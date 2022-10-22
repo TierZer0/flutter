@@ -1,0 +1,15 @@
+{
+  "name": "tierzero-flutter",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "devDependencies": {
+    "@nxrocks/nx-flutter": "^5.0.0",
+    "nx": "15.0.1",
+    "prettier": "^2.6.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

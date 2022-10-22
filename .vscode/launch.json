@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Recipe Book - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "program": "apps/recipe-book/lib/main.dart"
+    },
+    {
+      "name": "Recipe Book - Windows",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "windows",
+      "flutterMode": "debug",
+      "program": "apps/recipe-book/lib/main.dart"
+    }
+  ]
+}
