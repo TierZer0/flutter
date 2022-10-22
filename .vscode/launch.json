@@ -16,6 +16,14 @@
       "deviceId": "windows",
       "flutterMode": "debug",
       "program": "apps/recipe-book/lib/main.dart"
-    }
+    },
+    {
+      "name": "Niche - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "program": "apps/niche/lib/main.dart"
+    },
   ]
 }

@@ -1,0 +1,52 @@
+name: Niche
+description: A new Flutter project.
+
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.2
+  shared_preferences: ^2.0.13
+  fluent_ui: ^3.10.0
+  firebase_core: ^1.15.0
+  firebase_auth: ^3.3.15
+  firebase_core_desktop: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: fonts/Nunito-Black.ttf
+        - asset: fonts/Nunito-BlackItalic.ttf
+        - asset: fonts/Nunito-Bold.ttf
+        - asset: fonts/Nunito-BoldItalic.ttf
+        - asset: fonts/Nunito-ExtraBold.ttf
+        - asset: fonts/Nunito-ExtraBoldItalic.ttf
+        - asset: fonts/Nunito-ExtraLight.ttf
+        - asset: fonts/Nunito-ExtraLightItalic.ttf
+        - asset: fonts/Nunito-Italic.ttf
+        - asset: fonts/Nunito-Light.ttf
+        - asset: fonts/Nunito-LightItalic.ttf
+        - asset: fonts/Nunito-Medium.ttf
+        - asset: fonts/Nunito-MediumItalic.ttf
+        - asset: fonts/Nunito-Regular.ttf
+        - asset: fonts/Nunito-Regular.ttf
+        - asset: fonts/Nunito-SemiBold.ttf
+        - asset: fonts/Nunito-SemiBoldItalic.ttf
