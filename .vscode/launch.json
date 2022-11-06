@@ -18,6 +18,14 @@
       "program": "apps/recipe-book/lib/main.dart"
     },
     {
+      "name": "Recipe Book - Android",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "29191FDH2000Z4",
+      "flutterMode": "debug",
+      "program": "apps/recipe-book/lib/main.dart"
+    },
+    {
       "name": "Niche - Chrome",
       "request": "launch",
       "type": "dart",
