@@ -5,6 +5,20 @@ ThemeData buildLightTheme() {
   return base.copyWith(
     backgroundColor: const Color(0xFFFDFFFC),
     scaffoldBackgroundColor: const Color(0xFFFDFFFC),
+    inputDecorationTheme: const InputDecorationTheme(
+      labelStyle: TextStyle(
+        color: primaryColor,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: primaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+    ),
   );
 }
 

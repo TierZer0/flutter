@@ -21,6 +21,7 @@ dependencies:
   firebase_auth: ^4.1.1
   shared_preferences: ^2.0.15
   provider: ^6.0.4
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,20 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts: 
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato/Lato-Black.ttf
+        - asset: fonts/Lato/Lato-BlackItalic.ttf
+        - asset: fonts/Lato/Lato-Bold.ttf
+        - asset: fonts/Lato/Lato-BoldItalic.ttf
+        - asset: fonts/Lato/Lato-Italic.ttf
+        - asset: fonts/Lato/Lato-Light.ttf
+        - asset: fonts/Lato/Lato-LightItalic.ttf
+        - asset: fonts/Lato/Lato-Regular.ttf
+        - asset: fonts/Lato/Lato-Thin.ttf
+        - asset: fonts/Lato/Lato-ThinItalic.ttf
+
   # fonts:
   #   - family: Schyler
   #     fonts:

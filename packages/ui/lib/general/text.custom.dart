@@ -5,23 +5,38 @@ class CustomText extends StatelessWidget {
   double fontSize;
   FontWeight fontWeight;
   Color color;
+  String fontFamily;
+
+  EdgeInsets padding;
+
+  TextStyle textStyle;
+  bool overrideStyle;
 
   CustomText({
-    required this.text,
-    required this.fontSize,
-    required this.fontWeight,
-    required this.color,
+    this.text = "",
+    this.fontSize = 0.0,
+    this.fontWeight = FontWeight.normal,
+    this.color = Colors.black,
+    this.fontFamily = "",
+    this.textStyle = const TextStyle(),
+    this.overrideStyle = false,
+    this.padding = const EdgeInsets.all(1.0),
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        fontFamily: 'Nunito',
-        color: color,
+    return Padding(
+      padding: padding,
+      child: Text(
+        text,
+        style: overrideStyle
+            ? textStyle
+            : TextStyle(
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                fontFamily: fontFamily,
+                color: color,
+              ),
       ),
     );
   }
