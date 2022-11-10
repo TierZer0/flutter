@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
-import 'package:ui/general/text.custom.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ui/ui.dart';
 
 class LoginPage extends StatefulWidget {
@@ -151,6 +151,33 @@ class LoginPageState extends State<LoginPage> {
                         passwordController.text,
                       )
                       .then((value) => {appModel.uid = value.uid}),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 20.0,
+                  ),
+                  child: Divider(
+                    thickness: 1.0,
+                    color: lightThemeTextColor,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: IconButton(
+                          onPressed: () {},
+                          iconSize: 40.0,
+                          icon: const FaIcon(
+                            FontAwesomeIcons.google,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             )
