@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
@@ -6,6 +8,7 @@ class CustomInput extends StatelessWidget {
   TextInputType type;
   VoidCallback onTap;
   bool obscure;
+  String? errorText;
 
   EdgeInsets padding;
   Color focusColor;
@@ -20,6 +23,7 @@ class CustomInput extends StatelessWidget {
     required this.focusColor,
     required this.textColor,
     this.obscure = false,
+    required this.errorText,
   });
 
   @override
@@ -28,6 +32,7 @@ class CustomInput extends StatelessWidget {
       padding: padding,
       child: TextField(
         decoration: InputDecoration(
+          errorText: errorText,
           labelText: label,
           labelStyle: TextStyle(
             fontSize: 20.0,

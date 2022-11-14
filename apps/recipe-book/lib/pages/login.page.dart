@@ -19,169 +19,241 @@ class LoginPageState extends State<LoginPage> {
   }
 
   final emailController = TextEditingController();
+  var emailValidate = false;
   final passwordController = TextEditingController();
+  var passwordValidate = false;
 
   @override
   Widget build(BuildContext context) {
     var auth = AuthService();
+
     final appModel = Provider.of<AppModel>(context);
     return Material(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 100.0,
+        padding: const EdgeInsets.only(
+          left: 30.0,
+          right: 30.0,
+          top: 100.0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CustomText(
-              text: "Livre de Recettes",
-              overrideStyle: true,
-              textStyle: GoogleFonts.poly(
-                fontSize: 55.0,
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic,
-                color: primaryColor,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CustomText(
+                text: "Livre de Recettes",
+                overrideStyle: true,
+                textStyle: GoogleFonts.poly(
+                  fontSize: 55.0,
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic,
+                  color: primaryColor,
+                ),
               ),
-            ),
-            CustomText(
-              text: "Recipe Book",
-              fontSize: 30.0,
-              fontWeight: FontWeight.w400,
-              color: lightThemeTextColor,
-              fontFamily: 'Lato',
-            ),
-            CustomText(
-              text: "By TierZero Studios",
-              fontSize: 18.0,
-              fontWeight: FontWeight.w300,
-              fontFamily: 'Lato',
-              color: lightThemeTextColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 5.0,
+              CustomText(
+                text: "Recipe Book",
+                fontSize: 30.0,
+                fontWeight: FontWeight.w400,
+                color: lightThemeTextColor,
+                fontFamily: 'Lato',
               ),
-            ),
-            const SizedBox(
-              height: 60.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CustomText(
-                  text: "Welcome Back,",
-                  fontSize: 28.0,
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.w600,
+              CustomText(
+                text: "By TierZero Studios",
+                fontSize: 18.0,
+                fontWeight: FontWeight.w300,
+                fontFamily: 'Lato',
+                color: lightThemeTextColor,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
                 ),
-                CustomText(
-                  text: 'Login to your account',
-                  fontSize: 20.0,
-                  fontFamily: 'Lato',
-                  padding: const EdgeInsets.only(
-                    bottom: 20.0,
+              ),
+              const SizedBox(
+                height: 60.0,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomText(
+                    text: "Welcome Back,",
+                    fontSize: 28.0,
+                    fontFamily: 'Lato',
+                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                CustomInput(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                  ),
-                  label: 'Email',
-                  type: TextInputType.emailAddress,
-                  controller: emailController,
-                  focusColor: primaryColor,
-                  textColor: lightThemeTextColor,
-                  onTap: () {},
-                ),
-                CustomInput(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                  ),
-                  label: 'Password',
-                  type: TextInputType.visiblePassword,
-                  controller: passwordController,
-                  focusColor: primaryColor,
-                  textColor: lightThemeTextColor,
-                  obscure: true,
-                  onTap: () {},
-                ),
-                CustomButton(
-                  label: 'Login',
-                  buttonColor: primaryColor,
-                  externalPadding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * .25,
-                    vertical: 10.0,
-                  ),
-                  internalPadding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 15.0,
-                  ),
-                  textStyle: GoogleFonts.lato(
-                    color: darkThemeTextColor,
-                    fontWeight: FontWeight.w500,
+                  CustomText(
+                    text: 'Login to your account',
                     fontSize: 20.0,
+                    fontFamily: 'Lato',
+                    padding: const EdgeInsets.only(
+                      bottom: 20.0,
+                    ),
                   ),
-                  onTap: () async => await auth
-                      .emailSignIn(
-                        emailController.text,
-                        passwordController.text,
-                      )
-                      .then((value) => {appModel.uid = value.uid}),
-                ),
-                CustomButton(
-                  buttonColor: Colors.transparent,
-                  label: 'Create Account',
-                  textStyle: GoogleFonts.lato(
-                    color: lightThemeTextColor,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
+                  CustomInput(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                    ),
+                    label: 'Email',
+                    type: TextInputType.emailAddress,
+                    controller: emailController,
+                    focusColor: primaryColor,
+                    textColor: lightThemeTextColor,
+                    errorText: emailValidate ? 'Value can\'t be empty' : null,
+                    onTap: () {},
                   ),
-                  externalPadding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * .25,
-                    vertical: 0.0,
+                  CustomInput(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                    ),
+                    label: 'Password',
+                    type: TextInputType.visiblePassword,
+                    controller: passwordController,
+                    focusColor: primaryColor,
+                    textColor: lightThemeTextColor,
+                    obscure: true,
+                    errorText:
+                        passwordValidate ? 'Value can\'t be empty' : null,
+                    onTap: () {},
                   ),
-                  internalPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+                  CustomButton(
+                    label: 'Login',
+                    buttonColor: primaryColor,
+                    externalPadding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .25,
+                      vertical: 10.0,
+                    ),
+                    internalPadding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 15.0,
+                    ),
+                    textStyle: GoogleFonts.lato(
+                      color: darkThemeTextColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20.0,
+                    ),
+                    onTap: () async {
+                      setState(() {
+                        if (emailController.value.text.isEmpty) {
+                          emailValidate = true;
+                        } else {
+                          emailValidate = false;
+                        }
+                        if (passwordController.value.text.isEmpty) {
+                          passwordValidate = true;
+                        } else {
+                          passwordValidate = false;
+                        }
+                      });
+
+                      if (!passwordValidate && !emailValidate) {
+                        await auth
+                            .emailSignIn(
+                          emailController.text,
+                          passwordController.text,
+                        )
+                            .then(
+                          (value) {
+                            if (value.runtimeType == String) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(value)),
+                              );
+                            } else {
+                              appModel.uid = value.uid;
+                            }
+                          },
+                        );
+                      }
+                    },
                   ),
-                  boxShadows: const [],
-                  onTap: () async => await auth
-                      .emailCreateAccount(
-                        emailController.text,
-                        passwordController.text,
-                      )
-                      .then((value) => {appModel.uid = value.uid}),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 20.0,
+                  CustomButton(
+                      buttonColor: Colors.transparent,
+                      label: 'Create Account',
+                      textStyle: GoogleFonts.lato(
+                        color: lightThemeTextColor,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      externalPadding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * .25,
+                        vertical: 0.0,
+                      ),
+                      internalPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      boxShadows: const [],
+                      onTap: () async {
+                        setState(() {
+                          if (emailController.value.text.isEmpty) {
+                            emailValidate = true;
+                          } else {
+                            emailValidate = false;
+                          }
+                          if (passwordController.value.text.isEmpty) {
+                            passwordValidate = true;
+                          } else {
+                            passwordValidate = false;
+                          }
+                        });
+
+                        if (!passwordValidate && !emailValidate) {
+                          await auth
+                              .emailCreateAccount(
+                            emailController.text,
+                            passwordController.text,
+                          )
+                              .then(
+                            (value) {
+                              if (value.runtimeType == String) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(value)),
+                                );
+                              } else {
+                                appModel.uid = value.uid;
+                              }
+                            },
+                          );
+                        }
+                      }),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                      vertical: 20.0,
+                    ),
+                    child: Divider(
+                      thickness: 1.0,
+                      color: lightThemeTextColor,
+                    ),
                   ),
-                  child: Divider(
-                    thickness: 1.0,
-                    color: lightThemeTextColor,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: IconButton(
-                          onPressed: () {},
-                          iconSize: 40.0,
-                          icon: const FaIcon(
-                            FontAwesomeIcons.google,
+                  Row(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: IconButton(
+                            onPressed: () async {
+                              await auth.googleSSO().then((value) {
+                                if (value.runtimeType == String) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(value)),
+                                  );
+                                } else {
+                                  appModel.uid = value.uid;
+                                }
+                              });
+                            },
+                            iconSize: 40.0,
+                            icon: const FaIcon(
+                              FontAwesomeIcons.google,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            )
-          ],
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -50,7 +50,10 @@ class AppState extends State<App> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: buildLightTheme(),
-            home: appModel.uid != '' ? Container() : LoginPage(),
+            home: Scaffold(
+              resizeToAvoidBottomInset: true,
+              body: appModel.uid != '' ? Container() : LoginPage(),
+            ),
           );
         },
       ),
