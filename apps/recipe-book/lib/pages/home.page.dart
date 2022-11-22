@@ -14,7 +14,8 @@ class HomePageState extends State<HomePage> {
   }
 
   TextEditingController searchController = TextEditingController();
-  PageController trendingCtrl = PageController(viewportFraction: 0.65);
+  final PageController recipeCtrl = PageController(viewportFraction: 0.7);
+  int currentItem = 0;
 
   var testTrending = [
     {"title": "Southern Breakfast"},
@@ -135,17 +136,26 @@ class HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                height: 425,
+                child: PageView.builder(
+                  onPageChanged: (next) {
+                    if (currentItem != next) {
+                      setState(() {
+                        currentItem = next;
+                      });
+                    }
+                  },
+                  itemCount: 3,
+                  controller: recipeCtrl,
+                  itemBuilder: (BuildContext context, int currentIndex) {
+                    bool active = currentIndex == currentItem;
+                    return buildRecipeCard({}, active, primaryColor,
+                        theme.scaffoldBackgroundColor, context);
+                  },
+                ),
               )
-              // Container(
-              //   height: 255,
-              //   child: PageView.builder(
-              //     itemCount: 3,
-              //     controller: trendingCtrl,
-              //     itemBuilder: (BuildContext context, int currentIndex) {
-              //       return ;
-              //     },
-              //   ),
-              // )
             ],
           ),
         ),
@@ -206,20 +216,52 @@ Widget buildTrendingCard(item, Color backgrounColor, Color textColor,
   );
 }
 
+// Widget buildCategoryChip(item, Color backgroundColor, Color borderColor, Color textColor, Color activeTextColor, Color activeColor)
+
 Widget buildRecipeCard(item, bool active, Color backgroundColor,
     Color textColor, BuildContext context) {
   final double blur = active ? 15 : 0;
   final double opacity = active ? 1 : 0;
-  final double top = active ? 25 : 50;
+  final double top = active ? 15 : 50;
   final double bottom = active ? 25 : 50;
   final double left = active ? 20 : 15;
   final double right = active ? 20 : 15;
+
+  BorderRadius radius = const BorderRadius.all(
+    Radius.circular(20),
+  );
 
   return AnimatedContainer(
     duration: const Duration(
       milliseconds: 400,
     ),
-    decoration:
-        BoxDecoration(color: backgroundColor, boxShadow: [new BoxShadow()]),
+    margin: EdgeInsets.only(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+    ),
+    decoration: BoxDecoration(
+      color: backgroundColor,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black26,
+          blurRadius: blur,
+        ),
+      ],
+      borderRadius: radius,
+    ),
+    child: Material(
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: radius,
+      child: InkWell(
+        onTap: () {},
+        child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
+          children: [],
+        ),
+      ),
+    ),
   );
 }
