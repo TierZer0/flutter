@@ -9,14 +9,18 @@ class CustomInput extends StatelessWidget {
   VoidCallback onTap;
   bool obscure;
   String? errorText;
+  Widget icon;
+  double fontSize;
 
   EdgeInsets padding;
+  EdgeInsets contentPadding;
   Color focusColor;
   Color textColor;
 
   CustomInput({
     this.label = '',
     this.padding = const EdgeInsets.all(1.0),
+    this.contentPadding = const EdgeInsets.all(25.0),
     required this.controller,
     this.type = TextInputType.text,
     required this.onTap,
@@ -24,6 +28,11 @@ class CustomInput extends StatelessWidget {
     required this.textColor,
     this.obscure = false,
     required this.errorText,
+    this.icon = const SizedBox(
+      height: 0,
+      width: 0,
+    ),
+    this.fontSize = 18.0,
   });
 
   @override
@@ -32,21 +41,17 @@ class CustomInput extends StatelessWidget {
       padding: padding,
       child: TextField(
         decoration: InputDecoration(
+          prefixIcon: icon,
           errorText: errorText,
           labelText: label,
           labelStyle: TextStyle(
-            fontSize: 20.0,
+            fontSize: fontSize + 2,
             color: focusColor,
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
-          ),
-          contentPadding: const EdgeInsets.all(25.0),
+          contentPadding: contentPadding,
         ),
         style: TextStyle(
-          fontSize: 18,
+          fontSize: fontSize,
           color: textColor,
         ),
         cursorColor: focusColor,

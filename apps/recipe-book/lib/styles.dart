@@ -3,19 +3,35 @@ import 'package:flutter/material.dart';
 ThemeData buildLightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    backgroundColor: const Color(0xFFFDFFFC),
-    scaffoldBackgroundColor: const Color(0xFFFDFFFC),
+    backgroundColor: darkThemeTextColor,
+    scaffoldBackgroundColor: darkThemeTextColor,
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        color: lightThemeTextColor,
+      ),
+    ),
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
         color: primaryColor,
       ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+        borderSide: BorderSide(
+          color: primaryColor,
+          width: 1.0,
+          style: BorderStyle.solid,
+        ),
+      ),
+      prefixIconColor: primaryColor,
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: primaryColor,
           width: 2.5,
         ),
         borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+          Radius.circular(20.0),
         ),
       ),
     ),

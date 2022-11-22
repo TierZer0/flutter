@@ -12,4 +12,13 @@ class AppModel extends ChangeNotifier {
     appPreferences.setUserUIDPref(value);
     notifyListeners();
   }
+
+  // CURRENT VIEW state
+  String _view = 'Home';
+  String get view => _view;
+  set view(String value) {
+    _view = value;
+    appPreferences.setCurrentView(value);
+    notifyListeners();
+  }
 }

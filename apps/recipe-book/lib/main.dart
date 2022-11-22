@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/styles.dart';
+import 'package:ui/ui.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,22 +27,27 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   AppModel appModel = AppModel();
+  var views = {
+    "Home": HomePage(),
+  };
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _initIsLoggedIn() async {
-    appModel.uid = await appModel.appPreferences.getUserUIDPref();
+  void changeView(String view) async {
+    appModel.view = view;
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: primaryColor,
+        statusBarColor: darkThemeTextColor,
         systemNavigationBarColor: primaryColor,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
     return ChangeNotifierProvider<AppModel>.value(
@@ -52,7 +59,64 @@ class AppState extends State<App> {
             theme: buildLightTheme(),
             home: Scaffold(
               resizeToAvoidBottomInset: true,
-              body: appModel.uid != '' ? Container() : LoginPage(),
+              body: appModel.uid == '' ? LoginPage() : views[appModel.view],
+              bottomNavigationBar: appModel.uid != ''
+                  ? CustomBottomNavBar(
+                      height: 90,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      navs: [
+                        CustomIconButton(
+                          color: appModel.view == 'Home'
+                              ? tertiaryColor
+                              : (Theme.of(context).textTheme.titleLarge?.color)!
+                                  .withOpacity(0.75),
+                          icon: const Icon(
+                            Icons.home_outlined,
+                          ),
+                          onPressed: () => changeView('Home'),
+                          iconSize: 45.0,
+                        ),
+                        CustomIconButton(
+                          color: appModel.view == 'Recipes'
+                              ? tertiaryColor
+                              : lightThemeTextColor.withOpacity(0.75),
+                          icon: const Icon(
+                            Icons.book_outlined,
+                          ),
+                          onPressed: () => changeView('Recipes'),
+                          iconSize: 40.0,
+                        ),
+                        CustomIconButton(
+                          color: lightThemeTextColor.withOpacity(0.75),
+                          icon: const Icon(
+                            Icons.add,
+                          ),
+                          onPressed: () {},
+                          iconSize: 65.0,
+                        ),
+                        CustomIconButton(
+                          color: appModel.view == 'Favorites'
+                              ? tertiaryColor
+                              : lightThemeTextColor.withOpacity(0.75),
+                          icon: const Icon(
+                            Icons.favorite_outline,
+                          ),
+                          onPressed: () => changeView('Favorites'),
+                          iconSize: 40.0,
+                        ),
+                        CustomIconButton(
+                          color: appModel.view == 'Profile'
+                              ? tertiaryColor
+                              : lightThemeTextColor.withOpacity(0.75),
+                          icon: const Icon(
+                            Icons.person_outline_outlined,
+                          ),
+                          onPressed: () => changeView('Profile'),
+                          iconSize: 40.0,
+                        ),
+                      ],
+                    )
+                  : null,
             ),
           );
         },

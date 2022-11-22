@@ -97,6 +97,9 @@ class LoginPageState extends State<LoginPage> {
                     focusColor: primaryColor,
                     textColor: lightThemeTextColor,
                     errorText: emailValidate ? 'Value can\'t be empty' : null,
+                    icon: const Icon(
+                      Icons.email_outlined,
+                    ),
                     onTap: () {},
                   ),
                   CustomInput(
@@ -111,6 +114,9 @@ class LoginPageState extends State<LoginPage> {
                     obscure: true,
                     errorText:
                         passwordValidate ? 'Value can\'t be empty' : null,
+                    icon: const Icon(
+                      Icons.password_outlined,
+                    ),
                     onTap: () {},
                   ),
                   CustomButton(
