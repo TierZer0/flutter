@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
+
+import '../app_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,6 +29,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appModel = Provider.of<AppModel>(context);
     var theme = Theme.of(context);
     return SafeArea(
       child: Material(
@@ -98,6 +102,7 @@ class HomePageState extends State<HomePage> {
                         (item) => buildTrendingCard(
                           item,
                           theme.backgroundColor,
+                          theme.shadowColor,
                           (theme.textTheme.titleLarge?.color)!,
                           context,
                           () {},
@@ -164,8 +169,8 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-Widget buildTrendingCard(item, Color backgrounColor, Color textColor,
-    BuildContext context, VoidCallback onTap) {
+Widget buildTrendingCard(item, Color backgrounColor, Color shadowColor,
+    Color textColor, BuildContext context, VoidCallback onTap) {
   return Container(
     width: 200,
     margin: const EdgeInsets.symmetric(
@@ -176,7 +181,7 @@ Widget buildTrendingCard(item, Color backgrounColor, Color textColor,
       color: backgrounColor,
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.3),
+          color: shadowColor,
           blurRadius: 10.0,
         ),
       ],

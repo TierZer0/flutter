@@ -5,6 +5,7 @@ import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/login.page.dart';
+import 'package:recipe_book/pages/profile.page.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 import 'firebase_options.dart';
@@ -29,6 +30,7 @@ class AppState extends State<App> {
   AppModel appModel = AppModel();
   var views = {
     "Home": HomePage(),
+    "Profile": ProfilePage(),
   };
 
   @override
@@ -42,21 +44,30 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: darkThemeTextColor,
-        systemNavigationBarColor: primaryColor,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
     return ChangeNotifierProvider<AppModel>.value(
       value: appModel,
       child: Consumer<AppModel>(
         builder: (context, value, child) {
+          ThemeData theme =
+              appModel.theme ? buildDarkTheme() : buildLightTheme();
+          SystemChrome.setSystemUIOverlayStyle(
+            appModel.theme
+                ? const SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    systemNavigationBarColor: primaryColor,
+                    statusBarIconBrightness: Brightness.light,
+                    systemNavigationBarIconBrightness: Brightness.dark,
+                  )
+                : const SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    systemNavigationBarColor: primaryColor,
+                    statusBarIconBrightness: Brightness.dark,
+                    systemNavigationBarIconBrightness: Brightness.light,
+                  ),
+          );
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: buildLightTheme(),
+            theme: theme,
             home: Scaffold(
               resizeToAvoidBottomInset: true,
               body: appModel.uid == '' ? LoginPage() : views[appModel.view],
@@ -68,7 +79,7 @@ class AppState extends State<App> {
                         CustomIconButton(
                           color: appModel.view == 'Home'
                               ? tertiaryColor
-                              : (Theme.of(context).textTheme.titleLarge?.color)!
+                              : (theme.textTheme.titleLarge?.color)!
                                   .withOpacity(0.75),
                           icon: const Icon(
                             Icons.home_outlined,
@@ -79,7 +90,8 @@ class AppState extends State<App> {
                         CustomIconButton(
                           color: appModel.view == 'Recipes'
                               ? tertiaryColor
-                              : lightThemeTextColor.withOpacity(0.75),
+                              : (theme.textTheme.titleLarge?.color)!
+                                  .withOpacity(0.75),
                           icon: const Icon(
                             Icons.book_outlined,
                           ),
@@ -87,7 +99,8 @@ class AppState extends State<App> {
                           iconSize: 40.0,
                         ),
                         CustomIconButton(
-                          color: lightThemeTextColor.withOpacity(0.75),
+                          color: (theme.textTheme.titleLarge?.color)!
+                              .withOpacity(0.75),
                           icon: const Icon(
                             Icons.add,
                           ),
@@ -97,7 +110,8 @@ class AppState extends State<App> {
                         CustomIconButton(
                           color: appModel.view == 'Favorites'
                               ? tertiaryColor
-                              : lightThemeTextColor.withOpacity(0.75),
+                              : (theme.textTheme.titleLarge?.color)!
+                                  .withOpacity(0.75),
                           icon: const Icon(
                             Icons.favorite_outline,
                           ),
@@ -107,7 +121,8 @@ class AppState extends State<App> {
                         CustomIconButton(
                           color: appModel.view == 'Profile'
                               ? tertiaryColor
-                              : lightThemeTextColor.withOpacity(0.75),
+                              : (theme.textTheme.titleLarge?.color)!
+                                  .withOpacity(0.75),
                           icon: const Icon(
                             Icons.person_outline_outlined,
                           ),
