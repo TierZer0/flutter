@@ -10,6 +10,46 @@ ThemeData buildLightTheme() {
         color: lightThemeTextColor,
       ),
     ),
+    shadowColor: Colors.grey.withOpacity(0.3),
+    inputDecorationTheme: const InputDecorationTheme(
+      labelStyle: TextStyle(
+        color: primaryColor,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+        borderSide: BorderSide(
+          color: primaryColor,
+          width: 1.0,
+          style: BorderStyle.solid,
+        ),
+      ),
+      prefixIconColor: primaryColor,
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: primaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+    ),
+  );
+}
+
+ThemeData buildDarkTheme() {
+  final ThemeData base = ThemeData.dark();
+  return base.copyWith(
+    backgroundColor: const Color(0xFF100F0F),
+    scaffoldBackgroundColor: const Color(0xFF090707),
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        color: Color(0xFFB7B7B7),
+      ),
+    ),
+    shadowColor: Colors.transparent,
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
         color: primaryColor,

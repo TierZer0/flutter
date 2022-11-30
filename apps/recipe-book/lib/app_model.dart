@@ -21,4 +21,13 @@ class AppModel extends ChangeNotifier {
     appPreferences.setCurrentView(value);
     notifyListeners();
   }
+
+  //CURRENT THEME state
+  bool _theme = false;
+  bool get theme => _theme;
+  set theme(bool value) {
+    _theme = value;
+    appPreferences.setCurrentTheme(value);
+    notifyListeners();
+  }
 }
