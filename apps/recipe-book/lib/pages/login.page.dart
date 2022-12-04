@@ -25,8 +25,6 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var auth = AuthService();
-
     final appModel = Provider.of<AppModel>(context);
     return Material(
       child: Container(
@@ -150,7 +148,7 @@ class LoginPageState extends State<LoginPage> {
                       });
 
                       if (!passwordValidate && !emailValidate) {
-                        await auth
+                        await authService
                             .emailSignIn(
                           emailController.text,
                           passwordController.text,
@@ -201,7 +199,7 @@ class LoginPageState extends State<LoginPage> {
                         });
 
                         if (!passwordValidate && !emailValidate) {
-                          await auth
+                          await authService
                               .emailCreateAccount(
                             emailController.text,
                             passwordController.text,
@@ -237,7 +235,7 @@ class LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: IconButton(
                             onPressed: () async {
-                              await auth.googleSSO().then((value) {
+                              await authService.googleSSO().then((value) {
                                 if (value.runtimeType == String) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text(value)),
