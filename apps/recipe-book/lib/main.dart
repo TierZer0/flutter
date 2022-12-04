@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/profile.page.dart';
+import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 import 'firebase_options.dart';
@@ -28,6 +29,8 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   AppModel appModel = AppModel();
+  AppPreferences appPreferences = AppPreferences();
+
   var views = {
     "Home": HomePage(),
     "Profile": ProfilePage(),
@@ -65,6 +68,7 @@ class AppState extends State<App> {
                     systemNavigationBarIconBrightness: Brightness.light,
                   ),
           );
+          appPreferences.getUserUIDPref().then((value) => appModel.uid = value);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: theme,

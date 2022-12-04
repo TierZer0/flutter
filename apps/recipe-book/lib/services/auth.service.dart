@@ -1,15 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../app_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  AppModel appModel = AppModel();
 
-  get user => _auth.currentUser;
+  get user => _auth.currentUser ?? appModel.uid;
 
   Future emailSignIn(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await updateUserData(user);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -22,6 +28,7 @@ class AuthService {
         email: email,
         password: password,
       );
+      await updateUserData(user);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -39,9 +46,26 @@ class AuthService {
 
     try {
       await _auth.signInWithCredential(credential);
+      await updateUserData(user);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
+
+  Future<bool> updateUserData(User user) async {
+    final ref = _db.collection('users').doc(user.uid);
+    ref.update({
+      'lastSeen': DateTime.now(),
+    }).catchError((e) => {
+          ref.set({
+            'lastSeen': DateTime.now(),
+            'name': user.displayName ?? user.email,
+            'darkTheme': false,
+          })
+        });
+    return true;
+  }
 }
+
+final AuthService authService = AuthService();

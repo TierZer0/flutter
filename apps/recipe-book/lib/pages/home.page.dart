@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
-import '../app_model.dart';
+import 'package:recipe_book/app_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +31,9 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final appModel = Provider.of<AppModel>(context);
+    userService.getUserTheme.then((theme) {
+      appModel.theme = theme;
+    }).catchError((e) => print(e));
     var theme = Theme.of(context);
     return SafeArea(
       child: Material(
