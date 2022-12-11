@@ -79,59 +79,53 @@ class AppState extends State<App> {
                   ? CustomBottomNavBar(
                       height: 90,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      navs: [
-                        CustomIconButton(
-                          color: appModel.view == 'Home'
-                              ? tertiaryColor
-                              : (theme.textTheme.titleLarge?.color)!
-                                  .withOpacity(0.75),
+                      useMat3: true,
+                      activeColor: tertiaryColor,
+                      mat3Navs: [
+                        CustomNavBarItem(
+                          label: 'Home',
+                          isActive: appModel.view == 'Home',
+                          onPressed: () => changeView('Home'),
                           icon: const Icon(
                             Icons.home_outlined,
+                            size: 35.0,
                           ),
-                          onPressed: () => changeView('Home'),
-                          iconSize: 45.0,
                         ),
-                        CustomIconButton(
-                          color: appModel.view == 'Recipes'
-                              ? tertiaryColor
-                              : (theme.textTheme.titleLarge?.color)!
-                                  .withOpacity(0.75),
+                        CustomNavBarItem(
+                          label: 'Recipes',
+                          isActive: appModel.view == 'Recipes',
+                          onPressed: () => changeView('Recipes'),
                           icon: const Icon(
                             Icons.book_outlined,
+                            size: 35.0,
                           ),
-                          onPressed: () => changeView('Recipes'),
-                          iconSize: 40.0,
                         ),
-                        CustomIconButton(
-                          color: (theme.textTheme.titleLarge?.color)!
-                              .withOpacity(0.75),
+                        CustomNavBarItem(
+                          label: 'New',
+                          isActive: false,
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.add,
+                            size: 35.0,
                           ),
-                          onPressed: () {},
-                          iconSize: 65.0,
                         ),
-                        CustomIconButton(
-                          color: appModel.view == 'Favorites'
-                              ? tertiaryColor
-                              : (theme.textTheme.titleLarge?.color)!
-                                  .withOpacity(0.75),
+                        CustomNavBarItem(
+                          label: 'Favorites',
+                          isActive: appModel.view == 'Favorites',
+                          onPressed: () => changeView('Favorites'),
                           icon: const Icon(
                             Icons.favorite_outline,
+                            size: 35.0,
                           ),
-                          onPressed: () => changeView('Favorites'),
-                          iconSize: 40.0,
                         ),
-                        CustomIconButton(
-                          color: appModel.view == 'Profile'
-                              ? tertiaryColor
-                              : (theme.textTheme.titleLarge?.color)!
-                                  .withOpacity(0.75),
+                        CustomNavBarItem(
+                          label: 'Home',
+                          isActive: appModel.view == 'Profile',
+                          onPressed: () => changeView('Profile'),
                           icon: const Icon(
                             Icons.person_outline_outlined,
+                            size: 35.0,
                           ),
-                          onPressed: () => changeView('Profile'),
-                          iconSize: 40.0,
                         ),
                       ],
                     )
