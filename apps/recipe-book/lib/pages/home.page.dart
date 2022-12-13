@@ -92,7 +92,7 @@ class HomePageState extends State<HomePage> {
                 fontFamily: "Lato",
                 color: (theme.textTheme.titleLarge?.color)!,
               ),
-              Container(
+              SizedBox(
                 height: 175,
                 child: ListView(
                   padding: const EdgeInsets.symmetric(
@@ -115,7 +115,7 @@ class HomePageState extends State<HomePage> {
                       .toList(),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 75,
                 child: ListView(
                   padding: const EdgeInsets.symmetric(
@@ -146,7 +146,7 @@ class HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 425,
                 child: PageView.builder(
                   onPageChanged: (next) {

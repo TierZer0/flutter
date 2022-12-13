@@ -35,7 +35,6 @@ class CustomBottomNavBar extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        splashColor: activeColor,
                         onTap: item.onPressed,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

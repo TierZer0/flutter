@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData buildLightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
+    canvasColor: Colors.transparent,
     backgroundColor: darkThemeTextColor,
     scaffoldBackgroundColor: darkThemeTextColor,
     textTheme: const TextTheme(
@@ -42,6 +43,7 @@ ThemeData buildLightTheme() {
 ThemeData buildDarkTheme() {
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
+    canvasColor: Colors.transparent,
     backgroundColor: const Color(0xFF100F0F),
     scaffoldBackgroundColor: const Color(0xFF090707),
     textTheme: const TextTheme(
