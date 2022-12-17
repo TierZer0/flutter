@@ -20,7 +20,7 @@ class CustomText extends StatelessWidget {
     this.fontFamily = "",
     this.textStyle = const TextStyle(),
     this.overrideStyle = false,
-    this.padding = const EdgeInsets.all(1.0),
+    this.padding = const EdgeInsets.all(0.0),
   });
 
   @override

@@ -160,8 +160,8 @@ class HomePageState extends State<HomePage> {
                   controller: recipeCtrl,
                   itemBuilder: (BuildContext context, int currentIndex) {
                     bool active = currentIndex == currentItem;
-                    return buildRecipeCard({}, active, primaryColor,
-                        theme.scaffoldBackgroundColor, context);
+                    return buildRecipeCard(
+                        {}, active, primaryColor, theme.scaffoldBackgroundColor, context);
                   },
                 ),
               )
@@ -173,8 +173,8 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-Widget buildTrendingCard(item, Color backgrounColor, Color shadowColor,
-    Color textColor, BuildContext context, VoidCallback onTap) {
+Widget buildTrendingCard(item, Color backgrounColor, Color shadowColor, Color textColor,
+    BuildContext context, VoidCallback onTap) {
   return Container(
     width: 200,
     margin: const EdgeInsets.symmetric(
@@ -227,8 +227,8 @@ Widget buildTrendingCard(item, Color backgrounColor, Color shadowColor,
 
 // Widget buildCategoryChip(item, Color backgroundColor, Color borderColor, Color textColor, Color activeTextColor, Color activeColor)
 
-Widget buildRecipeCard(item, bool active, Color backgroundColor,
-    Color textColor, BuildContext context) {
+Widget buildRecipeCard(
+    item, bool active, Color backgroundColor, Color textColor, BuildContext context) {
   final double blur = active ? 15 : 0;
   final double opacity = active ? 1 : 0;
   final double top = active ? 15 : 50;
