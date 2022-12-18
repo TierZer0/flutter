@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
@@ -17,6 +18,15 @@ class LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
+  FormGroup buildForm() => fb.group(
+        <String, Object>{
+          'email': FormControl<String>(
+            validators: [Validators.required, Validators.email],
+          ),
+          'password': ['', Validators.required, Validators.minLength(8)],
+        },
+      );
 
   final emailController = TextEditingController();
   var emailValidate = false;
@@ -85,138 +95,106 @@ class LoginPageState extends State<LoginPage> {
                       bottom: 20.0,
                     ),
                   ),
-                  CustomInput(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                    ),
-                    label: 'Email',
-                    type: TextInputType.emailAddress,
-                    controller: emailController,
-                    focusColor: primaryColor,
-                    textColor: lightThemeTextColor,
-                    errorText: emailValidate ? 'Value can\'t be empty' : null,
-                    icon: const Icon(
-                      Icons.email_outlined,
-                    ),
-                    onTap: () {},
-                  ),
-                  CustomInput(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                    ),
-                    label: 'Password',
-                    type: TextInputType.visiblePassword,
-                    controller: passwordController,
-                    focusColor: primaryColor,
-                    textColor: lightThemeTextColor,
-                    obscure: true,
-                    errorText:
-                        passwordValidate ? 'Value can\'t be empty' : null,
-                    icon: const Icon(
-                      Icons.password_outlined,
-                    ),
-                    onTap: () {},
-                  ),
-                  CustomButton(
-                    label: 'Login',
-                    buttonColor: primaryColor,
-                    externalPadding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * .25,
-                      vertical: 10.0,
-                    ),
-                    internalPadding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 15.0,
-                    ),
-                    textStyle: GoogleFonts.lato(
-                      color: darkThemeTextColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20.0,
-                    ),
-                    onTap: () async {
-                      setState(() {
-                        if (emailController.value.text.isEmpty) {
-                          emailValidate = true;
-                        } else {
-                          emailValidate = false;
-                        }
-                        if (passwordController.value.text.isEmpty) {
-                          passwordValidate = true;
-                        } else {
-                          passwordValidate = false;
-                        }
-                      });
-
-                      if (!passwordValidate && !emailValidate) {
-                        await authService
-                            .emailSignIn(
-                          emailController.text,
-                          passwordController.text,
-                        )
-                            .then(
-                          (value) {
-                            if (value.runtimeType == String) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(value)),
+                  ReactiveFormBuilder(
+                    form: buildForm,
+                    builder: (context, form, child) {
+                      return Column(
+                        children: [
+                          ReactiveTextField<String>(
+                            formControlName: 'email',
+                            validationMessages: {
+                              ValidationMessage.required: (_) => 'The email must not be empty',
+                              ValidationMessage.email: (_) =>
+                                  'The email value must be a valid email',
+                            },
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              helperStyle: TextStyle(height: 0.7),
+                              errorStyle: TextStyle(height: 0.7),
+                            ),
+                            style: const TextStyle(
+                              color: lightThemeTextColor,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25.0,
+                          ),
+                          ReactiveTextField<String>(
+                            formControlName: 'password',
+                            obscureText: true,
+                            validationMessages: {
+                              ValidationMessage.required: (_) => 'The password must not be empty',
+                              ValidationMessage.minLength: (_) =>
+                                  'The password must be at least 8 characters',
+                            },
+                            textInputAction: TextInputAction.done,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              helperStyle: TextStyle(height: 0.7),
+                              errorStyle: TextStyle(height: 0.7),
+                            ),
+                            style: const TextStyle(
+                              color: lightThemeTextColor,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25.0,
+                          ),
+                          CustomButton(
+                            label: 'Login',
+                            buttonColor: primaryColor,
+                            externalPadding: EdgeInsets.symmetric(
+                              horizontal: MediaQuery.of(context).size.width * .25,
+                              vertical: 10.0,
+                            ),
+                            internalPadding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                              vertical: 15.0,
+                            ),
+                            textStyle: GoogleFonts.lato(
+                              color: darkThemeTextColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20.0,
+                            ),
+                            onTap: () async {
+                              form.markAllAsTouched();
+                              if (form.invalid) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: tertiaryColor,
+                                    content: Text(
+                                      'Fill out the login form',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              await authService
+                                  .emailSignIn(
+                                      form.control('email').value, form.control('password').value)
+                                  .then(
+                                (value) {
+                                  if (value.runtimeType == String) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(value)),
+                                    );
+                                  } else {
+                                    appModel.uid = value.uid;
+                                  }
+                                },
                               );
-                            } else {
-                              appModel.uid = value.uid;
-                            }
-                          },
-                        );
-                      }
+                            },
+                          )
+                        ],
+                      );
                     },
                   ),
-                  CustomButton(
-                      buttonColor: Colors.transparent,
-                      label: 'Create Account',
-                      textStyle: GoogleFonts.lato(
-                        color: lightThemeTextColor,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      externalPadding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * .25,
-                        vertical: 0.0,
-                      ),
-                      internalPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      boxShadows: const [],
-                      onTap: () async {
-                        setState(() {
-                          if (emailController.value.text.isEmpty) {
-                            emailValidate = true;
-                          } else {
-                            emailValidate = false;
-                          }
-                          if (passwordController.value.text.isEmpty) {
-                            passwordValidate = true;
-                          } else {
-                            passwordValidate = false;
-                          }
-                        });
-
-                        if (!passwordValidate && !emailValidate) {
-                          await authService
-                              .emailCreateAccount(
-                            emailController.text,
-                            passwordController.text,
-                          )
-                              .then(
-                            (value) {
-                              if (value.runtimeType == String) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(value)),
-                                );
-                              } else {
-                                appModel.uid = value.uid;
-                              }
-                            },
-                          );
-                        }
-                      }),
                   const Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 15.0,

@@ -14,7 +14,7 @@ ThemeData buildLightTheme() {
     shadowColor: Colors.grey.withOpacity(0.3),
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
-        color: primaryColor,
+        color: lightThemeTextColor,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(
@@ -35,6 +35,27 @@ ThemeData buildLightTheme() {
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      errorStyle: TextStyle(
+        color: tertiaryColor,
       ),
     ),
   );

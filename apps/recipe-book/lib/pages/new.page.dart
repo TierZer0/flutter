@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/styles.dart';
-import 'package:ui/general/icon-buitton.custom.dart';
-import 'package:ui/general/text.custom.dart';
+import 'package:ui/ui.dart';
 
 class NewPage extends StatefulWidget {
   const NewPage({super.key});
@@ -18,6 +17,9 @@ class NewPageState extends State<NewPage> {
   void initState() {
     super.initState();
   }
+
+  int _stepIndex = 0;
+  final GlobalKey<FormState> _formDetails = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +40,54 @@ class NewPageState extends State<NewPage> {
             Icons.arrow_back_outlined,
             size: 30,
           ),
-          onPressed: () {},
+          onPressed: () => context.go('/'),
           color: (theme.textTheme.titleLarge?.color)!,
         ),
       ),
       body: Container(
         color: theme.scaffoldBackgroundColor,
         child: SingleChildScrollView(
-          child: Stepper(steps: []),
+          child: Stepper(
+            currentStep: _stepIndex,
+            onStepCancel: () {
+              if (_stepIndex > 0) {
+                setState(() {
+                  _stepIndex -= 1;
+                });
+              }
+            },
+            onStepContinue: () {
+              if (_stepIndex <= 0) {
+                setState(() {
+                  _stepIndex -= 1;
+                });
+              }
+            },
+            steps: [
+              Step(
+                title: CustomText(
+                  text: "Details",
+                  fontSize: 20.0,
+                  fontFamily: "Lato",
+                  color: (theme.textTheme.titleLarge?.color)!,
+                ),
+                content: Container(
+                  child: Form(
+                    key: _formDetails,
+                    child: Column(
+                      children: [],
+                    ),
+                  ),
+                ),
+              ),
+              Step(
+                title: const Text(
+                  'Ingredients',
+                ),
+                content: Container(),
+              ),
+            ],
+          ),
         ),
       ),
     );
