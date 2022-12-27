@@ -87,6 +87,15 @@ ThemeData buildDarkTheme() {
           style: BorderStyle.solid,
         ),
       ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
       prefixIconColor: primaryColor,
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -96,6 +105,9 @@ ThemeData buildDarkTheme() {
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),
+      ),
+      errorStyle: TextStyle(
+        color: tertiaryColor,
       ),
     ),
   );

@@ -46,9 +46,7 @@ class CustomBottomNavBar extends StatelessWidget {
                                 vertical: 5.0,
                               ),
                               decoration: BoxDecoration(
-                                color: item.isActive
-                                    ? activeColor
-                                    : Colors.transparent,
+                                color: item.isActive ? activeColor : Colors.transparent,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(
                                     20.0,
@@ -83,8 +81,5 @@ class CustomNavBarItem {
   VoidCallback onPressed;
 
   CustomNavBarItem(
-      {required this.label,
-      required this.icon,
-      required this.isActive,
-      required this.onPressed});
+      {required this.label, required this.icon, required this.isActive, required this.onPressed});
 }

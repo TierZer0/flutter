@@ -100,45 +100,30 @@ class LoginPageState extends State<LoginPage> {
                     builder: (context, form, child) {
                       return Column(
                         children: [
-                          ReactiveTextField<String>(
-                            formControlName: 'email',
+                          CustomReactiveInput(
+                            inputAction: TextInputAction.next,
+                            formName: 'email',
+                            label: 'Email',
+                            textColor: lightThemeTextColor,
                             validationMessages: {
                               ValidationMessage.required: (_) => 'The email must not be empty',
                               ValidationMessage.email: (_) =>
                                   'The email value must be a valid email',
                             },
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                              helperStyle: TextStyle(height: 0.7),
-                              errorStyle: TextStyle(height: 0.7),
-                            ),
-                            style: const TextStyle(
-                              color: lightThemeTextColor,
-                              fontSize: 20.0,
-                            ),
                           ),
                           const SizedBox(
                             height: 25.0,
                           ),
-                          ReactiveTextField<String>(
-                            formControlName: 'password',
-                            obscureText: true,
+                          CustomReactiveInput(
+                            inputAction: TextInputAction.done,
+                            formName: 'password',
+                            label: 'Password',
+                            textColor: lightThemeTextColor,
                             validationMessages: {
                               ValidationMessage.required: (_) => 'The password must not be empty',
                               ValidationMessage.minLength: (_) =>
                                   'The password must be at least 8 characters',
                             },
-                            textInputAction: TextInputAction.done,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                              helperStyle: TextStyle(height: 0.7),
-                              errorStyle: TextStyle(height: 0.7),
-                            ),
-                            style: const TextStyle(
-                              color: lightThemeTextColor,
-                              fontSize: 20.0,
-                            ),
                           ),
                           const SizedBox(
                             height: 25.0,
