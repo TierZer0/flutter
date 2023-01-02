@@ -22,7 +22,7 @@ class NewPageState extends State<NewPage> {
     super.initState();
   }
 
-  int _stepIndex = 1;
+  int _stepIndex = 0;
 
   List<String> units = ['oz', 'grams', 'lb', 'count', 'tbls', 'tsp', 'cup', 'gallon'];
   FormGroup buildForm() => fb.group(
@@ -31,6 +31,7 @@ class NewPageState extends State<NewPage> {
             {
               'name': FormControl<String>(validators: [Validators.required]),
               'description': FormControl<String>(),
+              'category': FormControl<String>(),
               'book': FormControl<String>(),
             },
           ),
@@ -41,9 +42,18 @@ class NewPageState extends State<NewPage> {
               'unit': FormControl<String>(validators: [Validators.required]),
               'items': FormControl<List<Ingredient>>(value: []),
             },
+          ),
+          'instructions': FormGroup(
+            {
+              'title': FormControl<String>(validators: [Validators.required]),
+              'order': FormControl<int>(),
+              'description': FormControl<String>(validators: [Validators.required]),
+              'steps': FormControl<List<Instruction>>(value: []),
+            },
           )
         },
       );
+  Recipe recipe = Recipe('', '', '', [], [], 0);
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +84,10 @@ class NewPageState extends State<NewPage> {
           child: ReactiveFormBuilder(
             form: buildForm,
             builder: (context, formGroup, child) {
+              AbstractControl<dynamic> details = formGroup.control('details');
+              AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
+              AbstractControl<dynamic> instructions = formGroup.control('instructions');
+
               return Stepper(
                 currentStep: _stepIndex,
                 onStepCancel: () {
@@ -83,37 +97,83 @@ class NewPageState extends State<NewPage> {
                     });
                   }
                 },
+                onStepTapped: (index) {
+                  if (index > _stepIndex) return;
+
+                  setState(() {
+                    _stepIndex = index;
+                  });
+                },
                 onStepContinue: () {
                   formGroup.markAsUntouched();
-                  if (_stepIndex <= 0) {
-                    var increase = 1;
-                    switch (_stepIndex) {
-                      case 0:
-                        if (formGroup.control('details').invalid) {
-                          increase = 0;
-                          formGroup.control('details').markAllAsTouched();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: tertiaryColor,
-                              content: Text(
-                                'Fill out the login form',
-                                style: TextStyle(
-                                  color: darkThemeTextColor,
-                                  fontSize: 20.0,
-                                ),
+                  var increase = 1;
+                  switch (_stepIndex) {
+                    case 0:
+                      if (formGroup.control('details').invalid) {
+                        increase = 0;
+                        formGroup.control('details').markAllAsTouched();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: tertiaryColor,
+                            content: Text(
+                              'Fill out the login form',
+                              style: TextStyle(
+                                color: darkThemeTextColor,
+                                fontSize: 20.0,
                               ),
                             ),
-                          );
-                        }
-                        break;
-                      case 1:
-                        print(formGroup.control('ingredients').value);
-                        break;
-                    }
-                    setState(() {
-                      _stepIndex += increase;
-                    });
+                          ),
+                        );
+                      }
+                      break;
+                    case 1:
+                      if (formGroup.control('ingredients').value['items'].length <= 0) {
+                        increase = 0;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: tertiaryColor,
+                            content: Text(
+                              'Atleast one ingredient is required',
+                              style: TextStyle(
+                                color: darkThemeTextColor,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      break;
+                    case 2:
+                      if (formGroup.control('instructions').value['steps'].length <= 0) {
+                        increase = 0;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: tertiaryColor,
+                            content: Text(
+                              'Atleast one instruction step is required',
+                              style: TextStyle(
+                                color: darkThemeTextColor,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      recipe = Recipe(
+                        details.value['name'],
+                        '',
+                        details.value['description'] ?? '',
+                        ingredients.value['items'],
+                        instructions.value['steps'],
+                        0,
+                      );
+                      break;
+                    case 3:
+                      break;
                   }
+                  setState(() {
+                    _stepIndex += increase;
+                  });
                 },
                 steps: [
                   Step(
@@ -142,6 +202,21 @@ class NewPageState extends State<NewPage> {
                           formName: 'details.description',
                           label: 'Description',
                           textColor: (theme.textTheme.titleLarge?.color)!,
+                        ),
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        CustomReactiveAutocomplete(
+                          formName: 'details.category',
+                          optionsBuilder: (TextEditingValue value) {
+                            return [];
+                            // return _options.where((String option) {
+                            //   return option.contains(value.text.toLowerCase());
+                            // });
+                          },
+                          backgroundColor: theme.backgroundColor,
+                          textColor: (theme.textTheme.titleLarge?.color)!,
+                          label: "Category",
                         ),
                         const SizedBox(
                           height: 25.0,
@@ -287,13 +362,144 @@ class NewPageState extends State<NewPage> {
                   ),
                   Step(
                     title: CustomText(
-                      text: "Directions",
+                      text: "Instructions",
                       fontSize: 20.0,
                       fontFamily: "Lato",
                       color: (theme.textTheme.titleLarge?.color)!,
                     ),
-                    content: Container(),
+                    content: Column(
+                      children: [
+                        CustomReactiveInput(
+                          formName: 'instructions.title',
+                          inputAction: TextInputAction.next,
+                          label: 'Title',
+                          textColor: (theme.textTheme.titleLarge?.color)!,
+                          validationMessages: {
+                            ValidationMessage.required: (_) =>
+                                'The Instruction title must not be empty',
+                          },
+                        ),
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        CustomReactiveInput(
+                          formName: 'instructions.description',
+                          inputAction: TextInputAction.next,
+                          label: 'Description',
+                          textColor: (theme.textTheme.titleLarge?.color)!,
+                          validationMessages: {
+                            ValidationMessage.required: (_) =>
+                                'The Instruction description must not be empty',
+                          },
+                        ),
+                        CustomButton(
+                          buttonColor: primaryColor,
+                          onTap: () {
+                            formGroup.markAsUntouched();
+                            AbstractControl<dynamic> group = formGroup.control('instructions');
+                            if (group.invalid) {
+                              group.markAllAsTouched();
+                              return;
+                            }
+                            List<Instruction> steps = group.value['steps'] ?? [];
+                            steps.add(Instruction(group.value['title'], steps.length + 1,
+                                group.value['description']));
+                            formGroup.control('instructions').patchValue({'steps': steps});
+                          },
+                          label: "Add Instruction",
+                          externalPadding: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width * .5,
+                              top: 10.0,
+                              bottom: 10.0),
+                          internalPadding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 15.0,
+                          ),
+                          textStyle: GoogleFonts.lato(
+                            color: darkThemeTextColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200.0,
+                          child: ListView(
+                            children: formGroup
+                                .control('instructions')
+                                .value['steps']
+                                .map<Widget>(
+                                  (Instruction item) => CustomText(
+                                    text: item.toString(),
+                                    fontSize: 20.0,
+                                    fontFamily: "Lato",
+                                    color: (theme.textTheme.titleLarge?.color)!,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  Step(
+                    title: CustomText(
+                      text: "Save",
+                      fontSize: 20.0,
+                      fontFamily: "Lato",
+                      color: (theme.textTheme.titleLarge?.color)!,
+                    ),
+                    content: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            text: recipe.toString(),
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Lato",
+                            color: (theme.textTheme.titleLarge?.color)!,
+                          ),
+                          const SizedBox(
+                            height: 25.0,
+                          ),
+                          CustomText(
+                            text: 'Ingredients',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Lato",
+                            color: (theme.textTheme.titleLarge?.color)!,
+                          ),
+                          SizedBox(
+                            height: 100.0,
+                            child: ListView(
+                              children: recipe.listIngredients(
+                                (theme.textTheme.titleLarge?.color)!,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25.0,
+                          ),
+                          CustomText(
+                            text: 'Steps',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Lato",
+                            color: (theme.textTheme.titleLarge?.color)!,
+                          ),
+                          SizedBox(
+                            height: 100.0,
+                            child: ListView(
+                              children: recipe.listSteps(
+                                (theme.textTheme.titleLarge?.color)!,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               );
             },

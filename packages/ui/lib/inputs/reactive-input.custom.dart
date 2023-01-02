@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -5,6 +7,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
   String formName;
   Map<String, String Function(Object)> validationMessages;
   TextInputAction inputAction;
+  int? maxLines;
 
   String label;
   Color textColor;
@@ -18,11 +21,13 @@ class CustomReactiveInput<T> extends StatelessWidget {
     required this.label,
     required this.textColor,
     this.fontSize = 20.0,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField<T>(
+      maxLines: maxLines,
       formControlName: formName,
       validationMessages: validationMessages,
       textInputAction: inputAction,
