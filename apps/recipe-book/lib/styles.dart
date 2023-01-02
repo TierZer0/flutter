@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData buildLightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
+    canvasColor: Colors.transparent,
     backgroundColor: darkThemeTextColor,
     scaffoldBackgroundColor: darkThemeTextColor,
     textTheme: const TextTheme(
@@ -13,7 +14,7 @@ ThemeData buildLightTheme() {
     shadowColor: Colors.grey.withOpacity(0.3),
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
-        color: primaryColor,
+        color: lightThemeTextColor,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(
@@ -35,6 +36,27 @@ ThemeData buildLightTheme() {
           Radius.circular(20.0),
         ),
       ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      errorStyle: TextStyle(
+        color: tertiaryColor,
+      ),
     ),
   );
 }
@@ -42,6 +64,7 @@ ThemeData buildLightTheme() {
 ThemeData buildDarkTheme() {
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
+    canvasColor: Colors.transparent,
     backgroundColor: const Color(0xFF100F0F),
     scaffoldBackgroundColor: const Color(0xFF090707),
     textTheme: const TextTheme(
@@ -64,6 +87,15 @@ ThemeData buildDarkTheme() {
           style: BorderStyle.solid,
         ),
       ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
       prefixIconColor: primaryColor,
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -73,6 +105,9 @@ ThemeData buildDarkTheme() {
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),
+      ),
+      errorStyle: TextStyle(
+        color: tertiaryColor,
       ),
     ),
   );
