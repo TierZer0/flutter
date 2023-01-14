@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
-import 'package:recipe_book/pages/new.page.dart';
+import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
 import 'firebase_options.dart';
