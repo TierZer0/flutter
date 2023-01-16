@@ -12,6 +12,9 @@ class CustomReactiveInput<T> extends StatelessWidget {
   String label;
   Color textColor;
   double fontSize;
+  bool readonly;
+
+  void Function(FormControl<T>)? onTap;
 
   CustomReactiveInput({
     super.key,
@@ -22,11 +25,14 @@ class CustomReactiveInput<T> extends StatelessWidget {
     required this.textColor,
     this.fontSize = 20.0,
     this.maxLines,
+    this.onTap,
+    this.readonly = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField<T>(
+      onTap: onTap,
       maxLines: maxLines,
       formControlName: formName,
       validationMessages: validationMessages,
@@ -40,6 +46,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
         color: textColor,
         fontSize: fontSize,
       ),
+      readOnly: readonly,
     );
   }
 }

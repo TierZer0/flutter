@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/models/models.dart';
-import 'package:recipe_book/pages/new-recipe/details.step.dart';
-import 'package:recipe_book/pages/new-recipe/ingredients.step.dart';
-import 'package:recipe_book/pages/new-recipe/instructions.step.dart';
-import 'package:recipe_book/pages/new-recipe/save.step.dart';
+import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/pages/new-recipe/steps/details.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/ingredients.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/instructions.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/save.step.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../styles.dart';
@@ -35,7 +35,7 @@ class NewPageState extends State<NewPage> {
               'name': FormControl<String>(validators: [Validators.required]),
               'description': FormControl<String>(),
               'category': FormControl<String>(),
-              'book': FormControl<String>(),
+              'book': FormControl<RecipeBook>(),
             },
           ),
           'ingredients': FormGroup(
@@ -56,7 +56,7 @@ class NewPageState extends State<NewPage> {
           )
         },
       );
-  Recipe recipe = Recipe('', '', '', [], [], 0);
+  Recipe recipe = Recipe('', '', '', '', [], [], 0, '');
 
   @override
   Widget build(BuildContext context) {
@@ -165,13 +165,18 @@ class NewPageState extends State<NewPage> {
                       recipe = Recipe(
                         details.value['name'],
                         '',
+                        details.value['book'],
                         details.value['description'] ?? '',
                         ingredients.value['items'],
                         instructions.value['steps'],
                         0,
+                        '',
                       );
                       break;
                     case 3:
+                      increase = 0;
+                      recipesService.upsertRecipe(recipe);
+                      //context.go('/');
                       // TO DO: Add logic to post to db
                       // Add to recipe collection
                       // Add id to users recipe array

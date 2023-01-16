@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
+import 'package:recipe_book/pages/new-recipe/new-recipe-book.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
@@ -42,9 +43,15 @@ class AppState extends State<App> {
         },
         routes: <RouteBase>[
           GoRoute(
-            path: 'new',
+            path: 'newRecipe',
             builder: (context, state) {
               return const NewPage();
+            },
+          ),
+          GoRoute(
+            path: 'newRecipeBook',
+            builder: (context, state) {
+              return const NewRecipeBookPage();
             },
           ),
         ],

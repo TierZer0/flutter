@@ -71,7 +71,7 @@ class MainViewState extends State<MainView> {
                 CustomNavBarItem(
                   label: 'New',
                   isActive: false,
-                  onPressed: () => context.go('/new'),
+                  onPressed: () => context.go('/newRecipe'),
                   icon: Icon(
                     Icons.add,
                     size: 35.0,
