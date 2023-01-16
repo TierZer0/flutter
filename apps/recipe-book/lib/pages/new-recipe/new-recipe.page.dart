@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/models/models.dart';
-import 'package:recipe_book/pages/new-recipe/details.step.dart';
-import 'package:recipe_book/pages/new-recipe/ingredients.step.dart';
-import 'package:recipe_book/pages/new-recipe/instructions.step.dart';
-import 'package:recipe_book/pages/new-recipe/save.step.dart';
+import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/pages/new-recipe/steps/details.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/ingredients.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/instructions.step.dart';
+import 'package:recipe_book/pages/new-recipe/steps/save.step.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../styles.dart';
@@ -56,12 +56,13 @@ class NewPageState extends State<NewPage> {
           )
         },
       );
-  Recipe recipe = Recipe('', '', '', [], [], 0);
+  Recipe recipe = Recipe('', '', '', '', [], [], 0, '');
 
   @override
   Widget build(BuildContext context) {
     final appModel = Provider.of<AppModel>(context);
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -90,6 +91,11 @@ class NewPageState extends State<NewPage> {
               AbstractControl<dynamic> details = formGroup.control('details');
               AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
               AbstractControl<dynamic> instructions = formGroup.control('instructions');
+
+              if (recipesService.recipeBook.name != '' &&
+                  details.value['book'] != recipesService.recipeBook.name) {
+                details.patchValue({'book': recipesService.recipeBook.name});
+              }
 
               return Stepper(
                 currentStep: _stepIndex,
@@ -165,17 +171,19 @@ class NewPageState extends State<NewPage> {
                       recipe = Recipe(
                         details.value['name'],
                         '',
+                        recipesService.recipeBook.id,
                         details.value['description'] ?? '',
                         ingredients.value['items'],
                         instructions.value['steps'],
                         0,
+                        '',
                       );
                       break;
                     case 3:
-                      // TO DO: Add logic to post to db
-                      // Add to recipe collection
-                      // Add id to users recipe array
-                      // Add id to recipe book if selected
+                      increase = 0;
+                      recipesService.upsertRecipe(recipe);
+                      recipesService.recipeBook = RecipeBook('', '', '', []);
+                      context.go('/');
                       break;
                   }
                   setState(() {

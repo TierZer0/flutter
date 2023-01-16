@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/models/recipe.models.dart';
 import 'package:ui/ui.dart';
 
 class DetailsStep extends StatelessWidget {
@@ -45,17 +48,13 @@ class DetailsStep extends StatelessWidget {
         const SizedBox(
           height: 25.0,
         ),
-        CustomReactiveAutocomplete(
+        CustomReactiveInput<String>(
+          inputAction: TextInputAction.next,
           formName: 'details.book',
-          optionsBuilder: (TextEditingValue value) {
-            return [];
-            // return _options.where((String option) {
-            //   return option.contains(value.text.toLowerCase());
-            // });
-          },
-          backgroundColor: theme.backgroundColor,
+          label: 'Select Recipe Book',
           textColor: (theme.textTheme.titleLarge?.color)!,
-          label: "Recipe Book",
+          onTap: (p0) => context.push('/newRecipeBook'),
+          readonly: true,
         ),
       ],
     );
