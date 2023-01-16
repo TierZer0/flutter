@@ -30,7 +30,6 @@ dependencies:
   go_router: ^5.2.4
   reactive_forms: ^14.1.0
   reactive_raw_autocomplete: ^0.5.0
-  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:

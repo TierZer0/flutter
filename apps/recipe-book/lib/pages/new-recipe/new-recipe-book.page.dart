@@ -10,7 +10,6 @@ import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
-import 'package:uuid/uuid.dart';
 
 class NewRecipeBookPage extends StatefulWidget {
   const NewRecipeBookPage({super.key});
