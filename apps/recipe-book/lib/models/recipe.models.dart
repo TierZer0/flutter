@@ -9,9 +9,16 @@ class RecipeBook {
 
   RecipeBook(this.id, this.name, this.category, this.recipes);
 
+  RecipeBook.fromJson(Map<String, dynamic> json)
+      : this(
+          json['id'],
+          json['name'],
+          json['category'],
+          json['recipes'],
+        );
+
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
       'category': category,
       'recipes': recipes,

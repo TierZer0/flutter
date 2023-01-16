@@ -48,7 +48,7 @@ class DetailsStep extends StatelessWidget {
         const SizedBox(
           height: 25.0,
         ),
-        CustomReactiveInput<RecipeBook>(
+        CustomReactiveInput<String>(
           inputAction: TextInputAction.next,
           formName: 'details.book',
           label: 'Select Recipe Book',

@@ -35,7 +35,7 @@ class NewPageState extends State<NewPage> {
               'name': FormControl<String>(validators: [Validators.required]),
               'description': FormControl<String>(),
               'category': FormControl<String>(),
-              'book': FormControl<RecipeBook>(),
+              'book': FormControl<String>(),
             },
           ),
           'ingredients': FormGroup(
@@ -62,6 +62,7 @@ class NewPageState extends State<NewPage> {
   Widget build(BuildContext context) {
     final appModel = Provider.of<AppModel>(context);
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -90,6 +91,11 @@ class NewPageState extends State<NewPage> {
               AbstractControl<dynamic> details = formGroup.control('details');
               AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
               AbstractControl<dynamic> instructions = formGroup.control('instructions');
+
+              if (recipesService.recipeBook.name != '' &&
+                  details.value['book'] != recipesService.recipeBook.name) {
+                details.patchValue({'book': recipesService.recipeBook.name});
+              }
 
               return Stepper(
                 currentStep: _stepIndex,
@@ -165,7 +171,7 @@ class NewPageState extends State<NewPage> {
                       recipe = Recipe(
                         details.value['name'],
                         '',
-                        details.value['book'],
+                        recipesService.recipeBook.id,
                         details.value['description'] ?? '',
                         ingredients.value['items'],
                         instructions.value['steps'],
@@ -176,11 +182,8 @@ class NewPageState extends State<NewPage> {
                     case 3:
                       increase = 0;
                       recipesService.upsertRecipe(recipe);
-                      //context.go('/');
-                      // TO DO: Add logic to post to db
-                      // Add to recipe collection
-                      // Add id to users recipe array
-                      // Add id to recipe book if selected
+                      recipesService.recipeBook = RecipeBook('', '', '', []);
+                      context.go('/');
                       break;
                   }
                   setState(() {

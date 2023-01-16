@@ -6,6 +6,7 @@ import 'package:recipe_book/models/user.models.dart';
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   String collection = 'users';
+  String userBookCollection = 'books';
 
   setUserTheme(bool value) {
     _db
@@ -23,11 +24,12 @@ class UserService {
     return _db.collection(collection).doc(authService.user.uid).get();
   }
 
-  Stream<DocumentSnapshot> get userStream {
+  Stream<QuerySnapshot> get userStream {
     return _db
         .collection('users')
         .doc(authService.user.uid)
-        .snapshots(includeMetadataChanges: true);
+        .collection(userBookCollection)
+        .snapshots();
   }
 
   get userRef {
@@ -37,10 +39,11 @@ class UserService {
   }
 
   createRecipeBook(RecipeBook recipeBook) async {
-    final _userRef = await userRef;
-    _userRef.update({
-      'books': FieldValue.arrayUnion([recipeBook.toMap()])
-    });
+    _db
+        .collection(collection)
+        .doc(authService.user.uid)
+        .collection(userBookCollection)
+        .add(recipeBook.toMap());
   }
 }
 
