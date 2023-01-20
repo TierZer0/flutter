@@ -1,18 +1,19 @@
 #!/bin/sh
 
-cd $CI_WORKSPACE
-
-git clone https://github.com/flutter/flutter.git --depth 1 -b stable $HOME/flutter
-export PATH="$PATH:$HOME/flutter/bin"
-
-flutter precache --ios
-
-flutter pub get
-
-HOMEBREW_NO_AUTO_UPDATE=1
-
+# Install CocoaPods using Homebrew.
 brew install cocoapods
 
-cd $CI_WORKSPACE/apps/recipes-book/ios && pod install
+# Install Flutter
+brew install --cask flutter
 
-exit 0
+# Run Flutter doctor
+flutter doctor
+
+# Get packages
+flutter packages get
+
+# Update generated files
+flutter pub run build_runner build
+
+# Build ios app
+flutter build ios --no-codesign
