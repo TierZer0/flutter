@@ -61,7 +61,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
           child: Column(
             children: [
               StreamBuilder<QuerySnapshot>(
-                stream: userService.userStream.cast(),
+                stream: userService.userBooksStream.cast(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Error');
@@ -163,7 +163,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
                                 [],
                               ),
                             ),
-                            label: "New Recipe Book",
+                            label: "Create Recipe Book",
                             internalPadding: const EdgeInsets.symmetric(
                               horizontal: 20.0,
                               vertical: 15.0,

@@ -24,7 +24,7 @@ class UserService {
     return _db.collection(collection).doc(authService.user.uid).get();
   }
 
-  Stream<QuerySnapshot> get userStream {
+  Stream<QuerySnapshot> get userBooksStream {
     return _db
         .collection('users')
         .doc(authService.user.uid)
@@ -44,6 +44,12 @@ class UserService {
         .doc(authService.user.uid)
         .collection(userBookCollection)
         .add(recipeBook.toMap());
+  }
+
+  createCategory(String category) async {
+    _db.collection(collection).doc(authService.user.uid).update({
+      'categories': FieldValue.arrayUnion([category])
+    });
   }
 }
 
