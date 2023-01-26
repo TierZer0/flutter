@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/user.service.dart';
@@ -29,6 +30,13 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
   FormGroup buildCategoryForm() => fb.group(
         <String, Object>{
           'name': FormControl<String>(validators: [Validators.required])
+        },
+      );
+
+  FormGroup buildRecipeBookForm() => fb.group(
+        <String, Object>{
+          'name': FormControl<String>(validators: [Validators.required]),
+          'category': FormControl<String>()
         },
       );
 
@@ -81,7 +89,7 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                   child: Text("Info"),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -167,8 +175,134 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                     ),
                   ),
                 ),
-                const Center(
-                  child: Text("Recipe Books"),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .42,
+                          child: StreamBuilder(
+                            stream: userService.userBooksStream.cast(),
+                            builder: (_, snapshot) {
+                              if (snapshot.hasData) {
+                                var items = snapshot.data!.docs;
+                                List<RecipeBook> books = [];
+                                for (var e in items) {
+                                  books.add(
+                                      RecipeBook(e.id, e['name'], e['category'], e['recipes']));
+                                }
+                                return ListView(
+                                  children: books.map((e) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0, horizontal: 20.0),
+                                      child: ListTile(
+                                        tileColor: theme.backgroundColor,
+                                        title: CustomText(
+                                          text: e.name,
+                                          fontSize: 30.0,
+                                          fontFamily: "Lato",
+                                          color: (theme.textTheme.titleLarge?.color)!,
+                                        ),
+                                        subtitle: CustomText(
+                                          text: e.category,
+                                          fontSize: 15.0,
+                                          fontFamily: "Lato",
+                                          color: (theme.textTheme.titleLarge?.color)!,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              }
+                              return const SizedBox(
+                                height: 0,
+                              );
+                            },
+                          ),
+                        ),
+                        ReactiveFormBuilder(
+                          form: buildRecipeBookForm,
+                          builder: (context, formGroup, child) {
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 25.0,
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: CustomText(
+                                    text: "New Recipe Book",
+                                    fontSize: 25.0,
+                                    fontFamily: "Lato",
+                                    color: (theme.textTheme.titleLarge?.color)!,
+                                    padding: const EdgeInsets.only(
+                                      left: 20.0,
+                                      bottom: 20.0,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: CustomReactiveInput(
+                                    inputAction: TextInputAction.next,
+                                    formName: 'name',
+                                    label: 'Name',
+                                    textColor: (theme.textTheme.titleLarge?.color)!,
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: CustomReactiveInput(
+                                    inputAction: TextInputAction.next,
+                                    formName: 'category',
+                                    label: 'Category',
+                                    textColor: (theme.textTheme.titleLarge?.color)!,
+                                  ),
+                                ),
+                                CustomButton(
+                                  buttonColor: formGroup.valid ? primaryColor : Colors.grey,
+                                  onTap: formGroup.valid
+                                      ? () {
+                                          userService.createRecipeBook(
+                                            RecipeBook(
+                                              '',
+                                              formGroup.control('name').value,
+                                              formGroup.control('category').value,
+                                              [],
+                                            ),
+                                          );
+                                          // userService.createCategory(
+                                          //   formGroup.control('name').value,
+                                          // );
+                                          formGroup.reset();
+                                        }
+                                      : null,
+                                  label: "Create Recipe Book",
+                                  internalPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: 15.0,
+                                  ),
+                                  externalPadding: const EdgeInsets.symmetric(
+                                    vertical: 20.0,
+                                    horizontal: 60.0,
+                                  ),
+                                  textStyle: GoogleFonts.lato(
+                                    color: darkThemeTextColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 Column(
                   children: [
