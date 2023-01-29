@@ -66,6 +66,11 @@ class AuthService {
         });
     return true;
   }
+
+  Future<bool> logout() async {
+    await _auth.signOut();
+    return true;
+  }
 }
 
 final AuthService authService = AuthService();

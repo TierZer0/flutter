@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
@@ -61,7 +62,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
           child: Column(
             children: [
               StreamBuilder<QuerySnapshot>(
-                stream: userService.userStream.cast(),
+                stream: userService.userBooksStream.cast(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return const Text('Error');
@@ -74,7 +75,16 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
                   var items = snapshot.data!.docs;
                   List<RecipeBook> books = [];
                   for (var e in items) {
-                    books.add(RecipeBook(e.id, e['name'], e['category'], e['recipes']));
+                    books.add(
+                      RecipeBook(
+                        e.id,
+                        e['name'],
+                        e['category'],
+                        e['recipes'],
+                        authService.user.uid,
+                        e['likes'],
+                      ),
+                    );
                   }
                   return SizedBox(
                     height: MediaQuery.of(context).size.height * .45,
@@ -161,9 +171,11 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
                                 formGroup.control('name').value,
                                 formGroup.control('category').value,
                                 [],
+                                authService.user.uid,
+                                0,
                               ),
                             ),
-                            label: "New Recipe Book",
+                            label: "Create Recipe Book",
                             internalPadding: const EdgeInsets.symmetric(
                               horizontal: 20.0,
                               vertical: 15.0,

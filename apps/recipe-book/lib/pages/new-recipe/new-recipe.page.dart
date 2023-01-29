@@ -8,6 +8,7 @@ import 'package:recipe_book/pages/new-recipe/steps/details.step.dart';
 import 'package:recipe_book/pages/new-recipe/steps/ingredients.step.dart';
 import 'package:recipe_book/pages/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/pages/new-recipe/steps/save.step.dart';
+import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
 
@@ -56,7 +57,7 @@ class NewPageState extends State<NewPage> {
           )
         },
       );
-  Recipe recipe = Recipe('', '', '', '', [], [], 0, '');
+  Recipe recipe = Recipe('', '', '', '', [], [], 0, '', authService.user.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +178,20 @@ class NewPageState extends State<NewPage> {
                         instructions.value['steps'],
                         0,
                         '',
+                        authService.user.uid,
                       );
                       break;
                     case 3:
                       increase = 0;
                       recipesService.upsertRecipe(recipe);
-                      recipesService.recipeBook = RecipeBook('', '', '', []);
+                      recipesService.recipeBook = RecipeBook(
+                        '',
+                        '',
+                        '',
+                        [],
+                        authService.user.uid,
+                        0,
+                      );
                       context.go('/');
                       break;
                   }

@@ -11,6 +11,13 @@ ThemeData buildLightTheme() {
         color: lightThemeTextColor,
       ),
     ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: darkThemeTextColor,
+      foregroundColor: lightThemeTextColor,
+    ),
+    tabBarTheme: const TabBarTheme(
+      labelColor: lightThemeTextColor,
+    ),
     shadowColor: Colors.grey.withOpacity(0.3),
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
@@ -71,6 +78,13 @@ ThemeData buildDarkTheme() {
       titleLarge: TextStyle(
         color: Color(0xFFB7B7B7),
       ),
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF090707),
+      foregroundColor: darkThemeTextColor,
+    ),
+    tabBarTheme: const TabBarTheme(
+      labelColor: darkThemeTextColor,
     ),
     shadowColor: Colors.transparent,
     inputDecorationTheme: const InputDecorationTheme(

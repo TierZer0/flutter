@@ -7,7 +7,7 @@ class CustomButton extends StatelessWidget {
   TextStyle textStyle;
   List<BoxShadow> boxShadows;
 
-  VoidCallback onTap;
+  VoidCallback? onTap;
   String label;
 
   CustomButton({

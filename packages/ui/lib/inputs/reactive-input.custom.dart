@@ -13,6 +13,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
   Color textColor;
   double fontSize;
   bool readonly;
+  bool obscureText;
 
   void Function(FormControl<T>)? onTap;
 
@@ -24,9 +25,10 @@ class CustomReactiveInput<T> extends StatelessWidget {
     required this.label,
     required this.textColor,
     this.fontSize = 20.0,
-    this.maxLines,
+    this.maxLines = 1,
     this.onTap,
     this.readonly = false,
+    this.obscureText = false,
   });
 
   @override
@@ -37,6 +39,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
       formControlName: formName,
       validationMessages: validationMessages,
       textInputAction: inputAction,
+      obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
         helperStyle: const TextStyle(height: 0.7),

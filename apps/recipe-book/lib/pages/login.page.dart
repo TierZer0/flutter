@@ -118,6 +118,7 @@ class LoginPageState extends State<LoginPage> {
                             inputAction: TextInputAction.done,
                             formName: 'password',
                             label: 'Password',
+                            obscureText: true,
                             textColor: lightThemeTextColor,
                             validationMessages: {
                               ValidationMessage.required: (_) => 'The password must not be empty',

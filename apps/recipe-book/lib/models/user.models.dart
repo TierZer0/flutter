@@ -6,12 +6,14 @@ class UserFB {
   Timestamp lastSeen;
   bool darkTheme;
   List<dynamic> likes;
+  List<dynamic> categories;
 
   UserFB(
     this.name,
     this.lastSeen,
     this.darkTheme,
     this.likes,
+    this.categories,
   );
 
   UserFB.fromJson(Map<String, dynamic> json)
@@ -20,6 +22,7 @@ class UserFB {
           json['lastSeen'],
           json['darkTheme'],
           json['likes'] ?? [],
+          json['categories'] ?? [],
         );
 
   Map<String, dynamic> toMap() {
