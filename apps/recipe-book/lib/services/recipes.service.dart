@@ -35,7 +35,15 @@ class RecipesService {
     });
   }
 
-  RecipeBook recipeBook = RecipeBook('', '', '', []);
+  getRecipesByUser(String userUid) {
+    return _db
+        .collection(recipesCollection)
+        .where('createdBy', isEqualTo: userUid)
+        .orderBy('likes')
+        .get();
+  }
+
+  RecipeBook recipeBook = RecipeBook('', '', '', [], authService.user.uid, 0);
 }
 
 final RecipesService recipesService = RecipesService();

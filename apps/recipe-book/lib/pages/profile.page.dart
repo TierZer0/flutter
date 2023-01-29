@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
@@ -85,8 +87,126 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
             body: TabBarView(
               controller: _tabController,
               children: [
-                const Center(
-                  child: Text("Info"),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: "Likes",
+                                  fontSize: 25.0,
+                                  fontFamily: "Lato",
+                                  color: (theme.textTheme.titleLarge?.color)!,
+                                  padding: const EdgeInsets.only(
+                                    top: 18.0,
+                                    left: 20.0,
+                                    bottom: 20.0,
+                                  ),
+                                ),
+                                CustomIconButton(
+                                  icon: const Icon(
+                                    Icons.navigate_next_outlined,
+                                    size: 25.0,
+                                  ),
+                                  onPressed: () {},
+                                  color: primaryColor,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 125.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                CustomText(
+                                  text: "Popular Recipes",
+                                  fontSize: 25.0,
+                                  fontFamily: "Lato",
+                                  color: (theme.textTheme.titleLarge?.color)!,
+                                  padding: const EdgeInsets.only(
+                                    top: 18.0,
+                                    left: 20.0,
+                                    bottom: 20.0,
+                                  ),
+                                ),
+                                CustomIconButton(
+                                  icon: const Icon(
+                                    Icons.navigate_next_outlined,
+                                    size: 25.0,
+                                  ),
+                                  onPressed: () {},
+                                  color: primaryColor,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 125.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                CustomText(
+                                  text: "Popular Recipe Books",
+                                  fontSize: 25.0,
+                                  fontFamily: "Lato",
+                                  color: (theme.textTheme.titleLarge?.color)!,
+                                  padding: const EdgeInsets.only(
+                                    top: 18.0,
+                                    left: 20.0,
+                                    bottom: 20.0,
+                                  ),
+                                ),
+                                CustomIconButton(
+                                  icon: const Icon(
+                                    Icons.navigate_next_outlined,
+                                    size: 25.0,
+                                  ),
+                                  onPressed: () {},
+                                  color: primaryColor,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 125.0,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height,
@@ -98,12 +218,17 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                           child: ListView(
                             children: data.categories
                                 .map(
-                                  (e) => ListTile(
-                                    title: CustomText(
-                                      text: e,
-                                      fontSize: 25.0,
-                                      fontFamily: "Lato",
-                                      color: (theme.textTheme.titleLarge?.color)!,
+                                  (e) => Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+                                    child: ListTile(
+                                      tileColor: theme.backgroundColor,
+                                      title: CustomText(
+                                        text: e,
+                                        fontSize: 25.0,
+                                        fontFamily: "Lato",
+                                        color: (theme.textTheme.titleLarge?.color)!,
+                                      ),
                                     ),
                                   ),
                                 )
@@ -190,7 +315,15 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                                 List<RecipeBook> books = [];
                                 for (var e in items) {
                                   books.add(
-                                      RecipeBook(e.id, e['name'], e['category'], e['recipes']));
+                                    RecipeBook(
+                                      e.id,
+                                      e['name'],
+                                      e['category'],
+                                      e['recipes'],
+                                      authService.user.uid,
+                                      e['likes'],
+                                    ),
+                                  );
                                 }
                                 return ListView(
                                   children: books.map((e) {
@@ -210,6 +343,27 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                                           fontSize: 15.0,
                                           fontFamily: "Lato",
                                           color: (theme.textTheme.titleLarge?.color)!,
+                                        ),
+                                        trailing: SizedBox(
+                                          width: 50.0,
+                                          child: Row(
+                                            children: [
+                                              CustomText(
+                                                text: e.likes.toString(),
+                                                fontSize: 18.0,
+                                                fontFamily: "Lato",
+                                                color: (theme.textTheme.titleLarge?.color)!,
+                                                padding: const EdgeInsets.only(
+                                                  right: 10.0,
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.favorite,
+                                                size: 25.0,
+                                                color: tertiaryColor,
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
@@ -269,15 +423,13 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
                                       ? () {
                                           userService.createRecipeBook(
                                             RecipeBook(
-                                              '',
-                                              formGroup.control('name').value,
-                                              formGroup.control('category').value,
-                                              [],
-                                            ),
+                                                '',
+                                                formGroup.control('name').value,
+                                                formGroup.control('category').value,
+                                                [],
+                                                authService.user.uid,
+                                                0),
                                           );
-                                          // userService.createCategory(
-                                          //   formGroup.control('name').value,
-                                          // );
                                           formGroup.reset();
                                         }
                                       : null,
@@ -370,92 +522,5 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
         );
       },
     );
-
-    // return SafeArea(
-    //   child: Material(
-    //       child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-    //     future: userService.getUser,
-    //     builder: (_, snapshot) {
-    //       if (snapshot.hasData) {
-    //         var data = snapshot.data!.data();
-    //         return Container(
-    //           padding: const EdgeInsets.only(
-    //             top: 20.0,
-    //           ),
-    //           color: theme.scaffoldBackgroundColor,
-    //           height: MediaQuery.of(context).size.height - 90.0,
-    //           width: MediaQuery.of(context).size.width,
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             mainAxisAlignment: MainAxisAlignment.start,
-    //             children: [
-    //               CustomText(
-    //                 text: data!['name'],
-    //                 fontSize: 35.0,
-    //                 padding: const EdgeInsets.only(left: 30.0),
-    //                 fontFamily: "Lato",
-    //                 color: (theme.textTheme.titleLarge?.color)!,
-    //               ),
-    //               Row(
-    //                 children: [
-    // CustomText(
-    //   text: "Dark Theme",
-    //   fontSize: 20.0,
-    //   padding: const EdgeInsets.only(left: 30.0),
-    //   fontFamily: "Lato",
-    //   color: (theme.textTheme.titleLarge?.color)!,
-    // ),
-    // Switch(
-    //   value: appModel.theme,
-    //   onChanged: (value) {
-    //     userService.setUserTheme(value);
-    //     setState(() {
-    //       appModel.theme = value;
-    //     });
-    //   },
-    // ),
-    //                 ],
-    //               ),
-    //               CustomButton(
-    //                 externalPadding: const EdgeInsets.only(right: 50.0, left: 30.0),
-    //                 internalPadding: const EdgeInsets.symmetric(
-    //                   vertical: 10.0,
-    //                   horizontal: 20.0,
-    //                 ),
-    //                 label: 'Logout',
-    //                 buttonColor: primaryColor,
-    //                 onTap: () {
-    // appModel.uid = '';
-    // appModel.theme = false;
-    // appModel.view = 'Home';
-    //                   ScaffoldMessenger.of(context).showSnackBar(
-    //                     const SnackBar(
-    //                       content: Text('Successfully Logged out'),
-    //                     ),
-    //                   );
-    //                 },
-    //                 textStyle: const TextStyle(
-    //                   fontSize: 20.0,
-    //                   color: lightThemeTextColor,
-    //                 ),
-    //               )
-    //             ],
-    //           ),
-    //         );
-    //       }
-    // return Container(
-    //   padding: const EdgeInsets.only(
-    //     top: 20.0,
-    //   ),
-    //   color: theme.scaffoldBackgroundColor,
-    //   height: MediaQuery.of(context).size.height - 90.0,
-    //   width: MediaQuery.of(context).size.width,
-    //   child: const Center(
-    //     child: CircularProgressIndicator(),
-    //   ),
-    // );
-    //     },
-    //   )),
-    // );
   }
 }

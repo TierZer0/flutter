@@ -6,8 +6,10 @@ class RecipeBook {
   String name;
   String category;
   List<dynamic> recipes;
+  String createdBy;
+  int likes;
 
-  RecipeBook(this.id, this.name, this.category, this.recipes);
+  RecipeBook(this.id, this.name, this.category, this.recipes, this.createdBy, this.likes);
 
   RecipeBook.fromJson(Map<String, dynamic> json)
       : this(
@@ -15,6 +17,8 @@ class RecipeBook {
           json['name'],
           json['category'],
           json['recipes'],
+          json['createdBy'],
+          json['likes'],
         );
 
   Map<String, dynamic> toMap() {
@@ -22,6 +26,8 @@ class RecipeBook {
       'name': name,
       'category': category,
       'recipes': recipes,
+      'createdBy': createdBy,
+      'likes': likes
     };
   }
 }
@@ -35,9 +41,19 @@ class Recipe {
   List<Ingredient> ingredients;
   int likes;
   String id;
+  String createdBy;
 
-  Recipe(this.title, this.category, this.recipeBook, this.description, this.ingredients,
-      this.instructions, this.likes, this.id);
+  Recipe(
+    this.title,
+    this.category,
+    this.recipeBook,
+    this.description,
+    this.ingredients,
+    this.instructions,
+    this.likes,
+    this.id,
+    this.createdBy,
+  );
 
   Recipe.fromJson(Map<String, dynamic> json)
       : this(
@@ -49,6 +65,7 @@ class Recipe {
           json['instructions'],
           json['likes'],
           json['id'],
+          json['createdBy'],
         );
 
   Map<String, dynamic> toMap() {
@@ -69,7 +86,8 @@ class Recipe {
       'description': description,
       'instrunctions': _instructions,
       'ingredients': _ingredients,
-      'likes': likes
+      'likes': likes,
+      'createdBy': createdBy
     };
   }
 
