@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData buildLightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
+    useMaterial3: true,
     canvasColor: Colors.transparent,
     backgroundColor: darkThemeTextColor,
     scaffoldBackgroundColor: darkThemeTextColor,
@@ -10,6 +11,11 @@ ThemeData buildLightTheme() {
       titleLarge: TextStyle(
         color: lightThemeTextColor,
       ),
+    ),
+    navigationBarTheme: const NavigationBarThemeData(
+      surfaceTintColor: darkThemeTextColor,
+      backgroundColor: darkThemeTextColor,
+      indicatorColor: primaryColor,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: darkThemeTextColor,
@@ -71,6 +77,7 @@ ThemeData buildLightTheme() {
 ThemeData buildDarkTheme() {
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
+    useMaterial3: true,
     canvasColor: Colors.transparent,
     backgroundColor: const Color(0xFF100F0F),
     scaffoldBackgroundColor: const Color(0xFF090707),
@@ -78,6 +85,11 @@ ThemeData buildDarkTheme() {
       titleLarge: TextStyle(
         color: Color(0xFFB7B7B7),
       ),
+    ),
+    navigationBarTheme: const NavigationBarThemeData(
+      surfaceTintColor: Color(0xFF090707),
+      backgroundColor: Color(0xFF090707),
+      indicatorColor: primaryColor,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF090707),
