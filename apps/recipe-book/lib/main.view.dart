@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/login.page.dart';
-import 'package:recipe_book/pages/profile.page.dart';
+import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 import 'package:go_router/go_router.dart';
@@ -24,14 +24,23 @@ class MainViewState extends State<MainView> {
     super.initState();
   }
 
-  var views = {
-    "Home": HomePage(),
-    "Profile": ProfilePage(),
-  };
+  // var views = {
+  //   "Home": HomePage(),
+  //   "Profile": ProfilePage(),
+  // };
+
+  var views = [
+    HomePage(),
+    Container(),
+    Container(),
+    ProfilePage(),
+  ];
 
   void changeView(String view, AppModel appModel) async {
     appModel.view = view;
   }
+
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -40,67 +49,58 @@ class MainViewState extends State<MainView> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: appModel.uid == '' ? LoginPage() : views[appModel.view],
-      bottomNavigationBar: appModel.uid != ''
-          ? CustomBottomNavBar(
-              height: 90,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              useMat3: true,
-              activeColor: tertiaryColor,
-              mat3Navs: [
-                CustomNavBarItem(
-                  label: 'Home',
-                  isActive: appModel.view == 'Home',
-                  onPressed: () => changeView('Home', appModel),
-                  icon: Icon(
-                    Icons.home_outlined,
-                    size: 35.0,
-                    color: textColor,
-                  ),
-                ),
-                CustomNavBarItem(
-                  label: 'Recipes',
-                  isActive: appModel.view == 'Recipes',
-                  onPressed: () => changeView('Recipes', appModel),
-                  icon: Icon(
-                    Icons.book_outlined,
-                    size: 35.0,
-                    color: textColor,
-                  ),
-                ),
-                CustomNavBarItem(
-                  label: 'New',
-                  isActive: false,
-                  onPressed: () => context.go('/newRecipe'),
-                  icon: Icon(
-                    Icons.add,
-                    size: 35.0,
-                    color: textColor,
-                  ),
-                ),
-                CustomNavBarItem(
-                  label: 'Favorites',
-                  isActive: appModel.view == 'Favorites',
-                  onPressed: () => changeView('Favorites', appModel),
-                  icon: Icon(
-                    Icons.favorite_outline,
-                    size: 35.0,
-                    color: textColor,
-                  ),
-                ),
-                CustomNavBarItem(
-                  label: 'Profile',
-                  isActive: appModel.view == 'Profile',
-                  onPressed: () => changeView('Profile', appModel),
-                  icon: Icon(
-                    Icons.person_outline_outlined,
-                    size: 35.0,
-                    color: textColor,
-                  ),
-                ),
-              ],
-            )
-          : null,
+      body: views[currentPageIndex],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        selectedIndex: currentPageIndex,
+        destinations: [
+          NavigationDestination(
+            icon: Icon(
+              Icons.home_outlined,
+              size: 35.0,
+              color: textColor,
+            ),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(
+              Icons.book_outlined,
+              size: 35.0,
+              color: textColor,
+            ),
+            label: 'Recipes',
+          ),
+          NavigationDestination(
+            icon: Icon(
+              Icons.favorite_outline,
+              size: 35.0,
+              color: textColor,
+            ),
+            label: 'Favorites',
+          ),
+          NavigationDestination(
+            icon: Icon(
+              Icons.person_outline_outlined,
+              size: 35.0,
+              color: textColor,
+            ),
+            label: 'Profile',
+          )
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: tertiaryColor,
+        onPressed: () => context.go('/newRecipe'),
+        child: const Icon(
+          Icons.add_outlined,
+          size: 40.0,
+        ),
+      ),
     );
   }
 }
