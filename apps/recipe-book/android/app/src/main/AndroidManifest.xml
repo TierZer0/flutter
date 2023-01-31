@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tierzero.recipe.recipe_book">
    <application
-        android:label="recipe_book"
+        android:label="Recipe Book"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
