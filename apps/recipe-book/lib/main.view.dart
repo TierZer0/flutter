@@ -95,7 +95,7 @@ class MainViewState extends State<MainView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: tertiaryColor,
-        onPressed: () {},
+        onPressed: () => context.go('/newRecipe'),
         child: const Icon(
           Icons.add_outlined,
           size: 40.0,
