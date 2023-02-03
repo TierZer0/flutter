@@ -5,7 +5,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:ui/ui.dart';
 
-class DetailsStep extends StatelessWidget {
+class DetailsStep extends StatefulWidget {
+  @override
+  DetailsStepState createState() => DetailsStepState();
+}
+
+class DetailsStepState extends State<DetailsStep> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

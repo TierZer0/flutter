@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
+import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe-book.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
@@ -36,6 +37,12 @@ class AppState extends State<App> {
 
   final GoRouter _router = GoRouter(
     routes: <RouteBase>[
+      GoRoute(
+        path: '/login',
+        builder: (context, state) {
+          return LoginPage();
+        },
+      ),
       GoRoute(
         path: '/',
         builder: (context, state) {

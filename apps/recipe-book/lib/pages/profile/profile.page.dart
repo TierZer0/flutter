@@ -31,7 +31,7 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
-          text: authService.user.displayName,
+          text: authService.user?.displayName,
           fontSize: 35.0,
           fontFamily: "Lato",
           color: (theme.textTheme.titleLarge?.color)!,

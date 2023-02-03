@@ -31,7 +31,7 @@ class BooksTab extends StatelessWidget {
                 e['name'],
                 e['category'],
                 e['recipes'],
-                authService.user.uid,
+                authService.user!.uid,
                 e['likes'],
               ),
             );

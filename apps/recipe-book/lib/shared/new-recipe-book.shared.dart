@@ -7,12 +7,17 @@ import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
-class NewRecipeBookShared extends StatelessWidget {
+class NewRecipeBookShared extends StatefulWidget {
   List<RecipeBook> books;
   FormGroup Function() formBuilder;
 
   NewRecipeBookShared({required this.books, required this.formBuilder});
 
+  @override
+  NewRecipeBookSharedState createState() => NewRecipeBookSharedState();
+}
+
+class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -25,7 +30,7 @@ class NewRecipeBookShared extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * .42,
               child: ListView(
-                children: books.map((e) {
+                children: widget.books.map((e) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                     child: ListTile(
@@ -69,8 +74,10 @@ class NewRecipeBookShared extends StatelessWidget {
               ),
             ),
             ReactiveFormBuilder(
-              form: formBuilder,
+              form: widget.formBuilder,
               builder: (context, formGroup, child) {
+                print(formGroup.valid);
+
                 return Column(
                   children: [
                     const SizedBox(
@@ -117,7 +124,7 @@ class NewRecipeBookShared extends StatelessWidget {
                                   formGroup.control('name').value,
                                   formGroup.control('category').value,
                                   [],
-                                  authService.user.uid,
+                                  authService.user!.uid,
                                   0,
                                 ),
                               );

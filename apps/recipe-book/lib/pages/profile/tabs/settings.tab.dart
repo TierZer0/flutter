@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/auth.service.dart';
@@ -58,6 +59,7 @@ class SettingsTabState extends State<SettingsTab> {
               appModel.uid = '';
               appModel.theme = false;
               appModel.view = 'Home';
+              context.go('/login');
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Successfully Logged out'),

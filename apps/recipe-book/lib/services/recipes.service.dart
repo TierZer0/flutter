@@ -27,7 +27,7 @@ class RecipesService {
     var postResult = await recipes.add(recipe);
     _db
         .collection('users')
-        .doc(authService.user.uid)
+        .doc(authService.user?.uid)
         .collection('books')
         .doc(recipe.recipeBook)
         .update({
@@ -43,7 +43,7 @@ class RecipesService {
         .get();
   }
 
-  RecipeBook recipeBook = RecipeBook('', '', '', [], authService.user.uid, 0);
+  RecipeBook recipeBook = RecipeBook('', '', '', [], authService.user!.uid, 0);
 }
 
 final RecipesService recipesService = RecipesService();

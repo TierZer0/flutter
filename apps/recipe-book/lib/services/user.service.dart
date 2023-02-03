@@ -9,31 +9,34 @@ class UserService {
   String userBookCollection = 'books';
 
   setUserTheme(bool value) {
+    if (!authService.hasUser) {
+      return;
+    }
     _db
         .collection(collection)
-        .doc(authService.user.uid)
+        .doc(authService.user?.uid)
         .set({'darkTheme': value}, SetOptions(merge: true));
   }
 
   get getUserTheme async {
-    var snapshot = await _db.collection(collection).doc(authService.user.uid).get();
+    var snapshot = await _db.collection(collection).doc(authService.user?.uid).get();
     return snapshot['darkTheme'];
   }
 
   get getUser {
-    return _db.collection(collection).doc(authService.user.uid).get();
+    return _db.collection(collection).doc(authService.user?.uid).get();
   }
 
   Stream<QuerySnapshot> get userBooksStream {
     return _db
         .collection('users')
-        .doc(authService.user.uid)
+        .doc(authService.user?.uid)
         .collection(userBookCollection)
         .snapshots();
   }
 
   get userRef {
-    return _db.collection(collection).doc(authService.user.uid).withConverter<UserFB>(
+    return _db.collection(collection).doc(authService.user?.uid).withConverter<UserFB>(
         fromFirestore: (snapshot, _) => UserFB.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toMap());
   }
@@ -41,13 +44,13 @@ class UserService {
   createRecipeBook(RecipeBook recipeBook) async {
     _db
         .collection(collection)
-        .doc(authService.user.uid)
+        .doc(authService.user?.uid)
         .collection(userBookCollection)
         .add(recipeBook.toMap());
   }
 
   createCategory(String category) async {
-    _db.collection(collection).doc(authService.user.uid).update({
+    _db.collection(collection).doc(authService.user?.uid).update({
       'categories': FieldValue.arrayUnion([category])
     });
   }

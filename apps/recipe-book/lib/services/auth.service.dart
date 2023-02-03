@@ -10,12 +10,14 @@ class AuthService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   AppModel appModel = AppModel();
 
-  get user => _auth.currentUser ?? appModel.uid;
+  User? get user {
+    return _auth.currentUser;
+  }
 
   Future emailSignIn(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      await updateUserData(user);
+      await updateUserData(user!);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -28,7 +30,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      await updateUserData(user);
+      await updateUserData(user!);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -46,7 +48,7 @@ class AuthService {
 
     try {
       await _auth.signInWithCredential(credential);
-      await updateUserData(user);
+      await updateUserData(user!);
       return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -54,7 +56,7 @@ class AuthService {
   }
 
   Future<bool> updateUserData(User user) async {
-    final ref = _db.collection('users').doc(user.uid);
+    final ref = _db.collection('users').doc(user?.uid);
     ref.update({
       'lastSeen': DateTime.now(),
     }).catchError((e) => {
@@ -70,6 +72,10 @@ class AuthService {
   Future<bool> logout() async {
     await _auth.signOut();
     return true;
+  }
+
+  get hasUser {
+    return authService.user != null ? true : false;
   }
 }
 
