@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 
 class UserFB {
   String name;
@@ -22,7 +21,7 @@ class UserFB {
           json['lastSeen'],
           json['darkTheme'],
           json['likes'] ?? [],
-          json['categories'] ?? [],
+          json['categories'],
         );
 
   Map<String, dynamic> toMap() {

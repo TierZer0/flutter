@@ -8,12 +8,10 @@ import 'package:recipe_book/shared/new-recipe-book.shared.dart';
 class BooksTab extends StatelessWidget {
   BooksTab({super.key});
 
-  FormGroup buildRecipeBookForm() => fb.group(
-        <String, Object>{
-          'name': FormControl<String>(validators: [Validators.required]),
-          'category': FormControl<String>()
-        },
-      );
+  final form = FormGroup({
+    'name': FormControl<String>(value: '', validators: [Validators.required]),
+    'category': FormControl<String>(value: '')
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,10 @@ class BooksTab extends StatelessWidget {
             );
           }
           return NewRecipeBookShared(
+            onTap: (item) => {},
             books: books,
-            formBuilder: buildRecipeBookForm,
+            // formBuilder: buildRecipeBookForm,
+            form: form,
           );
         }
         return Container(

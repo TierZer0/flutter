@@ -9,9 +9,10 @@ import 'package:ui/ui.dart';
 
 class NewRecipeBookShared extends StatefulWidget {
   List<RecipeBook> books;
-  FormGroup Function() formBuilder;
+  FormGroup form;
+  Function(dynamic) onTap;
 
-  NewRecipeBookShared({required this.books, required this.formBuilder});
+  NewRecipeBookShared({super.key, required this.books, required this.form, required this.onTap});
 
   @override
   NewRecipeBookSharedState createState() => NewRecipeBookSharedState();
@@ -34,6 +35,7 @@ class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                     child: ListTile(
+                      onTap: () => widget.onTap(e),
                       tileColor: theme.backgroundColor,
                       title: CustomText(
                         text: e.name,
@@ -73,83 +75,83 @@ class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
                 }).toList(),
               ),
             ),
-            ReactiveFormBuilder(
-              form: widget.formBuilder,
-              builder: (context, formGroup, child) {
-                print(formGroup.valid);
-
-                return Column(
-                  children: [
-                    const SizedBox(
-                      height: 25.0,
+            ReactiveForm(
+              formGroup: widget.form,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 25.0,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: CustomText(
+                      text: "New Recipe Book",
+                      fontSize: 25.0,
+                      fontFamily: "Lato",
+                      color: (theme.textTheme.titleLarge?.color)!,
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        bottom: 20.0,
+                      ),
                     ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: CustomText(
-                        text: "New Recipe Book",
-                        fontSize: 25.0,
-                        fontFamily: "Lato",
-                        color: (theme.textTheme.titleLarge?.color)!,
-                        padding: const EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 20.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: CustomReactiveInput(
+                      inputAction: TextInputAction.next,
+                      formName: 'name',
+                      label: 'Name',
+                      textColor: (theme.textTheme.titleLarge?.color)!,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: CustomReactiveInput(
+                      inputAction: TextInputAction.next,
+                      formName: 'category',
+                      label: 'Category',
+                      textColor: (theme.textTheme.titleLarge?.color)!,
+                    ),
+                  ),
+                  ReactiveFormConsumer(
+                    builder: (context, form, child) {
+                      return CustomButton(
+                        buttonColor: form.valid ? primaryColor : Colors.grey,
+                        onTap: form.valid
+                            ? () {
+                                userService.createRecipeBook(
+                                  RecipeBook(
+                                    '',
+                                    form.control('name').value,
+                                    form.control('category').value,
+                                    [],
+                                    authService.user!.uid,
+                                    0,
+                                  ),
+                                );
+                                form.reset();
+                              }
+                            : null,
+                        label: "Create Recipe Book",
+                        internalPadding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 15.0,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                      child: CustomReactiveInput(
-                        inputAction: TextInputAction.next,
-                        formName: 'name',
-                        label: 'Name',
-                        textColor: (theme.textTheme.titleLarge?.color)!,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                      child: CustomReactiveInput(
-                        inputAction: TextInputAction.next,
-                        formName: 'category',
-                        label: 'Category',
-                        textColor: (theme.textTheme.titleLarge?.color)!,
-                      ),
-                    ),
-                    CustomButton(
-                      buttonColor: formGroup.valid ? primaryColor : Colors.grey,
-                      onTap: formGroup.valid
-                          ? () {
-                              userService.createRecipeBook(
-                                RecipeBook(
-                                  '',
-                                  formGroup.control('name').value,
-                                  formGroup.control('category').value,
-                                  [],
-                                  authService.user!.uid,
-                                  0,
-                                ),
-                              );
-                              formGroup.reset();
-                            }
-                          : null,
-                      label: "Create Recipe Book",
-                      internalPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 15.0,
-                      ),
-                      externalPadding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 60.0,
-                      ),
-                      textStyle: GoogleFonts.lato(
-                        color: darkThemeTextColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            )
+                        externalPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 60.0,
+                        ),
+                        textStyle: GoogleFonts.lato(
+                          color: darkThemeTextColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.0,
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

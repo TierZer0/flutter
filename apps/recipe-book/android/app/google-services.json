@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:85740521128:android:e58a9b4ff54e4776c1249d",
+        "mobilesdk_app_id": "1:85740521128:android:3b8e9f6023aa844bc1249d",
         "android_client_info": {
-          "package_name": "tierzero.recipe.recipe_book"
+          "package_name": "com.tierzero.recipe_book"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "85740521128-q1707694rfbgrnpb9uvqqklcemp5n6h3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "85740521128-esrs3f8tj83rk3gbsvt38qj3f55jceno.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tierzero.recipe.recipeBook"
+              }
             }
           ]
         }

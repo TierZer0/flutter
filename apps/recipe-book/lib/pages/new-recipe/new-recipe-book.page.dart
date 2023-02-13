@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/shared/new-recipe-book.shared.dart';
 import 'package:ui/ui.dart';
@@ -21,16 +24,15 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
     super.initState();
   }
 
-  FormGroup buildForm() => fb.group(
-        <String, Object>{
-          'name': FormControl<String>(validators: [Validators.required]),
-          'category': FormControl<String>()
-        },
-      );
+  final form = FormGroup({
+    'name': FormControl<String>(value: '', validators: [Validators.required]),
+    'category': FormControl<String>(value: '')
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appModel = Provider.of<AppModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -80,8 +82,12 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
                 );
               }
               return NewRecipeBookShared(
+                onTap: (item) {
+                  appModel.recipeBook = item;
+                  context.pop();
+                },
                 books: books,
-                formBuilder: buildForm,
+                form: form,
               );
             },
           ),

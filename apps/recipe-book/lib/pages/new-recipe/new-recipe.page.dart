@@ -51,7 +51,7 @@ class NewPageState extends State<NewPage> {
             {
               'title': FormControl<String>(validators: [Validators.required]),
               'order': FormControl<int>(),
-              'description': FormControl<String>(validators: [Validators.required]),
+              'description': FormControl<String>(),
               'steps': FormControl<List<Instruction>>(value: []),
             },
           )
@@ -61,8 +61,8 @@ class NewPageState extends State<NewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = Provider.of<AppModel>(context);
     final theme = Theme.of(context);
+    final appModel = Provider.of<AppModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,9 +92,9 @@ class NewPageState extends State<NewPage> {
             AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
             AbstractControl<dynamic> instructions = formGroup.control('instructions');
 
-            if (recipesService.recipeBook.name != '' &&
-                details.value['book'] != recipesService.recipeBook.name) {
-              details.patchValue({'book': recipesService.recipeBook.name});
+            if (appModel.recipeBook.name != '' &&
+                details.value['book'] != appModel.recipeBook.name) {
+              details.patchValue({'book': appModel.recipeBook.name});
             }
 
             return Stepper(
@@ -171,8 +171,8 @@ class NewPageState extends State<NewPage> {
                     }
                     recipe = Recipe(
                       details.value['name'],
-                      '',
-                      recipesService.recipeBook.id,
+                      details.value['category'] ?? '',
+                      appModel.recipeBook.id,
                       details.value['description'] ?? '',
                       ingredients.value['items'],
                       instructions.value['steps'],
@@ -184,7 +184,7 @@ class NewPageState extends State<NewPage> {
                   case 3:
                     increase = 0;
                     recipesService.upsertRecipe(recipe);
-                    recipesService.recipeBook = RecipeBook(
+                    appModel.recipeBook = RecipeBook(
                       '',
                       '',
                       '',

@@ -41,6 +41,15 @@ class UserService {
         toFirestore: (user, _) => user.toMap());
   }
 
+  get categories async {
+    List<String> categories = [];
+    await userRef.get().then((snapshot) {
+      categories = List<String>.from(snapshot['categories']);
+    });
+    print(categories);
+    return categories;
+  }
+
   createRecipeBook(RecipeBook recipeBook) async {
     _db
         .collection(collection)
