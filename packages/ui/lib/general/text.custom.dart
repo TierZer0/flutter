@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomText extends StatelessWidget {
-  String text;
+  String? text;
   double fontSize;
   FontWeight fontWeight;
   Color color;
@@ -28,7 +28,7 @@ class CustomText extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Text(
-        text,
+        text ?? '',
         style: overrideStyle
             ? textStyle
             : TextStyle(

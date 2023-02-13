@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tierzero.recipe.recipe_book">
+    package="com.tierzero.recipe_book">
    <application
         android:label="Recipe Book"
         android:name="${applicationName}"

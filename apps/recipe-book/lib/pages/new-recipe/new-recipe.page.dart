@@ -51,18 +51,18 @@ class NewPageState extends State<NewPage> {
             {
               'title': FormControl<String>(validators: [Validators.required]),
               'order': FormControl<int>(),
-              'description': FormControl<String>(validators: [Validators.required]),
+              'description': FormControl<String>(),
               'steps': FormControl<List<Instruction>>(value: []),
             },
           )
         },
       );
-  Recipe recipe = Recipe('', '', '', '', [], [], 0, '', authService.user.uid);
+  Recipe recipe = Recipe('', '', '', '', [], [], 0, '', authService.user!.uid);
 
   @override
   Widget build(BuildContext context) {
-    final appModel = Provider.of<AppModel>(context);
     final theme = Theme.of(context);
+    final appModel = Provider.of<AppModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -85,166 +85,165 @@ class NewPageState extends State<NewPage> {
       ),
       body: Container(
         color: theme.scaffoldBackgroundColor,
-        child: SingleChildScrollView(
-          child: ReactiveFormBuilder(
-            form: buildForm,
-            builder: (context, formGroup, child) {
-              AbstractControl<dynamic> details = formGroup.control('details');
-              AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
-              AbstractControl<dynamic> instructions = formGroup.control('instructions');
+        child: ReactiveFormBuilder(
+          form: buildForm,
+          builder: (context, formGroup, child) {
+            AbstractControl<dynamic> details = formGroup.control('details');
+            AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
+            AbstractControl<dynamic> instructions = formGroup.control('instructions');
 
-              if (recipesService.recipeBook.name != '' &&
-                  details.value['book'] != recipesService.recipeBook.name) {
-                details.patchValue({'book': recipesService.recipeBook.name});
-              }
+            if (appModel.recipeBook.name != '' &&
+                details.value['book'] != appModel.recipeBook.name) {
+              details.patchValue({'book': appModel.recipeBook.name});
+            }
 
-              return Stepper(
-                currentStep: _stepIndex,
-                onStepCancel: () {
-                  if (_stepIndex > 0) {
-                    setState(() {
-                      _stepIndex -= 1;
-                    });
-                  }
-                },
-                onStepTapped: (index) {
-                  if (index > _stepIndex) return;
-
+            return Stepper(
+              type: StepperType.horizontal,
+              currentStep: _stepIndex,
+              onStepCancel: () {
+                if (_stepIndex > 0) {
                   setState(() {
-                    _stepIndex = index;
+                    _stepIndex -= 1;
                   });
-                },
-                onStepContinue: () {
-                  formGroup.markAsUntouched();
-                  var increase = 1;
-                  switch (_stepIndex) {
-                    case 0:
-                      if (formGroup.control('details').invalid) {
-                        increase = 0;
-                        formGroup.control('details').markAllAsTouched();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: tertiaryColor,
-                            content: Text(
-                              'Fill out the login form',
-                              style: TextStyle(
-                                color: darkThemeTextColor,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      break;
-                    case 1:
-                      if (formGroup.control('ingredients').value['items'].length <= 0) {
-                        increase = 0;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: tertiaryColor,
-                            content: Text(
-                              'Atleast one ingredient is required',
-                              style: TextStyle(
-                                color: darkThemeTextColor,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      break;
-                    case 2:
-                      if (formGroup.control('instructions').value['steps'].length <= 0) {
-                        increase = 0;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: tertiaryColor,
-                            content: Text(
-                              'Atleast one instruction step is required',
-                              style: TextStyle(
-                                color: darkThemeTextColor,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      recipe = Recipe(
-                        details.value['name'],
-                        '',
-                        recipesService.recipeBook.id,
-                        details.value['description'] ?? '',
-                        ingredients.value['items'],
-                        instructions.value['steps'],
-                        0,
-                        '',
-                        authService.user.uid,
-                      );
-                      break;
-                    case 3:
+                }
+              },
+              onStepTapped: (index) {
+                if (index > _stepIndex) return;
+
+                setState(() {
+                  _stepIndex = index;
+                });
+              },
+              onStepContinue: () {
+                formGroup.markAsUntouched();
+                var increase = 1;
+                switch (_stepIndex) {
+                  case 0:
+                    if (formGroup.control('details').invalid) {
                       increase = 0;
-                      recipesService.upsertRecipe(recipe);
-                      recipesService.recipeBook = RecipeBook(
-                        '',
-                        '',
-                        '',
-                        [],
-                        authService.user.uid,
-                        0,
+                      formGroup.control('details').markAllAsTouched();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: tertiaryColor,
+                          content: Text(
+                            'Fill out the login form',
+                            style: TextStyle(
+                              color: darkThemeTextColor,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
                       );
-                      context.go('/');
-                      break;
-                  }
-                  setState(() {
-                    _stepIndex += increase;
-                  });
-                },
-                steps: [
-                  Step(
-                    title: CustomText(
-                      text: "Details",
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
-                    ),
-                    content: DetailsStep(),
+                    }
+                    break;
+                  case 1:
+                    if (formGroup.control('ingredients').value['items'].length <= 0) {
+                      increase = 0;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: tertiaryColor,
+                          content: Text(
+                            'Atleast one ingredient is required',
+                            style: TextStyle(
+                              color: darkThemeTextColor,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    break;
+                  case 2:
+                    if (formGroup.control('instructions').value['steps'].length <= 0) {
+                      increase = 0;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: tertiaryColor,
+                          content: Text(
+                            'Atleast one instruction step is required',
+                            style: TextStyle(
+                              color: darkThemeTextColor,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    recipe = Recipe(
+                      details.value['name'],
+                      details.value['category'] ?? '',
+                      appModel.recipeBook.id,
+                      details.value['description'] ?? '',
+                      ingredients.value['items'],
+                      instructions.value['steps'],
+                      0,
+                      '',
+                      authService.user!.uid,
+                    );
+                    break;
+                  case 3:
+                    increase = 0;
+                    recipesService.upsertRecipe(recipe);
+                    appModel.recipeBook = RecipeBook(
+                      '',
+                      '',
+                      '',
+                      [],
+                      authService.user!.uid,
+                      0,
+                    );
+                    context.go('/');
+                    break;
+                }
+                setState(() {
+                  _stepIndex += increase;
+                });
+              },
+              steps: [
+                Step(
+                  title: CustomText(
+                    text: "Details",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: (theme.textTheme.titleLarge?.color)!,
                   ),
-                  Step(
-                    title: CustomText(
-                      text: "Ingredients",
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
-                    ),
-                    content: IngredientsStep(formGroup),
+                  content: DetailsStep(),
+                ),
+                Step(
+                  title: CustomText(
+                    text: "Ingredients",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: (theme.textTheme.titleLarge?.color)!,
                   ),
-                  Step(
-                    title: CustomText(
-                      text: "Instructions",
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
-                    ),
-                    content: InstructionsStep(formGroup),
+                  content: IngredientsStep(formGroup),
+                ),
+                Step(
+                  title: CustomText(
+                    text: "Instructions",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: (theme.textTheme.titleLarge?.color)!,
                   ),
-                  Step(
-                    title: CustomText(
-                      text: "Save",
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
+                  content: InstructionsStep(formGroup),
+                ),
+                Step(
+                  title: CustomText(
+                    text: "Save",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: (theme.textTheme.titleLarge?.color)!,
+                  ),
+                  content: Align(
+                    alignment: Alignment.topLeft,
+                    child: SaveStep(
+                      recipe,
                     ),
-                    content: Align(
-                      alignment: Alignment.topLeft,
-                      child: SaveStep(
-                        recipe,
-                      ),
-                    ),
-                  )
-                ],
-              );
-            },
-          ),
+                  ),
+                )
+              ],
+            );
+          },
         ),
       ),
     );

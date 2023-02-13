@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 
 class AppModel extends ChangeNotifier {
@@ -28,6 +29,14 @@ class AppModel extends ChangeNotifier {
   set theme(bool value) {
     _theme = value;
     appPreferences.setCurrentTheme(value);
+    notifyListeners();
+  }
+
+  //CURRENT RECIPE BOOK state
+  RecipeBook _recipeBook = RecipeBook('', '', '', [], '', 0);
+  RecipeBook get recipeBook => _recipeBook;
+  set recipeBook(RecipeBook book) {
+    _recipeBook = book;
     notifyListeners();
   }
 }
