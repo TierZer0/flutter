@@ -24,7 +24,7 @@ class CategoriesTab extends StatelessWidget {
       future: userService.getUser,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
-          var data = UserFB.fromJson(snapshot.data!.data()!);
+          var data = UserModel.fromFirestore(snapshot.data!, SnapshotOptions());
           return SizedBox(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
@@ -33,7 +33,7 @@ class CategoriesTab extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .5,
                     child: ListView(
-                      children: data.categories
+                      children: data.categories!
                           .map(
                             (e) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),

@@ -8,7 +8,7 @@ import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class NewRecipeBookShared extends StatefulWidget {
-  List<RecipeBook> books;
+  List<RecipeBookModel> books;
   FormGroup form;
   Function(dynamic) onTap;
 
@@ -120,13 +120,12 @@ class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
                         onTap: form.valid
                             ? () {
                                 userService.createRecipeBook(
-                                  RecipeBook(
-                                    '',
-                                    form.control('name').value,
-                                    form.control('category').value,
-                                    [],
-                                    authService.user!.uid,
-                                    0,
+                                  RecipeBookModel(
+                                    name: form.control('name').value,
+                                    category: form.control('category').value,
+                                    recipes: [],
+                                    createdBy: authService.user!.uid,
+                                    likes: 0,
                                   ),
                                 );
                                 form.reset();

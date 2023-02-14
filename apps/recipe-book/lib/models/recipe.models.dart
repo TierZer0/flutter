@@ -1,33 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
 
-class RecipeBook {
-  String id;
-  String name;
-  String category;
-  List<dynamic> recipes;
-  String createdBy;
-  int likes;
+class RecipeBookModel {
+  String? id;
+  String? name;
+  String? category;
+  List<dynamic>? recipes;
+  String? createdBy;
+  int? likes;
 
-  RecipeBook(this.id, this.name, this.category, this.recipes, this.createdBy, this.likes);
+  RecipeBookModel({
+    this.id,
+    this.name,
+    this.category,
+    this.recipes,
+    this.createdBy,
+    this.likes,
+  });
 
-  RecipeBook.fromJson(Map<String, dynamic> json)
-      : this(
-          json['id'],
-          json['name'],
-          json['category'],
-          json['recipes'],
-          json['createdBy'],
-          json['likes'],
-        );
+  factory RecipeBookModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return RecipeBookModel(
+      id: data?['id'],
+      name: data?['name'],
+      category: data?['category'],
+      recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
+      createdBy: data?['createdBy'],
+      likes: data?['likes'],
+    );
+  }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toFirestore() {
     return {
-      'name': name,
-      'category': category,
-      'recipes': recipes,
-      'createdBy': createdBy,
-      'likes': likes
+      if (name != null) "name": name,
+      if (category != null) "category": category,
+      if (recipes != null) "recipes": recipes,
+      if (createdBy != null) "createdBy": createdBy,
+      if (likes != null) "likes": likes,
     };
   }
 }

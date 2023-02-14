@@ -172,7 +172,7 @@ class NewPageState extends State<NewPage> {
                     recipe = Recipe(
                       details.value['name'],
                       details.value['category'] ?? '',
-                      appModel.recipeBook.id,
+                      appModel.recipeBook.id!,
                       details.value['description'] ?? '',
                       ingredients.value['items'],
                       instructions.value['steps'],
@@ -184,13 +184,12 @@ class NewPageState extends State<NewPage> {
                   case 3:
                     increase = 0;
                     recipesService.upsertRecipe(recipe);
-                    appModel.recipeBook = RecipeBook(
-                      '',
-                      '',
-                      '',
-                      [],
-                      authService.user!.uid,
-                      0,
+                    appModel.recipeBook = RecipeBookModel(
+                      name: '',
+                      category: '',
+                      recipes: [],
+                      createdBy: authService.user?.uid,
+                      likes: 0,
                     );
                     context.go('/');
                     break;

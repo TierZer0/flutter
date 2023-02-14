@@ -7,11 +7,11 @@ class RecipesService {
   String recipesCollection = 'recipes';
   String usersCollection = 'users';
 
-  recipeRef(Recipe recipe) {
-    return _db.collection(recipesCollection).doc(recipe.id).withConverter<Recipe>(
-        fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-        toFirestore: (recipe, _) => recipe.toMap());
-  }
+  // recipeRef(Recipe recipe) {
+  //   return _db.collection(recipesCollection).doc(recipe.id).withConverter<Recipe>(
+  //       fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
+  //       toFirestore: (recipe, _) => recipe.toMap());
+  // }
 
   get recipesRef {
     return _db.collection(recipesCollection).withConverter<Recipe>(

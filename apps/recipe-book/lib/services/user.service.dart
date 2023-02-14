@@ -36,26 +36,31 @@ class UserService {
   }
 
   get userRef {
-    return _db.collection(collection).doc(authService.user?.uid).withConverter<UserFB>(
-        fromFirestore: (snapshot, _) => UserFB.fromJson(snapshot.data()!),
-        toFirestore: (user, _) => user.toMap());
+    return _db.collection(collection).doc(authService.user?.uid).withConverter(
+          fromFirestore: UserModel.fromFirestore,
+          toFirestore: (UserModel user, _) => user.toFirestore(),
+        );
+  }
+
+  get recipeBooksRef {
+    return _db.collection(collection).doc(authService.user?.uid).collection('books').withConverter(
+          fromFirestore: RecipeBookModel.fromFirestore,
+          toFirestore: (RecipeBookModel book, _) => book.toFirestore(),
+        );
   }
 
   get categories async {
-    List<String> categories = [];
-    await userRef.get().then((snapshot) {
-      categories = List<String>.from(snapshot['categories']);
-    });
-    print(categories);
-    return categories;
+    final userSnap = await userRef.get();
+    final user = userSnap.data();
+    return user.categories;
   }
 
-  createRecipeBook(RecipeBook recipeBook) async {
+  createRecipeBook(RecipeBookModel recipeBook) async {
     _db
         .collection(collection)
         .doc(authService.user?.uid)
         .collection(userBookCollection)
-        .add(recipeBook.toMap());
+        .add(recipeBook.toFirestore());
   }
 
   createCategory(String category) async {
