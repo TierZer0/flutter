@@ -45,9 +45,14 @@ class InstructionsStep extends StatelessWidget {
               group.markAllAsTouched();
               return;
             }
-            List<Instruction> steps = group.value['steps'] ?? [];
+            List<InstructionModel> steps = group.value['steps'] ?? [];
             steps.add(
-                Instruction(group.value['title'], steps.length + 1, group.value['description']));
+              InstructionModel(
+                title: group.value['title'],
+                order: steps.length + 1,
+                description: group.value['description'],
+              ),
+            );
             formGroup.control('instructions').patchValue({'steps': steps});
           },
           label: "Add Instruction",
@@ -70,7 +75,7 @@ class InstructionsStep extends StatelessWidget {
                 .control('instructions')
                 .value['steps']
                 .map<Widget>(
-                  (Instruction item) => CustomText(
+                  (InstructionModel item) => CustomText(
                     text: item.toString(),
                     fontSize: 20.0,
                     fontFamily: "Lato",

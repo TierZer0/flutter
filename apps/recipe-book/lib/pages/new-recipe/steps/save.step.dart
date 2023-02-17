@@ -3,7 +3,7 @@ import 'package:recipe_book/models/recipe.models.dart';
 import 'package:ui/ui.dart';
 
 class SaveStep extends StatelessWidget {
-  Recipe recipe;
+  RecipeModel recipe;
 
   SaveStep(this.recipe);
 

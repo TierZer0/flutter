@@ -91,9 +91,12 @@ class IngredientsStep extends StatelessWidget {
               group.markAllAsTouched();
               return;
             }
-            List<Ingredient> items = group.value['items'] ?? [];
-            items
-                .add(Ingredient(group.value['item'], group.value['quantity'], group.value['unit']));
+            List<IngredientModel> items = group.value['items'] ?? [];
+            items.add(IngredientModel(
+              item: group.value['item'],
+              quantity: group.value['quantity'],
+              unit: group.value['unit'],
+            ));
             formGroup.control('ingredients').patchValue({'items': items});
           },
           label: "Add Ingredient",
@@ -116,7 +119,7 @@ class IngredientsStep extends StatelessWidget {
                 .control('ingredients')
                 .value['items']
                 .map<Widget>(
-                  (Ingredient item) => CustomText(
+                  (IngredientModel item) => CustomText(
                     text: item.toString(),
                     fontSize: 20.0,
                     fontFamily: "Lato",
