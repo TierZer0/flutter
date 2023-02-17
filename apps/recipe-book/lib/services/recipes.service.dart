@@ -7,19 +7,14 @@ class RecipesService {
   String recipesCollection = 'recipes';
   String usersCollection = 'users';
 
-  recipeRef(Recipe recipe) {
-    return _db.collection(recipesCollection).doc(recipe.id).withConverter<Recipe>(
-        fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-        toFirestore: (recipe, _) => recipe.toMap());
-  }
-
   get recipesRef {
-    return _db.collection(recipesCollection).withConverter<Recipe>(
-        fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-        toFirestore: (recipe, _) => recipe.toMap());
+    return _db.collection(recipesCollection).withConverter(
+          fromFirestore: RecipeModel.fromFirestore,
+          toFirestore: (RecipeModel recipe, _) => recipe.toFirestore(),
+        );
   }
 
-  upsertRecipe(Recipe recipe) async {
+  upsertRecipe(RecipeModel recipe) async {
     //TODO
     //Handle editing existing
 

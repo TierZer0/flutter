@@ -6,7 +6,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/shared/new-recipe-book.shared.dart';
 import 'package:ui/ui.dart';
@@ -68,16 +67,16 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
               }
 
               var items = snapshot.data!.docs;
-              List<RecipeBook> books = [];
+              List<RecipeBookModel> books = [];
               for (var e in items) {
                 books.add(
-                  RecipeBook(
-                    e.id,
-                    e['name'],
-                    e['category'],
-                    e['recipes'],
-                    authService.user!.uid,
-                    e['likes'],
+                  RecipeBookModel(
+                    id: e.id,
+                    name: e['name'],
+                    category: e['category'],
+                    recipes: e['recipes'],
+                    createdBy: authService.user!.uid,
+                    likes: e['likes'],
                   ),
                 );
               }

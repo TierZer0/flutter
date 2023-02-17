@@ -33,9 +33,15 @@ class AppModel extends ChangeNotifier {
   }
 
   //CURRENT RECIPE BOOK state
-  RecipeBook _recipeBook = RecipeBook('', '', '', [], '', 0);
-  RecipeBook get recipeBook => _recipeBook;
-  set recipeBook(RecipeBook book) {
+  RecipeBookModel _recipeBook = RecipeBookModel(
+    name: '',
+    category: '',
+    recipes: [],
+    createdBy: '',
+    likes: 0,
+  );
+  RecipeBookModel get recipeBook => _recipeBook;
+  set recipeBook(RecipeBookModel book) {
     _recipeBook = book;
     notifyListeners();
   }

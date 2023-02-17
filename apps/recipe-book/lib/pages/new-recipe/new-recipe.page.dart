@@ -44,7 +44,7 @@ class NewPageState extends State<NewPage> {
               'item': FormControl<String>(validators: [Validators.required]),
               'quantity': FormControl<String>(validators: [Validators.required]),
               'unit': FormControl<String>(validators: [Validators.required]),
-              'items': FormControl<List<Ingredient>>(value: []),
+              'items': FormControl<List<IngredientModel>>(value: []),
             },
           ),
           'instructions': FormGroup(
@@ -52,12 +52,22 @@ class NewPageState extends State<NewPage> {
               'title': FormControl<String>(validators: [Validators.required]),
               'order': FormControl<int>(),
               'description': FormControl<String>(),
-              'steps': FormControl<List<Instruction>>(value: []),
+              'steps': FormControl<List<InstructionModel>>(value: []),
             },
           )
         },
       );
-  Recipe recipe = Recipe('', '', '', '', [], [], 0, '', authService.user!.uid);
+
+  RecipeModel recipe = RecipeModel(
+    title: '',
+    category: '',
+    recipeBook: '',
+    description: '',
+    instructions: [],
+    ingredients: [],
+    likes: 0,
+    createdBy: authService.user!.uid,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -169,28 +179,26 @@ class NewPageState extends State<NewPage> {
                         ),
                       );
                     }
-                    recipe = Recipe(
-                      details.value['name'],
-                      details.value['category'] ?? '',
-                      appModel.recipeBook.id,
-                      details.value['description'] ?? '',
-                      ingredients.value['items'],
-                      instructions.value['steps'],
-                      0,
-                      '',
-                      authService.user!.uid,
+                    recipe = RecipeModel(
+                      title: details.value['name'],
+                      category: details.value['category'] ?? '',
+                      recipeBook: appModel.recipeBook.id!,
+                      description: details.value['description'] ?? '',
+                      ingredients: ingredients.value['items'],
+                      instructions: instructions.value['steps'],
+                      likes: 0,
+                      createdBy: authService.user!.uid,
                     );
                     break;
                   case 3:
                     increase = 0;
                     recipesService.upsertRecipe(recipe);
-                    appModel.recipeBook = RecipeBook(
-                      '',
-                      '',
-                      '',
-                      [],
-                      authService.user!.uid,
-                      0,
+                    appModel.recipeBook = RecipeBookModel(
+                      name: '',
+                      category: '',
+                      recipes: [],
+                      createdBy: authService.user?.uid,
+                      likes: 0,
                     );
                     context.go('/');
                     break;

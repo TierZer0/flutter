@@ -21,16 +21,16 @@ class BooksTab extends StatelessWidget {
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           var items = snapshot.data!.docs;
-          List<RecipeBook> books = [];
+          List<RecipeBookModel> books = [];
           for (var e in items) {
             books.add(
-              RecipeBook(
-                e.id,
-                e['name'],
-                e['category'],
-                e['recipes'],
-                authService.user!.uid,
-                e['likes'],
+              RecipeBookModel(
+                id: e.id,
+                name: e['name'],
+                category: e['category'],
+                recipes: e['recipes'],
+                createdBy: authService.user!.uid,
+                likes: e['likes'],
               ),
             );
           }
