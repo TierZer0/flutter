@@ -35,6 +35,7 @@ class CustomBottomNavBar extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
+                        splashColor: useMat3 ? Colors.transparent : Colors.grey,
                         onTap: item.onPressed,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,14 +43,15 @@ class CustomBottomNavBar extends StatelessWidget {
                             AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0,
-                                vertical: 5.0,
+                                horizontal: 15.0,
+                                vertical: 0.0,
                               ),
+                              margin: const EdgeInsets.only(bottom: 5.0),
                               decoration: BoxDecoration(
                                 color: item.isActive ? activeColor : Colors.transparent,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(
-                                    20.0,
+                                    35.0,
                                   ),
                                 ),
                               ),
@@ -57,9 +59,9 @@ class CustomBottomNavBar extends StatelessWidget {
                             ),
                             CustomText(
                               text: item.label,
-                              fontSize: 15.0,
+                              fontSize: 12.0,
                               fontFamily: "Lato",
-                              color: (theme.textTheme.titleLarge?.color)!,
+                              color: theme.colorScheme.onBackground,
                             )
                           ],
                         ),

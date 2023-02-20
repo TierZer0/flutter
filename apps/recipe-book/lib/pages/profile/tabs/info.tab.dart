@@ -25,7 +25,7 @@ class InfoTab extends StatelessWidget {
                       text: "Likes",
                       fontSize: 25.0,
                       fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
+                      color: theme.colorScheme.onBackground,
                       padding: const EdgeInsets.only(
                         top: 18.0,
                         left: 20.0,
@@ -62,7 +62,7 @@ class InfoTab extends StatelessWidget {
                       text: "Popular Recipes",
                       fontSize: 25.0,
                       fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
+                      color: theme.colorScheme.onBackground,
                       padding: const EdgeInsets.only(
                         top: 18.0,
                         left: 20.0,
@@ -99,7 +99,7 @@ class InfoTab extends StatelessWidget {
                       text: "Popular Recipe Books",
                       fontSize: 25.0,
                       fontFamily: "Lato",
-                      color: (theme.textTheme.titleLarge?.color)!,
+                      color: theme.colorScheme.onBackground,
                       padding: const EdgeInsets.only(
                         top: 18.0,
                         left: 20.0,

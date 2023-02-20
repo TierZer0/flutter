@@ -43,7 +43,11 @@ class UserService {
   }
 
   get recipeBooksRef {
-    return _db.collection(collection).doc(authService.user?.uid).collection('books').withConverter(
+    return _db
+        .collection(collection)
+        .doc(authService.user?.uid)
+        .collection(userBookCollection)
+        .withConverter(
           fromFirestore: RecipeBookModel.fromFirestore,
           toFirestore: (RecipeBookModel book, _) => book.toFirestore(),
         );
@@ -55,15 +59,36 @@ class UserService {
     return user.categories;
   }
 
+  deleteRecipeBook(String id) {
+    // Add check for recipes in book
+    _db
+        .collection(collection)
+        .doc(authService.user?.uid)
+        .collection(userBookCollection)
+        .doc(id)
+        .delete();
+  }
+
   createRecipeBook(RecipeBookModel recipeBook) async {
     _db
         .collection(collection)
         .doc(authService.user?.uid)
         .collection(userBookCollection)
-        .add(recipeBook.toFirestore());
+        .doc(recipeBook.id ?? null)
+        .set(recipeBook.toFirestore());
   }
 
-  createCategory(String category) async {
+  deleteCategory(String category) {
+    _db.collection(collection).doc(authService.user?.uid).update({
+      'categories': FieldValue.arrayRemove([category]),
+    });
+  }
+
+  createCategory({required String category, String? oldCategory = ''}) async {
+    if (oldCategory != '') {
+      deleteCategory(oldCategory!);
+      //find and update references to old category
+    }
     _db.collection(collection).doc(authService.user?.uid).update({
       'categories': FieldValue.arrayUnion([category])
     });

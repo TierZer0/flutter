@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
+import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +16,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+  AppPreferences appPreferences = AppPreferences();
+
   @override
   void initState() {
     super.initState();

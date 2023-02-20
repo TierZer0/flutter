@@ -7,14 +7,19 @@ import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
-class CategoriesTab extends StatelessWidget {
-  CategoriesTab({super.key});
+class CategoriesTab extends StatefulWidget {
+  CategoriesTabState createState() => CategoriesTabState();
+}
 
-  FormGroup buildCategoryForm() => fb.group(
-        <String, Object>{
-          'name': FormControl<String>(validators: [Validators.required])
-        },
-      );
+class CategoriesTabState extends State<CategoriesTab> {
+  final formGroup = FormGroup({
+    'name': FormControl<String>(validators: [Validators.required]),
+    'prevName': FormControl<String>(),
+  });
+
+  reload() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,9 @@ class CategoriesTab extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * .5,
                     child: ListView(
                       children: data.categories!
@@ -38,12 +46,48 @@ class CategoriesTab extends StatelessWidget {
                             (e) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                               child: ListTile(
-                                tileColor: theme.backgroundColor,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 5.0,
+                                  horizontal: 15.0,
+                                ),
+                                tileColor: theme.colorScheme.surface,
                                 title: CustomText(
                                   text: e,
                                   fontSize: 25.0,
                                   fontFamily: "Lato",
-                                  color: (theme.textTheme.titleLarge?.color)!,
+                                  color: theme.colorScheme.onBackground,
+                                ),
+                                trailing: SizedBox(
+                                  width: 50.0,
+                                  child: Row(
+                                    children: [
+                                      PopupMenuButton(
+                                        elevation: 5.0,
+                                        itemBuilder: (context) => <PopupMenuEntry>[
+                                          PopupMenuItem(
+                                            child: Text(
+                                              'Edit',
+                                            ),
+                                            onTap: () {
+                                              formGroup.patchValue({
+                                                'name': e,
+                                                'prevName': e,
+                                              });
+                                            },
+                                          ),
+                                          PopupMenuItem(
+                                            child: Text(
+                                              'Delete',
+                                            ),
+                                            onTap: () {
+                                              userService.deleteCategory(e);
+                                              reload();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -51,66 +95,61 @@ class CategoriesTab extends StatelessWidget {
                           .toList(),
                     ),
                   ),
-                  ReactiveFormBuilder(
-                    form: buildCategoryForm,
-                    builder: (context, formGroup, child) {
-                      return Column(
-                        children: [
-                          const SizedBox(
-                            height: 25.0,
+                  ReactiveForm(
+                    formGroup: formGroup,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 25.0,
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: CustomText(
+                            text: "New Category",
+                            fontSize: 25.0,
+                            fontFamily: "Lato",
+                            color: theme.colorScheme.onBackground,
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              bottom: 20.0,
+                            ),
                           ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: CustomText(
-                              text: "New Category",
-                              fontSize: 25.0,
-                              fontFamily: "Lato",
-                              color: (theme.textTheme.titleLarge?.color)!,
-                              padding: const EdgeInsets.only(
-                                left: 20.0,
-                                bottom: 20.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                          child: CustomReactiveInput(
+                            inputAction: TextInputAction.done,
+                            formName: 'name',
+                            label: 'Name',
+                            textColor: theme.colorScheme.onBackground,
+                          ),
+                        ),
+                        ReactiveFormConsumer(
+                          builder: (context, form, child) {
+                            return ElevatedButton(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+                                child: CustomText(
+                                  text: "Create Category",
+                                  fontSize: 20.0,
+                                  fontFamily: "Lato",
+                                  color: theme.colorScheme.onBackground,
+                                ),
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                            ),
-                            child: CustomReactiveInput(
-                              inputAction: TextInputAction.next,
-                              formName: 'name',
-                              label: 'Name',
-                              textColor: (theme.textTheme.titleLarge?.color)!,
-                            ),
-                          ),
-                          CustomButton(
-                            buttonColor: formGroup.valid ? primaryColor : Colors.grey,
-                            onTap: formGroup.valid
-                                ? () {
-                                    userService.createCategory(
-                                      formGroup.control('name').value,
-                                    );
-                                    formGroup.reset();
-                                  }
-                                : null,
-                            label: "Create Category",
-                            internalPadding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 15.0,
-                            ),
-                            externalPadding: const EdgeInsets.symmetric(
-                              vertical: 20.0,
-                              horizontal: 60.0,
-                            ),
-                            textStyle: GoogleFonts.lato(
-                              color: darkThemeTextColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                              onPressed: form.invalid
+                                  ? null
+                                  : () {
+                                      userService.createCategory(
+                                        category: form.control('name').value,
+                                      );
+                                      form.reset();
+                                      reload();
+                                    },
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

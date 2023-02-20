@@ -19,7 +19,7 @@ class InstructionsStep extends StatelessWidget {
           formName: 'instructions.title',
           inputAction: TextInputAction.next,
           label: 'Title',
-          textColor: (theme.textTheme.titleLarge?.color)!,
+          textColor: theme.colorScheme.onBackground,
           validationMessages: {
             ValidationMessage.required: (_) => 'The Instruction title must not be empty',
           },
@@ -31,7 +31,7 @@ class InstructionsStep extends StatelessWidget {
           formName: 'instructions.description',
           inputAction: TextInputAction.next,
           label: 'Description',
-          textColor: (theme.textTheme.titleLarge?.color)!,
+          textColor: theme.colorScheme.onBackground,
           validationMessages: {
             ValidationMessage.required: (_) => 'The Instruction description must not be empty',
           },
@@ -79,7 +79,7 @@ class InstructionsStep extends StatelessWidget {
                     text: item.toString(),
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                 )
                 .toList(),

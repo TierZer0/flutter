@@ -21,7 +21,7 @@ class IngredientsStep extends StatelessWidget {
           formName: 'ingredients.item',
           inputAction: TextInputAction.next,
           label: 'Ingredient',
-          textColor: (theme.textTheme.titleLarge?.color)!,
+          textColor: theme.colorScheme.onBackground,
           validationMessages: {
             ValidationMessage.required: (_) => 'The Ingredient must not be empty',
           },
@@ -38,7 +38,7 @@ class IngredientsStep extends StatelessWidget {
                 formName: 'ingredients.quantity',
                 inputAction: TextInputAction.next,
                 label: 'Quanity',
-                textColor: (theme.textTheme.titleLarge?.color)!,
+                textColor: theme.colorScheme.onBackground,
                 validationMessages: {
                   ValidationMessage.required: (_) => 'The Quantity must not be empty',
                 },
@@ -56,7 +56,7 @@ class IngredientsStep extends StatelessWidget {
                     text: "Unit",
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                 ),
                 formControlName: 'ingredients.unit',
@@ -73,7 +73,7 @@ class IngredientsStep extends StatelessWidget {
                           text: item,
                           fontSize: 20.0,
                           fontFamily: "Lato",
-                          color: (theme.textTheme.titleLarge?.color)!,
+                          color: theme.colorScheme.onBackground,
                         ),
                       ),
                     )
@@ -123,7 +123,7 @@ class IngredientsStep extends StatelessWidget {
                     text: item.toString(),
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                 )
                 .toList(),

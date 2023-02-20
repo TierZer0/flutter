@@ -36,6 +36,15 @@ class AppState extends State<App> {
   }
 
   final GoRouter _router = GoRouter(
+    initialLocation: '/login',
+    redirect: (BuildContext context, GoRouterState state) {
+      final appModel = Provider.of<AppModel>(context);
+      if (appModel.uid == '') {
+        return '/login';
+      } else {
+        return '/';
+      }
+    },
     routes: <RouteBase>[
       GoRoute(
         path: '/login',

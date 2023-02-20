@@ -26,7 +26,6 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    final appModel = Provider.of<AppModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +33,7 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
           text: authService.user?.displayName,
           fontSize: 35.0,
           fontFamily: "Lato",
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         elevation: 0,
         bottom: TabBar(
