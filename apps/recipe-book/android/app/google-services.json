@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "85740521128-of077l6foqstgtjip1i38f5lirk949du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tierzero.recipe_book",
+            "certificate_hash": "abbbeba92ff04ad2c8fd3970f9dfd21b98f5872d"
+          }
+        },
+        {
           "client_id": "85740521128-q1707694rfbgrnpb9uvqqklcemp5n6h3.apps.googleusercontent.com",
           "client_type": 3
         }

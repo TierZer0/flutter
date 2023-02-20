@@ -82,7 +82,7 @@ class NewPageState extends State<NewPage> {
           text: "Create A New Recipe",
           fontSize: 25.0,
           fontWeight: FontWeight.w500,
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         leading: CustomIconButton(
           icon: const Icon(
@@ -90,7 +90,7 @@ class NewPageState extends State<NewPage> {
             size: 30,
           ),
           onPressed: () => context.go('/'),
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
       ),
       body: Container(
@@ -213,7 +213,7 @@ class NewPageState extends State<NewPage> {
                     text: "Details",
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                   content: DetailsStep(),
                 ),
@@ -222,7 +222,7 @@ class NewPageState extends State<NewPage> {
                     text: "Ingredients",
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                   content: IngredientsStep(formGroup),
                 ),
@@ -231,7 +231,7 @@ class NewPageState extends State<NewPage> {
                     text: "Instructions",
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                   content: InstructionsStep(formGroup),
                 ),
@@ -240,7 +240,7 @@ class NewPageState extends State<NewPage> {
                     text: "Save",
                     fontSize: 20.0,
                     fontFamily: "Lato",
-                    color: (theme.textTheme.titleLarge?.color)!,
+                    color: theme.colorScheme.onBackground,
                   ),
                   content: Align(
                     alignment: Alignment.topLeft,

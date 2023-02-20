@@ -40,7 +40,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
           text: "Create or Select a Recipe Book",
           fontSize: 25.0,
           fontWeight: FontWeight.w500,
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         leading: CustomIconButton(
           icon: const Icon(
@@ -48,7 +48,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
             size: 30,
           ),
           onPressed: () => context.pop(),
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
       ),
       body: Container(

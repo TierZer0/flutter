@@ -53,14 +53,14 @@ class HomePageState extends State<HomePage> {
                 fontSize: 35.0,
                 padding: const EdgeInsets.only(left: 30.0),
                 fontFamily: "Lato",
-                color: (theme.textTheme.titleLarge?.color)!,
+                color: theme.colorScheme.onBackground,
               ),
               CustomText(
                 text: "What do you want to cook today?",
                 fontSize: 20.0,
                 padding: const EdgeInsets.only(left: 30.0),
                 fontFamily: "Lato",
-                color: (theme.textTheme.titleLarge?.color)!,
+                color: theme.colorScheme.onBackground,
               ),
               CustomInput(
                 padding: const EdgeInsets.symmetric(
@@ -90,7 +90,7 @@ class HomePageState extends State<HomePage> {
                 fontSize: 25.0,
                 padding: const EdgeInsets.only(left: 30.0),
                 fontFamily: "Lato",
-                color: (theme.textTheme.titleLarge?.color)!,
+                color: theme.colorScheme.onBackground,
               ),
               SizedBox(
                 height: 175,
@@ -105,7 +105,7 @@ class HomePageState extends State<HomePage> {
                       .map(
                         (item) => buildTrendingCard(
                           item,
-                          theme.backgroundColor,
+                          theme.colorScheme.surface,
                           theme.shadowColor,
                           (theme.textTheme.titleLarge?.color)!,
                           context,

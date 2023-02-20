@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/pages/home.page.dart';
-import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:recipe_book/styles.dart';
-import 'package:ui/ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ui/ui.dart';
 
 class MainView extends StatefulWidget {
-  // ThemeData theme;
-  // AppModel appModel;
-
-  // MainView(this.theme, this.appModel);
-
   @override
   MainViewState createState() => MainViewState();
 }
@@ -24,11 +18,6 @@ class MainViewState extends State<MainView> {
     super.initState();
   }
 
-  // var views = {
-  //   "Home": HomePage(),
-  //   "Profile": ProfilePage(),
-  // };
-
   var views = [
     HomePage(),
     Container(),
@@ -36,65 +25,113 @@ class MainViewState extends State<MainView> {
     ProfilePage(),
   ];
 
-  void changeView(String view, AppModel appModel) async {
-    appModel.view = view;
-  }
-
   int currentPageIndex = 0;
+  navPressed(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final appModel = Provider.of<AppModel>(context);
     final textColor = (Theme.of(context).textTheme.titleLarge?.color)!;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: views[currentPageIndex],
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        destinations: [
-          NavigationDestination(
+      // bottomNavigationBar: NavigationBar(
+      //   onDestinationSelected: (int index) {
+      //     print(index);
+      // setState(() {
+      //   currentPageIndex = index;
+      // });
+      //   },
+      //   selectedIndex: currentPageIndex,
+      //   destinations: <Widget>[
+      //     NavigationDestination(
+      // icon: Icon(
+      //   Icons.home_outlined,
+      //   size: 35.0,
+      //   color: textColor,
+      // ),
+      //       label: 'Home',
+      //     ),
+      //     NavigationDestination(
+      //       icon: Icon(
+      //         Icons.book_outlined,
+      //         size: 35.0,
+      //         color: textColor,
+      //       ),
+      //       label: 'Recipes',
+      //     ),
+      //     NavigationDestination(
+      //       icon: Icon(
+      //         Icons.favorite_outline,
+      //         size: 35.0,
+      //         color: textColor,
+      //       ),
+      //       label: 'Favorites',
+      //     ),
+      //     NavigationDestination(
+      //       icon: Icon(
+      //         Icons.person_outline_outlined,
+      //         size: 35.0,
+      //         color: textColor,
+      //       ),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      // ),
+      bottomNavigationBar: CustomBottomNavBar(
+        height: 85,
+        activeColor: primaryColor,
+        useMat3: true,
+        mat3Navs: <CustomNavBarItem>[
+          CustomNavBarItem(
+            label: 'Home',
             icon: Icon(
               Icons.home_outlined,
               size: 35.0,
               color: textColor,
             ),
-            label: 'Home',
+            isActive: currentPageIndex == 0,
+            onPressed: () => navPressed(0),
           ),
-          NavigationDestination(
+          CustomNavBarItem(
+            label: 'Books',
             icon: Icon(
               Icons.book_outlined,
               size: 35.0,
               color: textColor,
             ),
-            label: 'Recipes',
+            isActive: currentPageIndex == 1,
+            onPressed: () => navPressed(1),
           ),
-          NavigationDestination(
+          CustomNavBarItem(
+            label: 'Favorites',
             icon: Icon(
               Icons.favorite_outline,
               size: 35.0,
               color: textColor,
             ),
-            label: 'Favorites',
+            isActive: currentPageIndex == 2,
+            onPressed: () => navPressed(2),
           ),
-          NavigationDestination(
+          CustomNavBarItem(
+            label: 'Profile',
             icon: Icon(
               Icons.person_outline_outlined,
               size: 35.0,
               color: textColor,
             ),
-            label: 'Profile',
+            isActive: currentPageIndex == 3,
+            onPressed: () => navPressed(3),
           )
         ],
       ),
+      body: views[currentPageIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: tertiaryColor,
+        backgroundColor: secondaryColor,
         onPressed: () => context.go('/newRecipe'),
         child: const Icon(
           Icons.add_outlined,

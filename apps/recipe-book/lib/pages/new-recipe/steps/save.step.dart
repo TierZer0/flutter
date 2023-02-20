@@ -18,7 +18,7 @@ class SaveStep extends StatelessWidget {
           fontSize: 25.0,
           fontWeight: FontWeight.w700,
           fontFamily: "Lato",
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         const SizedBox(
           height: 25.0,
@@ -28,7 +28,7 @@ class SaveStep extends StatelessWidget {
           fontSize: 20.0,
           fontWeight: FontWeight.w700,
           fontFamily: "Lato",
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         SizedBox(
           height: 100.0,
@@ -46,7 +46,7 @@ class SaveStep extends StatelessWidget {
           fontSize: 20.0,
           fontWeight: FontWeight.w700,
           fontFamily: "Lato",
-          color: (theme.textTheme.titleLarge?.color)!,
+          color: theme.colorScheme.onBackground,
         ),
         SizedBox(
           height: 100.0,

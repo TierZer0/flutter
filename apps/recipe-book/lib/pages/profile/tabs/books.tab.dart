@@ -10,7 +10,8 @@ class BooksTab extends StatelessWidget {
 
   final form = FormGroup({
     'name': FormControl<String>(value: '', validators: [Validators.required]),
-    'category': FormControl<String>(value: '')
+    'category': FormControl<String>(value: ''),
+    'id': FormControl<String>(),
   });
 
   @override
