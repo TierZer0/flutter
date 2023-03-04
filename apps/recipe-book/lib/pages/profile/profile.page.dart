@@ -34,8 +34,12 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
           fontSize: 35.0,
           fontFamily: "Lato",
           color: theme.colorScheme.onBackground,
+          padding: EdgeInsets.only(
+            bottom: 40.0,
+          ),
         ),
         elevation: 0,
+        toolbarHeight: 85.0,
         bottom: TabBar(
           indicatorColor: primaryColor,
           controller: _tabController,

@@ -26,17 +26,21 @@ ThemeData buildLightTheme() {
       surface: elevatedLightColor,
       onSurface: lowerDarkColor,
     ),
+    cardTheme: CardTheme(
+      surfaceTintColor: elevatedLightColor,
+      elevation: 2,
+    ),
     scaffoldBackgroundColor: lightColor,
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         color: lightThemeTextColor,
       ),
     ),
-    // navigationBarTheme: const NavigationBarThemeData(
-    //   surfaceTintColor: lightColor,
-    //   backgroundColor: lightColor,
-    //   indicatorColor: primaryColor,
-    // ),
+    navigationBarTheme: const NavigationBarThemeData(
+      surfaceTintColor: lightColor,
+      backgroundColor: lightColor,
+      indicatorColor: primaryColor,
+    ),
     // appBarTheme: const AppBarTheme(
     //   backgroundColor: lightColor,
     //   foregroundColor: lightThemeTextColor,
@@ -44,6 +48,9 @@ ThemeData buildLightTheme() {
     // tabBarTheme: const TabBarTheme(
     //   labelColor: lightThemeTextColor,
     // ),
+    chipTheme: ChipThemeData(
+      selectedColor: primaryColor,
+    ),
     shadowColor: Colors.grey.withOpacity(0.3),
     inputDecorationTheme: const InputDecorationTheme(
       labelStyle: TextStyle(
@@ -116,17 +123,24 @@ ThemeData buildDarkTheme() {
       surface: elevatedDarkColor,
       onSurface: darkText,
     ),
+    cardTheme: CardTheme(
+      surfaceTintColor: elevatedDarkColor,
+      elevation: 0,
+    ),
     scaffoldBackgroundColor: lowerDarkColor,
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         color: darkText,
       ),
     ),
-    // navigationBarTheme: const NavigationBarThemeData(
-    //   surfaceTintColor: lowerDarkColor,
-    //   backgroundColor: lowerDarkColor,
-    //   indicatorColor: primaryColor,
-    // ),
+    chipTheme: ChipThemeData(
+      selectedColor: primaryColor,
+    ),
+    navigationBarTheme: const NavigationBarThemeData(
+      surfaceTintColor: lowerDarkColor,
+      backgroundColor: lowerDarkColor,
+      indicatorColor: primaryColor,
+    ),
     // appBarTheme: const AppBarTheme(
     //   backgroundColor: lowerDarkColor,
     //   foregroundColor: darkText,

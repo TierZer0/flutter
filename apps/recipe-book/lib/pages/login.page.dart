@@ -39,7 +39,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appModel = Provider.of<AppModel>(context);
+    // final appModel = Provider.of<AppModel>(context);
     return Material(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -175,8 +175,8 @@ class LoginPageState extends State<LoginPage> {
                                       SnackBar(content: Text(value)),
                                     );
                                   } else {
+                                    context.read<AppModel>().uid = value.uid;
                                     context.go('/');
-                                    appModel.uid = value.uid;
                                   }
                                 },
                               );
@@ -210,8 +210,8 @@ class LoginPageState extends State<LoginPage> {
                                     SnackBar(content: Text(value)),
                                   );
                                 } else {
+                                  context.read<AppModel>().uid = value.uid;
                                   context.go('/');
-                                  appModel.uid = value.uid;
                                 }
                               });
                             },

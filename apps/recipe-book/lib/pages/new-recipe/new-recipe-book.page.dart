@@ -25,13 +25,14 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
 
   final form = FormGroup({
     'name': FormControl<String>(value: '', validators: [Validators.required]),
-    'category': FormControl<String>(value: '')
+    'category': FormControl<String>(value: ''),
+    'id': FormControl<String>(),
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final appModel = Provider.of<AppModel>(context);
+    // final appModel = Provider.of<AppModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -82,7 +83,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
               }
               return NewRecipeBookShared(
                 onTap: (item) {
-                  appModel.recipeBook = item;
+                  context.read<AppModel>().recipeBook = item;
                   context.pop();
                 },
                 books: books,

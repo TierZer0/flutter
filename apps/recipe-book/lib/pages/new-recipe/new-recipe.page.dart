@@ -72,7 +72,7 @@ class NewPageState extends State<NewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final appModel = Provider.of<AppModel>(context);
+    // final appModel = Provider.of<AppModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -84,14 +84,14 @@ class NewPageState extends State<NewPage> {
           fontWeight: FontWeight.w500,
           color: theme.colorScheme.onBackground,
         ),
-        leading: CustomIconButton(
-          icon: const Icon(
-            Icons.arrow_back_outlined,
-            size: 30,
-          ),
-          onPressed: () => context.go('/'),
-          color: theme.colorScheme.onBackground,
-        ),
+        // leading: CustomIconButton(
+        //   icon: const Icon(
+        //     Icons.arrow_back_outlined,
+        //     size: 30,
+        //   ),
+        //   onPressed: () => context.go('/'),
+        //   color: theme.colorScheme.onBackground,
+        // ),
       ),
       body: Container(
         color: theme.scaffoldBackgroundColor,
@@ -102,9 +102,9 @@ class NewPageState extends State<NewPage> {
             AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
             AbstractControl<dynamic> instructions = formGroup.control('instructions');
 
-            if (appModel.recipeBook.name != '' &&
-                details.value['book'] != appModel.recipeBook.name) {
-              details.patchValue({'book': appModel.recipeBook.name});
+            if (context.read<AppModel>().recipeBook.name != '' &&
+                details.value['book'] != context.read<AppModel>().recipeBook.name) {
+              details.patchValue({'book': context.read<AppModel>().recipeBook.name});
             }
 
             return Stepper(
@@ -182,7 +182,7 @@ class NewPageState extends State<NewPage> {
                     recipe = RecipeModel(
                       title: details.value['name'],
                       category: details.value['category'] ?? '',
-                      recipeBook: appModel.recipeBook.id!,
+                      recipeBook: context.read<AppModel>().recipeBook.id!,
                       description: details.value['description'] ?? '',
                       ingredients: ingredients.value['items'],
                       instructions: instructions.value['steps'],
@@ -193,7 +193,7 @@ class NewPageState extends State<NewPage> {
                   case 3:
                     increase = 0;
                     recipesService.upsertRecipe(recipe);
-                    appModel.recipeBook = RecipeBookModel(
+                    context.read<AppModel>().recipeBook = RecipeBookModel(
                       name: '',
                       category: '',
                       recipes: [],

@@ -30,12 +30,18 @@ class RecipesService {
     });
   }
 
-  getRecipesByUser(String userUid) {
-    return _db
-        .collection(recipesCollection)
-        .where('createdBy', isEqualTo: userUid)
-        .orderBy('likes')
-        .get();
+  Future<QuerySnapshot<RecipeModel>> getRecipesByUser({
+    required String userUid,
+    String? category,
+  }) async {
+    final recipes = await recipesRef;
+    return category != null
+        ? recipes
+            .where('createdBy', isEqualTo: userUid)
+            .where('category', isEqualTo: category)
+            .orderBy('likes')
+            .get()
+        : recipes.where('createdBy', isEqualTo: userUid).orderBy('likes').get();
   }
 }
 

@@ -8,7 +8,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  AppModel appModel = AppModel();
+  // AppModel appModel = AppModel();
 
   User? get user {
     return _auth.currentUser;
