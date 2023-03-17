@@ -79,11 +79,10 @@ class RecipeModel {
       recipeBook: data?['recipeBook'],
       description: data?['description'],
       instructions: data?['instructions'] is Iterable
-          ? List<InstructionModel>.from(data?['instructions'])
+          ? InstructionModel().fromMap(data?['instructions'])
           : null,
-      ingredients: data?['ingredients'] is Iterable
-          ? List<IngredientModel>.from(data?['ingredients'])
-          : null,
+      ingredients:
+          data?['ingredients'] is Iterable ? IngredientModel().fromMap(data?['ingredients']) : null,
       likes: data?['likes'],
       id: data?['id'],
       createdBy: data?['createdBy'],
@@ -96,10 +95,11 @@ class RecipeModel {
       if (category != null) "category": category,
       if (recipeBook != null) "recipeBook": recipeBook,
       if (description != null) "description": description,
-      if (instructions != null) "instructions": instructions,
-      if (ingredients != null) "ingredients": ingredients,
+      if (instructions != null)
+        "instructions": instructions!.map((instruction) => instruction.toMap()),
+      if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toMap()),
       if (likes != null) "likes": likes,
-      if (createdBy != null) "createdBy": createdBy,
+      if (createdBy != null) "createdBy": createdBy
     };
   }
 
@@ -146,6 +146,18 @@ class InstructionModel {
     this.description,
   });
 
+  List<InstructionModel> fromMap(List<dynamic> instructions) {
+    return instructions
+        .map(
+          (instruction) => InstructionModel(
+            title: instruction['title'],
+            order: instruction['order'],
+            description: instruction['description'],
+          ),
+        )
+        .toList();
+  }
+
   Map<String, dynamic> toMap() {
     return {
       if (title != null) 'title': title,
@@ -170,6 +182,18 @@ class IngredientModel {
     this.quantity,
     this.unit,
   });
+
+  List<IngredientModel> fromMap(List<dynamic> ingredients) {
+    return ingredients
+        .map(
+          (ingredient) => IngredientModel(
+            item: ingredient['item'],
+            quantity: ingredient['quantity'],
+            unit: ingredient['unit'],
+          ),
+        )
+        .toList();
+  }
 
   Map<String, dynamic> toMap() {
     return {

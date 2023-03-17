@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/services/auth.service.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 import 'package:recipe_book/app_model.dart';
@@ -11,162 +14,249 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
+const generalFilters = [
+  'Trending',
+  'Most Recent',
+  'New',
+];
+
 class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    userService.categories.then((result) => setState(() => _categories.addAll(result)));
   }
 
-  TextEditingController searchController = TextEditingController();
   final PageController recipeCtrl = PageController(viewportFraction: 0.7);
   int currentItem = 0;
 
-  var testTrending = [
-    {"title": "Southern Breakfast"},
-    {"title": "Easy Dinners"},
-    {"title": "Meal Preps"}
-  ];
   bool categoryActive = false;
+
+  final formGroup = FormGroup({
+    'search': FormControl<String>(),
+  });
+
+  final List<String> _generalFilters = <String>['Trending', 'New'];
+  String? _generalFilter = 'Trending';
+
+  List<String> _categories = ['All'];
+  String? _categoryFilter = 'All';
 
   @override
   Widget build(BuildContext context) {
-    final appModel = Provider.of<AppModel>(context);
-    userService.getUserTheme.then((theme) {
-      appModel.theme = theme;
-    }).catchError((e) => print(e));
+    // final appModel = Provider.of<AppModel>(context);
     var theme = Theme.of(context);
-    return SafeArea(
-      child: Material(
-        child: Container(
-          padding: const EdgeInsets.only(
-            top: 20.0,
-          ),
-          color: theme.scaffoldBackgroundColor,
-          height: MediaQuery.of(context).size.height - 90.0,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CustomText(
-                text: "Welcome,",
-                fontSize: 35.0,
-                padding: const EdgeInsets.only(left: 30.0),
-                fontFamily: "Lato",
-                color: theme.colorScheme.onBackground,
-              ),
-              CustomText(
-                text: "What do you want to cook today?",
-                fontSize: 20.0,
-                padding: const EdgeInsets.only(left: 30.0),
-                fontFamily: "Lato",
-                color: theme.colorScheme.onBackground,
-              ),
-              CustomInput(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 20.0,
+    userService.getUserTheme.then((theme) {
+      context.read<AppModel>().theme = theme;
+    }).catchError((e) => print(e));
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 60.0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(
+              text: 'Welcome, ',
+              fontSize: 35.0,
+              fontFamily: "Lato",
+              color: theme.colorScheme.onBackground,
+            ),
+            CustomText(
+              text: 'What do you want to cook today?',
+              fontSize: 25.0,
+              fontFamily: "Lato",
+              color: theme.colorScheme.onBackground,
+            ),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: ReactiveForm(
+              formGroup: formGroup,
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20.0,
+                  right: 20.0,
+                  bottom: 20.0,
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 20.0,
+                child: CustomReactiveInput(
+                  inputAction: TextInputAction.done,
+                  formName: 'search',
+                  label: 'Search',
+                  textColor: theme.colorScheme.onSurface,
                 ),
-                controller: searchController,
-                focusColor: primaryColor,
-                textColor: primaryColor,
-                label: "Search",
-                errorText: null,
-                icon: const Icon(
-                  Icons.search,
-                ),
-                fontSize: 20.0,
-                onTap: () {},
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              CustomText(
-                text: "Trending",
-                fontSize: 25.0,
-                padding: const EdgeInsets.only(left: 30.0),
-                fontFamily: "Lato",
-                color: theme.colorScheme.onBackground,
-              ),
-              SizedBox(
-                height: 175,
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 0.0,
-                  ),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: testTrending
-                      .map(
-                        (item) => buildTrendingCard(
-                          item,
-                          theme.colorScheme.surface,
-                          theme.shadowColor,
-                          (theme.textTheme.titleLarge?.color)!,
-                          context,
-                          () {},
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              SizedBox(
-                height: 75,
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 10.0,
-                  ),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    CustomActionChip(
-                      label: "Category",
-                      backgroundColor: primaryColor.withOpacity(0.25),
-                      borderColor: primaryColor,
-                      textColor: primaryColor,
-                      activeTextColor: Colors.white,
-                      activeColor: primaryColor,
-                      onTap: () {
+              )),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 15.0,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 10.0,
+              children: _generalFilters
+                  .map(
+                    (filter) => ChoiceChip(
+                      label: CustomText(
+                        text: filter,
+                        fontSize: 18.0,
+                        fontFamily: "Lato",
+                        color: _generalFilter == filter
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.onBackground,
+                      ),
+                      selected: _generalFilter == filter,
+                      onSelected: (bool selected) {
                         setState(() {
-                          categoryActive = !categoryActive;
+                          _generalFilter = selected ? filter : null;
                         });
                       },
-                      active: categoryActive,
-                      internalPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 5.0,
-                      ),
                     ),
-                  ],
+                  )
+                  .toList(),
+            ),
+            SizedBox(
+              height: 250,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                child: FutureBuilder(
+                  future: recipesService.getRecipesByFilter(_generalFilter!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final docs = snapshot.data!.docs;
+                      return ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: docs.map((doc) {
+                          final recipe = doc.data();
+                          return Hero(
+                            tag: 'recipe-${doc.id}-general',
+                            child: Card(
+                              margin: EdgeInsets.only(
+                                right: 20.0,
+                                bottom: 15.0,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => context.push('/recipe/${doc.id}/general'),
+                                child: SizedBox(
+                                  width: 200,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        CustomText(
+                                          text: recipe.title,
+                                          fontSize: 18.0,
+                                          fontFamily: "Lato",
+                                          color: theme.colorScheme.onSurface,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
                 ),
               ),
-              SizedBox(
-                height: 425,
-                child: PageView.builder(
-                  onPageChanged: (next) {
-                    if (currentItem != next) {
-                      setState(() {
-                        currentItem = next;
-                      });
+            ),
+            Wrap(
+              spacing: 10.0,
+              children: _categories
+                  .map(
+                    (filter) => ChoiceChip(
+                      label: CustomText(
+                        text: filter,
+                        fontSize: 18.0,
+                        fontFamily: "Lato",
+                        color: _categoryFilter == filter
+                            ? theme.colorScheme.onPrimary
+                            : theme.colorScheme.onBackground,
+                      ),
+                      selected: _categoryFilter == filter,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _categoryFilter = selected ? filter : null;
+                        });
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+            SizedBox(
+              height: 300,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                child: FutureBuilder(
+                  future: recipesService.getRecipesByUser(
+                    userUid: authService.user!.uid,
+                    category: _categoryFilter != 'All' ? _categoryFilter : null,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final docs = snapshot.data!.docs;
+                      return ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: docs.map((doc) {
+                          final recipe = doc.data();
+                          return Hero(
+                            tag: 'recipe-${doc.id}-user',
+                            child: Card(
+                              margin: EdgeInsets.only(
+                                right: 20.0,
+                                bottom: 15.0,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => context.push('/recipe/${doc.id}/user'),
+                                child: SizedBox(
+                                  width: 200,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        CustomText(
+                                          text: recipe.title,
+                                          fontSize: 18.0,
+                                          fontFamily: "Lato",
+                                          color: theme.colorScheme.onSurface,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
                     }
-                  },
-                  itemCount: 3,
-                  controller: recipeCtrl,
-                  itemBuilder: (BuildContext context, int currentIndex) {
-                    bool active = currentIndex == currentItem;
-                    return buildRecipeCard(
-                        {}, active, primaryColor, theme.scaffoldBackgroundColor, context);
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   },
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

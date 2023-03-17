@@ -23,7 +23,7 @@ class SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    final appModel = Provider.of<AppModel>(context);
+    // final appModel = Provider.of<AppModel>(context);
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -54,11 +54,11 @@ class SettingsTabState extends State<SettingsTab> {
                 color: theme.colorScheme.onBackground,
               ),
               Switch(
-                value: appModel.theme,
+                value: context.read<AppModel>().theme,
                 onChanged: (value) {
                   userService.setUserTheme(value);
                   setState(() {
-                    appModel.theme = value;
+                    context.read<AppModel>().theme = value;
                   });
                 },
               ),
@@ -80,9 +80,9 @@ class SettingsTabState extends State<SettingsTab> {
           ElevatedButton(
             onPressed: () {
               authService.logout().then((value) {
-                appModel.uid = '';
-                appModel.theme = false;
-                appModel.view = 'Home';
+                context.read<AppModel>().uid = '';
+                context.read<AppModel>().theme = false;
+                context.read<AppModel>().view = 'Home';
                 context.go('/login');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

@@ -15,9 +15,6 @@ class RecipesService {
   }
 
   upsertRecipe(RecipeModel recipe) async {
-    //TODO
-    //Handle editing existing
-
     final recipes = await recipesRef;
     var postResult = await recipes.add(recipe);
     _db
@@ -30,12 +27,30 @@ class RecipesService {
     });
   }
 
-  getRecipesByUser(String userUid) {
-    return _db
-        .collection(recipesCollection)
-        .where('createdBy', isEqualTo: userUid)
-        .orderBy('likes')
-        .get();
+  Future<QuerySnapshot<RecipeModel>> getRecipesByFilter(String type) async {
+    final recipes = await recipesRef;
+    switch (type) {
+      // case 'Trending':
+      //   break;
+      case 'New':
+        return recipes.orderBy('created').get();
+      default:
+        return recipes.get();
+    }
+  }
+
+  Future<QuerySnapshot<RecipeModel>> getRecipesByUser({
+    required String userUid,
+    String? category,
+  }) async {
+    final recipes = await recipesRef;
+    return category != null
+        ? recipes
+            .where('createdBy', isEqualTo: userUid)
+            .where('category', isEqualTo: category)
+            .orderBy('likes')
+            .get()
+        : recipes.where('createdBy', isEqualTo: userUid).orderBy('likes').get();
   }
 }
 
