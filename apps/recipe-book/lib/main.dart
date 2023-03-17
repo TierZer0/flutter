@@ -78,10 +78,11 @@ class AppState extends State<App> {
         },
       ),
       GoRoute(
-        path: '/recipe/:recipeId',
+        path: '/recipe/:recipeId/:source',
         builder: (context, state) {
           return RecipePage(
             recipeId: state.params['recipeId']!,
+            source: state.params['source']!,
           );
         },
       ),

@@ -15,9 +15,6 @@ class RecipesService {
   }
 
   upsertRecipe(RecipeModel recipe) async {
-    //TODO
-    //Handle editing existing
-
     final recipes = await recipesRef;
     var postResult = await recipes.add(recipe);
     _db
@@ -28,6 +25,18 @@ class RecipesService {
         .update({
       'recipes': FieldValue.arrayUnion([postResult.id])
     });
+  }
+
+  Future<QuerySnapshot<RecipeModel>> getRecipesByFilter(String type) async {
+    final recipes = await recipesRef;
+    switch (type) {
+      // case 'Trending':
+      //   break;
+      case 'New':
+        return recipes.orderBy('created').get();
+      default:
+        return recipes.get();
+    }
   }
 
   Future<QuerySnapshot<RecipeModel>> getRecipesByUser({

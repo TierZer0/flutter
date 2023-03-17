@@ -99,7 +99,7 @@ class RecipeModel {
         "instructions": instructions!.map((instruction) => instruction.toMap()),
       if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toMap()),
       if (likes != null) "likes": likes,
-      if (createdBy != null) "createdBy": createdBy,
+      if (createdBy != null) "createdBy": createdBy
     };
   }
 

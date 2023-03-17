@@ -122,6 +122,58 @@ class HomePageState extends State<HomePage> {
             ),
             SizedBox(
               height: 250,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                child: FutureBuilder(
+                  future: recipesService.getRecipesByFilter(_generalFilter!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final docs = snapshot.data!.docs;
+                      return ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: docs.map((doc) {
+                          final recipe = doc.data();
+                          return Hero(
+                            tag: 'recipe-${doc.id}-general',
+                            child: Card(
+                              margin: EdgeInsets.only(
+                                right: 20.0,
+                                bottom: 15.0,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => context.push('/recipe/${doc.id}/general'),
+                                child: SizedBox(
+                                  width: 200,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        CustomText(
+                                          text: recipe.title,
+                                          fontSize: 18.0,
+                                          fontFamily: "Lato",
+                                          color: theme.colorScheme.onSurface,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ),
             ),
             Wrap(
               spacing: 10.0,
@@ -163,14 +215,15 @@ class HomePageState extends State<HomePage> {
                         children: docs.map((doc) {
                           final recipe = doc.data();
                           return Hero(
-                            tag: 'recipe-${doc.id}',
+                            tag: 'recipe-${doc.id}-user',
                             child: Card(
                               margin: EdgeInsets.only(
                                 right: 20.0,
+                                bottom: 15.0,
                               ),
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(
-                                onTap: () => context.push('/recipe/${doc.id}'),
+                                onTap: () => context.push('/recipe/${doc.id}/user'),
                                 child: SizedBox(
                                   width: 200,
                                   child: Padding(
