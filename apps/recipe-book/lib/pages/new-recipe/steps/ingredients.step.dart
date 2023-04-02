@@ -60,7 +60,7 @@ class IngredientsStep extends StatelessWidget {
                   ),
                 ),
                 formControlName: 'ingredients.unit',
-                dropdownColor: theme.backgroundColor,
+                dropdownColor: theme.colorScheme.surface,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10.0),
                 ),
@@ -82,53 +82,62 @@ class IngredientsStep extends StatelessWidget {
             ),
           ],
         ),
-        CustomButton(
-          buttonColor: primaryColor,
-          onTap: () {
-            formGroup.markAsUntouched();
-            AbstractControl<dynamic> group = formGroup.control('ingredients');
-            if (group.invalid) {
-              group.markAllAsTouched();
-              return;
-            }
-            List<IngredientModel> items = group.value['items'] ?? [];
-            items.add(IngredientModel(
-              item: group.value['item'],
-              quantity: group.value['quantity'],
-              unit: group.value['unit'],
-            ));
-            formGroup.control('ingredients').patchValue({'items': items});
-          },
-          label: "Add Ingredient",
-          externalPadding: EdgeInsets.only(
-              right: MediaQuery.of(context).size.width * .5, top: 10.0, bottom: 10.0),
-          internalPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 15.0,
-          ),
-          textStyle: GoogleFonts.lato(
-            color: darkThemeTextColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 18.0,
-          ),
-        ),
-        SizedBox(
-          height: 200.0,
-          child: ListView(
-            children: formGroup
-                .control('ingredients')
-                .value['items']
-                .map<Widget>(
-                  (IngredientModel item) => CustomText(
-                    text: item.toString(),
+        ReactiveFormConsumer(builder: (context, form, child) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: form.control('ingredients').invalid
+                    ? null
+                    : () {
+                        form.markAsUntouched();
+                        AbstractControl<dynamic> group = form.control('ingredients');
+                        if (group.invalid) {
+                          group.markAllAsTouched();
+                          return;
+                        }
+                        List<IngredientModel> items = group.value['items'] ?? [];
+                        items.add(IngredientModel(
+                          item: group.value['item'],
+                          quantity: group.value['quantity'],
+                          unit: group.value['unit'],
+                        ));
+                        group.patchValue({'item': null, 'quantity': null, 'unit': null});
+                        form.control('ingredients').patchValue({'items': items});
+                      },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+                  child: CustomText(
+                    text: "Add Ingredient",
                     fontSize: 20.0,
                     fontFamily: "Lato",
                     color: theme.colorScheme.onBackground,
                   ),
-                )
-                .toList(),
-          ),
-        ),
+                ),
+              ),
+              SizedBox(
+                height: 25.0,
+              ),
+              SizedBox(
+                height: 200.0,
+                child: ListView(
+                  children: form
+                      .control('ingredients')
+                      .value['items']
+                      .map<Widget>(
+                        (IngredientModel item) => CustomText(
+                          text: item.toString(),
+                          fontSize: 20.0,
+                          fontFamily: "Lato",
+                          color: theme.colorScheme.onBackground,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
+          );
+        }),
       ],
     );
   }

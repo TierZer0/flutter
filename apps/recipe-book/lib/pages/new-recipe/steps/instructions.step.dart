@@ -36,54 +36,69 @@ class InstructionsStep extends StatelessWidget {
             ValidationMessage.required: (_) => 'The Instruction description must not be empty',
           },
         ),
-        CustomButton(
-          buttonColor: primaryColor,
-          onTap: () {
-            formGroup.markAsUntouched();
-            AbstractControl<dynamic> group = formGroup.control('instructions');
-            if (group.invalid) {
-              group.markAllAsTouched();
-              return;
-            }
-            List<InstructionModel> steps = group.value['steps'] ?? [];
-            steps.add(
-              InstructionModel(
-                title: group.value['title'],
-                order: steps.length + 1,
-                description: group.value['description'],
-              ),
-            );
-            formGroup.control('instructions').patchValue({'steps': steps});
-          },
-          label: "Add Instruction",
-          externalPadding: EdgeInsets.only(
-              right: MediaQuery.of(context).size.width * .5, top: 10.0, bottom: 10.0),
-          internalPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 15.0,
-          ),
-          textStyle: GoogleFonts.lato(
-            color: darkThemeTextColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 18.0,
-          ),
-        ),
         SizedBox(
-          height: 200.0,
-          child: ListView(
-            children: formGroup
-                .control('instructions')
-                .value['steps']
-                .map<Widget>(
-                  (InstructionModel item) => CustomText(
-                    text: item.toString(),
-                    fontSize: 20.0,
-                    fontFamily: "Lato",
-                    color: theme.colorScheme.onBackground,
+          height: 15.0,
+        ),
+        ReactiveFormConsumer(
+          builder: (context, form, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  onPressed: form.control('instructions').invalid
+                      ? null
+                      : () {
+                          form.markAsUntouched();
+                          AbstractControl<dynamic> group = form.control('instructions');
+                          if (group.invalid) {
+                            group.markAllAsTouched();
+                            return;
+                          }
+                          List<InstructionModel> steps = group.value['steps'] ?? [];
+
+                          steps.add(
+                            InstructionModel(
+                              title: group.value['title'],
+                              order: steps.length + 1,
+                              description: group.value['description'],
+                            ),
+                          );
+                          group.patchValue({'title': null, 'order': null, 'description': null});
+                          form.control('instructions').patchValue({'steps': steps});
+                        },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+                    child: CustomText(
+                      text: "Add Instruction",
+                      fontSize: 20.0,
+                      fontFamily: "Lato",
+                      color: theme.colorScheme.onBackground,
+                    ),
                   ),
-                )
-                .toList(),
-          ),
+                ),
+                SizedBox(
+                  height: 25.0,
+                ),
+                SizedBox(
+                  height: 200.0,
+                  child: ListView(
+                    children: form
+                        .control('instructions')
+                        .value['steps']
+                        .map<Widget>(
+                          (InstructionModel item) => CustomText(
+                            text: item.toString(),
+                            fontSize: 20.0,
+                            fontFamily: "Lato",
+                            color: theme.colorScheme.onBackground,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

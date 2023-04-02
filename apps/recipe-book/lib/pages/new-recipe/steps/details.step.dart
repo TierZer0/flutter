@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class DetailsStep extends StatefulWidget {
@@ -50,7 +51,7 @@ class DetailsStepState extends State<DetailsStep> {
         ),
         ReactiveDropdownField(
           formControlName: 'details.category',
-          dropdownColor: theme.backgroundColor,
+          dropdownColor: theme.colorScheme.surface,
           decoration: InputDecoration(
             label: CustomText(
               text: "Category",

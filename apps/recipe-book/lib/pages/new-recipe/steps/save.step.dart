@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class SaveStep extends StatelessWidget {
-  RecipeModel recipe;
+class SaveStep extends StatefulWidget {
+  final RecipeModel recipe;
 
-  SaveStep(this.recipe);
+  SaveStep({super.key, required this.recipe});
+
+  @override
+  SaveStepState createState() => SaveStepState();
+}
+
+class SaveStepState extends State<SaveStep> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  File? _photo;
+
+  imgFromGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _photo = File(pickedFile.path);
+        recipesService.uploadFile(_photo!);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +42,7 @@ class SaveStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text: recipe.toString(),
+          text: widget.recipe.toString(),
           fontSize: 25.0,
           fontWeight: FontWeight.w700,
           fontFamily: "Lato",
@@ -33,7 +61,7 @@ class SaveStep extends StatelessWidget {
         SizedBox(
           height: 100.0,
           child: ListView(
-            children: recipe.listIngredients(
+            children: widget.recipe.listIngredients(
               (theme.textTheme.titleLarge?.color)!,
             ),
           ),
@@ -51,10 +79,16 @@ class SaveStep extends StatelessWidget {
         SizedBox(
           height: 100.0,
           child: ListView(
-            children: recipe.listSteps(
+            children: widget.recipe.listSteps(
               (theme.textTheme.titleLarge?.color)!,
             ),
           ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            imgFromGallery();
+          },
+          child: Text('Select Image'),
         ),
       ],
     );

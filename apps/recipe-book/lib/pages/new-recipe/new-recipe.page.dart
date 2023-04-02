@@ -72,11 +72,10 @@ class NewPageState extends State<NewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final appModel = Provider.of<AppModel>(context);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         title: CustomText(
           text: "Create A New Recipe",
@@ -84,14 +83,6 @@ class NewPageState extends State<NewPage> {
           fontWeight: FontWeight.w500,
           color: theme.colorScheme.onBackground,
         ),
-        // leading: CustomIconButton(
-        //   icon: const Icon(
-        //     Icons.arrow_back_outlined,
-        //     size: 30,
-        //   ),
-        //   onPressed: () => context.go('/'),
-        //   color: theme.colorScheme.onBackground,
-        // ),
       ),
       body: Container(
         color: theme.scaffoldBackgroundColor,
@@ -108,6 +99,7 @@ class NewPageState extends State<NewPage> {
             }
 
             return Stepper(
+              elevation: 0,
               type: StepperType.horizontal,
               currentStep: _stepIndex,
               onStepCancel: () {
@@ -182,7 +174,7 @@ class NewPageState extends State<NewPage> {
                     recipe = RecipeModel(
                       title: details.value['name'],
                       category: details.value['category'] ?? '',
-                      recipeBook: context.read<AppModel>().recipeBook.id!,
+                      recipeBook: context.read<AppModel>().recipeBook.id ?? '',
                       description: details.value['description'] ?? '',
                       ingredients: ingredients.value['items'],
                       instructions: instructions.value['steps'],
@@ -216,6 +208,7 @@ class NewPageState extends State<NewPage> {
                     color: theme.colorScheme.onBackground,
                   ),
                   content: DetailsStep(),
+                  isActive: _stepIndex == 0,
                 ),
                 Step(
                   title: CustomText(
@@ -225,6 +218,7 @@ class NewPageState extends State<NewPage> {
                     color: theme.colorScheme.onBackground,
                   ),
                   content: IngredientsStep(formGroup),
+                  isActive: _stepIndex == 1,
                 ),
                 Step(
                   title: CustomText(
@@ -234,6 +228,7 @@ class NewPageState extends State<NewPage> {
                     color: theme.colorScheme.onBackground,
                   ),
                   content: InstructionsStep(formGroup),
+                  isActive: _stepIndex == 2,
                 ),
                 Step(
                   title: CustomText(
@@ -245,9 +240,10 @@ class NewPageState extends State<NewPage> {
                   content: Align(
                     alignment: Alignment.topLeft,
                     child: SaveStep(
-                      recipe,
+                      recipe: recipe,
                     ),
                   ),
+                  isActive: _stepIndex == 3,
                 )
               ],
             );
