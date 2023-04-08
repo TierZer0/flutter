@@ -7,8 +7,10 @@ import 'dart:io';
 
 class SaveStep extends StatefulWidget {
   final RecipeModel recipe;
+  VoidCallback tapBack;
+  VoidCallback tapForward;
 
-  SaveStep({super.key, required this.recipe});
+  SaveStep({super.key, required this.recipe, required this.tapBack, required this.tapForward});
 
   @override
   SaveStepState createState() => SaveStepState();
@@ -38,59 +40,97 @@ class SaveStepState extends State<SaveStep> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-          text: widget.recipe.toString(),
-          fontSize: 25.0,
-          fontWeight: FontWeight.w700,
-          fontFamily: "Lato",
-          color: theme.colorScheme.onBackground,
-        ),
-        const SizedBox(
-          height: 25.0,
-        ),
-        CustomText(
-          text: 'Ingredients',
-          fontSize: 20.0,
-          fontWeight: FontWeight.w700,
-          fontFamily: "Lato",
-          color: theme.colorScheme.onBackground,
-        ),
-        SizedBox(
-          height: 100.0,
-          child: ListView(
-            children: widget.recipe.listIngredients(
-              (theme.textTheme.titleLarge?.color)!,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 25.0,
+        vertical: 25.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(
+            text: widget.recipe.toString(),
+            fontSize: 25.0,
+            fontWeight: FontWeight.w700,
+            fontFamily: "Lato",
+            color: theme.colorScheme.onBackground,
+          ),
+          const SizedBox(
+            height: 25.0,
+          ),
+          CustomText(
+            text: 'Ingredients',
+            fontSize: 20.0,
+            fontWeight: FontWeight.w700,
+            fontFamily: "Lato",
+            color: theme.colorScheme.onBackground,
+          ),
+          SizedBox(
+            height: 100.0,
+            child: ListView(
+              children: widget.recipe.listIngredients(
+                (theme.textTheme.titleLarge?.color)!,
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 25.0,
-        ),
-        CustomText(
-          text: 'Steps',
-          fontSize: 20.0,
-          fontWeight: FontWeight.w700,
-          fontFamily: "Lato",
-          color: theme.colorScheme.onBackground,
-        ),
-        SizedBox(
-          height: 100.0,
-          child: ListView(
-            children: widget.recipe.listSteps(
-              (theme.textTheme.titleLarge?.color)!,
+          const SizedBox(
+            height: 25.0,
+          ),
+          CustomText(
+            text: 'Steps',
+            fontSize: 20.0,
+            fontWeight: FontWeight.w700,
+            fontFamily: "Lato",
+            color: theme.colorScheme.onBackground,
+          ),
+          SizedBox(
+            height: 100.0,
+            child: ListView(
+              children: widget.recipe.listSteps(
+                (theme.textTheme.titleLarge?.color)!,
+              ),
             ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            imgFromGallery();
-          },
-          child: Text('Select Image'),
-        ),
-      ],
+          ElevatedButton(
+            onPressed: () {
+              imgFromGallery();
+            },
+            child: Text('Select Image'),
+          ),
+          const SizedBox(
+            height: 25.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: widget.tapBack,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                  child: CustomText(
+                    text: "Prior Step",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: theme.colorScheme.onBackground,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: widget.tapForward,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                  child: CustomText(
+                    text: "Save Recipe",
+                    fontSize: 20.0,
+                    fontFamily: "Lato",
+                    color: theme.colorScheme.onBackground,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
