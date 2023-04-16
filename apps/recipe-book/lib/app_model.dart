@@ -43,6 +43,6 @@ class AppModel extends ChangeNotifier {
   RecipeBookModel get recipeBook => _recipeBook;
   set recipeBook(RecipeBookModel book) {
     _recipeBook = book;
-    notifyListeners();
+    //notifyListeners();
   }
 }

@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
 
 class RecipesService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   String recipesCollection = 'recipes';
   String usersCollection = 'users';
 
@@ -14,8 +19,9 @@ class RecipesService {
         );
   }
 
-  upsertRecipe(RecipeModel recipe) async {
+  upsertRecipe(RecipeModel recipe, File photo) async {
     final recipes = await recipesRef;
+    await uploadFile(photo);
     var postResult = await recipes.add(recipe);
     _db
         .collection('users')
@@ -51,6 +57,16 @@ class RecipesService {
             .orderBy('likes')
             .get()
         : recipes.where('createdBy', isEqualTo: userUid).orderBy('likes').get();
+  }
+
+  uploadFile(File file) async {
+    final fileName = basename(file!.path);
+    final destination = 'food/${authService.user?.uid}/$fileName';
+
+    try {
+      final ref = _storage.ref(destination).child('file/');
+      return await ref.putFile(file);
+    } catch (e) {}
   }
 }
 

@@ -55,6 +55,7 @@ class RecipeModel {
   int? likes;
   String? id;
   String? createdBy;
+  String? image;
 
   RecipeModel({
     this.title,
@@ -66,6 +67,7 @@ class RecipeModel {
     this.likes,
     this.id,
     this.createdBy,
+    this.image,
   });
 
   factory RecipeModel.fromFirestore(
@@ -86,6 +88,7 @@ class RecipeModel {
       likes: data?['likes'],
       id: data?['id'],
       createdBy: data?['createdBy'],
+      image: data?['image'],
     );
   }
 
@@ -99,7 +102,8 @@ class RecipeModel {
         "instructions": instructions!.map((instruction) => instruction.toMap()),
       if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toMap()),
       if (likes != null) "likes": likes,
-      if (createdBy != null) "createdBy": createdBy
+      if (createdBy != null) "createdBy": createdBy,
+      if (image != null) "image": image
     };
   }
 

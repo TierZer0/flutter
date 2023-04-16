@@ -21,18 +21,19 @@ class RecipePageState extends State<RecipePage> {
   }
 
   trackView() async {
-    try {
-      var instance = FirebaseFunctions.instance;
-      // instance.useFunctionsEmulator('localhost', 5001);
-      print(FirebaseAuth.instance.currentUser);
-      final result = await instance.httpsCallable('viewOnRecipe').call([
-        {"recipeId": widget.recipeId}
-      ]);
-    } on FirebaseFunctionsException catch (error) {
-      print(error.code);
-      print(error.details);
-      print(error.message);
-    }
+    //   try {
+    //     var instance = FirebaseFunctions.instance;
+    //     FirebaseFunctions.
+    //     // instance.useFunctionsEmulator('localhost', 5001);
+    //     print(FirebaseAuth.instance.currentUser);
+    //     final result = await instance.httpsCallable('viewOnRecipe').call([
+    //       {"recipeId": widget.recipeId}
+    //     ]);
+    //   } on FirebaseFunctionsException catch (error) {
+    //     print(error.code);
+    //     print(error.details);
+    //     print(error.message);
+    //   }
   }
 
   @override

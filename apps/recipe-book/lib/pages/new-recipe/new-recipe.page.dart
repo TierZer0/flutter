@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +23,12 @@ class NewPage extends StatefulWidget {
   NewPageState createState() => NewPageState();
 }
 
-class NewPageState extends State<NewPage> {
+class NewPageState extends State<NewPage> with TickerProviderStateMixin {
+  late TabController _tabController;
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   int _stepIndex = 0;
@@ -58,6 +62,8 @@ class NewPageState extends State<NewPage> {
         },
       );
 
+  List<bool> completedSteps = [false, false, false, false];
+
   RecipeModel recipe = RecipeModel(
     title: '',
     category: '',
@@ -72,188 +78,151 @@ class NewPageState extends State<NewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final appModel = Provider.of<AppModel>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
-        title: CustomText(
-          text: "Create A New Recipe",
-          fontSize: 25.0,
-          fontWeight: FontWeight.w500,
-          color: theme.colorScheme.onBackground,
-        ),
-        // leading: CustomIconButton(
-        //   icon: const Icon(
-        //     Icons.arrow_back_outlined,
-        //     size: 30,
-        //   ),
-        //   onPressed: () => context.go('/'),
-        //   color: theme.colorScheme.onBackground,
-        // ),
-      ),
-      body: Container(
-        color: theme.scaffoldBackgroundColor,
-        child: ReactiveFormBuilder(
-          form: buildForm,
-          builder: (context, formGroup, child) {
-            AbstractControl<dynamic> details = formGroup.control('details');
-            AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
-            AbstractControl<dynamic> instructions = formGroup.control('instructions');
+    return ReactiveFormBuilder(
+      form: buildForm,
+      builder: (context, formGroup, child) {
+        AbstractControl<dynamic> details = formGroup.control('details') as FormGroup;
+        AbstractControl<dynamic> ingredients = formGroup.control('ingredients') as FormGroup;
+        AbstractControl<dynamic> instructions = formGroup.control('instructions') as FormGroup;
 
-            if (context.read<AppModel>().recipeBook.name != '' &&
-                details.value['book'] != context.read<AppModel>().recipeBook.name) {
-              details.patchValue({'book': context.read<AppModel>().recipeBook.name});
+        onTap(curr, goTo) {
+          final steps = ['details', 'ingredients', 'instructions'];
+
+          return () {
+            if (curr == 2) {
+              recipe = RecipeModel(
+                title: details.value['name'],
+                category: details.value['category'] ?? '',
+                recipeBook: context.read<AppModel>().recipeBook.id ?? '',
+                description: details.value['description'] ?? '',
+                ingredients: ingredients.value['items'],
+                instructions: instructions.value['steps'],
+                likes: 0,
+                createdBy: authService.user!.uid,
+              );
             }
 
-            return Stepper(
-              type: StepperType.horizontal,
-              currentStep: _stepIndex,
-              onStepCancel: () {
-                if (_stepIndex > 0) {
-                  setState(() {
-                    _stepIndex -= 1;
-                  });
+            var update = false;
+            switch (curr) {
+              case 0:
+                if (details.valid) {
+                  update = true;
                 }
-              },
-              onStepTapped: (index) {
-                if (index > _stepIndex) return;
+                break;
+              case 1:
+                if (ingredients.value['items'].length > 0) {
+                  update = true;
+                }
+                break;
+              case 2:
+                if (instructions.value['steps'].length > 0) {
+                  update = true;
+                }
+                break;
+            }
+            setState(() {
+              completedSteps[curr] = update;
+            });
 
-                setState(() {
-                  _stepIndex = index;
-                });
-              },
-              onStepContinue: () {
-                formGroup.markAsUntouched();
-                var increase = 1;
-                switch (_stepIndex) {
-                  case 0:
-                    if (formGroup.control('details').invalid) {
-                      increase = 0;
-                      formGroup.control('details').markAllAsTouched();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: tertiaryColor,
-                          content: Text(
-                            'Fill out the login form',
-                            style: TextStyle(
-                              color: darkThemeTextColor,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    break;
-                  case 1:
-                    if (formGroup.control('ingredients').value['items'].length <= 0) {
-                      increase = 0;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: tertiaryColor,
-                          content: Text(
-                            'Atleast one ingredient is required',
-                            style: TextStyle(
-                              color: darkThemeTextColor,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    break;
-                  case 2:
-                    if (formGroup.control('instructions').value['steps'].length <= 0) {
-                      increase = 0;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: tertiaryColor,
-                          content: Text(
-                            'Atleast one instruction step is required',
-                            style: TextStyle(
-                              color: darkThemeTextColor,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    recipe = RecipeModel(
-                      title: details.value['name'],
-                      category: details.value['category'] ?? '',
-                      recipeBook: context.read<AppModel>().recipeBook.id!,
-                      description: details.value['description'] ?? '',
-                      ingredients: ingredients.value['items'],
-                      instructions: instructions.value['steps'],
-                      likes: 0,
-                      createdBy: authService.user!.uid,
-                    );
-                    break;
-                  case 3:
-                    increase = 0;
-                    recipesService.upsertRecipe(recipe);
-                    context.read<AppModel>().recipeBook = RecipeBookModel(
-                      name: '',
-                      category: '',
-                      recipes: [],
-                      createdBy: authService.user?.uid,
-                      likes: 0,
-                    );
-                    context.go('/');
-                    break;
-                }
-                setState(() {
-                  _stepIndex += increase;
-                });
-              },
-              steps: [
-                Step(
-                  title: CustomText(
-                    text: "Details",
-                    fontSize: 20.0,
-                    fontFamily: "Lato",
-                    color: theme.colorScheme.onBackground,
-                  ),
-                  content: DetailsStep(),
-                ),
-                Step(
-                  title: CustomText(
-                    text: "Ingredients",
-                    fontSize: 20.0,
-                    fontFamily: "Lato",
-                    color: theme.colorScheme.onBackground,
-                  ),
-                  content: IngredientsStep(formGroup),
-                ),
-                Step(
-                  title: CustomText(
-                    text: "Instructions",
-                    fontSize: 20.0,
-                    fontFamily: "Lato",
-                    color: theme.colorScheme.onBackground,
-                  ),
-                  content: InstructionsStep(formGroup),
-                ),
-                Step(
-                  title: CustomText(
-                    text: "Save",
-                    fontSize: 20.0,
-                    fontFamily: "Lato",
-                    color: theme.colorScheme.onBackground,
-                  ),
-                  content: Align(
-                    alignment: Alignment.topLeft,
-                    child: SaveStep(
-                      recipe,
+            return _tabController.animateTo(goTo);
+          };
+        }
+
+        submit(File photo) {
+          recipesService.upsertRecipe(recipe, photo);
+          context.read<AppModel>().recipeBook = RecipeBookModel(
+            name: '',
+            category: '',
+            recipes: [],
+            createdBy: authService.user?.uid,
+            likes: 0,
+          );
+          context.go('/');
+        }
+
+        if (context.read<AppModel>().recipeBook.name != '' &&
+            details.value['book'] != context.read<AppModel>().recipeBook.name) {
+          details.patchValue({'book': context.read<AppModel>().recipeBook.name});
+        }
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: theme.colorScheme.surface,
+            elevation: 0,
+            title: CustomText(
+              text: "Create A New Recipe",
+              fontSize: 25.0,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.onBackground,
+            ),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(85.0),
+              child: IgnorePointer(
+                child: TabBar(
+                  indicatorColor: primaryColor,
+                  controller: _tabController,
+                  physics: NeverScrollableScrollPhysics(),
+                  tabs: [
+                    Tab(
+                      text: '1: Details',
+                      icon: completedSteps[0]
+                          ? Icon(Icons.check_outlined)
+                          : Icon(Icons.edit_outlined),
                     ),
-                  ),
+                    Tab(
+                      text: '2: Ingredients',
+                      icon: completedSteps[1]
+                          ? Icon(Icons.check_outlined)
+                          : Icon(Icons.edit_outlined),
+                    ),
+                    Tab(
+                      text: '3: Instructions',
+                      icon: completedSteps[2]
+                          ? Icon(Icons.check_outlined)
+                          : Icon(Icons.edit_outlined),
+                    ),
+                    Tab(
+                      text: '4: Save',
+                      icon: completedSteps[0] && completedSteps[1] && completedSteps[2]
+                          ? Icon(Icons.check_outlined)
+                          : Icon(Icons.edit_outlined),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          body: Container(
+            color: theme.scaffoldBackgroundColor,
+            child: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                DetailsStep(
+                  onTap: onTap(0, 1),
+                ),
+                IngredientsStep(
+                  formGroup: formGroup,
+                  tapBack: onTap(1, 0),
+                  tapForward: onTap(1, 2),
+                ),
+                InstructionsStep(
+                  formGroup: formGroup,
+                  tapBack: onTap(2, 1),
+                  tapForward: onTap(2, 3),
+                ),
+                SaveStep(
+                  recipe: recipe,
+                  tapBack: onTap(3, 2),
+                  tapForward: (photo) {
+                    submit(photo!);
+                  },
                 )
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
