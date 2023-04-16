@@ -19,8 +19,9 @@ class RecipesService {
         );
   }
 
-  upsertRecipe(RecipeModel recipe) async {
+  upsertRecipe(RecipeModel recipe, File photo) async {
     final recipes = await recipesRef;
+    await uploadFile(photo);
     var postResult = await recipes.add(recipe);
     _db
         .collection('users')
@@ -64,7 +65,7 @@ class RecipesService {
 
     try {
       final ref = _storage.ref(destination).child('file/');
-      await ref.putFile(file);
+      return await ref.putFile(file);
     } catch (e) {}
   }
 }

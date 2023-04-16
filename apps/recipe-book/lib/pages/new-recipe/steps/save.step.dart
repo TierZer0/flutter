@@ -8,7 +8,7 @@ import 'dart:io';
 class SaveStep extends StatefulWidget {
   final RecipeModel recipe;
   VoidCallback tapBack;
-  VoidCallback tapForward;
+  Function tapForward;
 
   SaveStep({super.key, required this.recipe, required this.tapBack, required this.tapForward});
 
@@ -27,10 +27,15 @@ class SaveStepState extends State<SaveStep> {
   imgFromGallery() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
     setState(() {
       if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        recipesService.uploadFile(_photo!);
+        if (pickedFile!.name.indexOf('.jpg') != -1 || pickedFile!.name.indexOf('.png') != -1) {
+          _photo = File(pickedFile.path);
+          widget.recipe.image = pickedFile.name;
+        } else {
+          _photo = null;
+        }
       } else {
         print('No image selected.');
       }
@@ -91,11 +96,22 @@ class SaveStepState extends State<SaveStep> {
               ),
             ),
           ),
+          _photo?.path != null
+              ? SizedBox(height: 200, child: Image.file(_photo!))
+              : SizedBox.shrink(),
           ElevatedButton(
             onPressed: () {
               imgFromGallery();
             },
-            child: Text('Select Image'),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              child: CustomText(
+                text: "Select Image",
+                fontSize: 15.0,
+                fontFamily: "Lato",
+                color: theme.colorScheme.onBackground,
+              ),
+            ),
           ),
           const SizedBox(
             height: 25.0,
@@ -116,7 +132,7 @@ class SaveStepState extends State<SaveStep> {
                 ),
               ),
               ElevatedButton(
-                onPressed: widget.tapForward,
+                onPressed: () => widget.tapForward(_photo),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                   child: CustomText(

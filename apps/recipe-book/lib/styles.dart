@@ -53,51 +53,84 @@ ThemeData buildLightTheme() {
     ),
     shadowColor: Colors.grey.withOpacity(0.3),
     inputDecorationTheme: const InputDecorationTheme(
+      filled: true,
+      prefixIconColor: primaryColor,
       labelStyle: TextStyle(
-        color: lightThemeTextColor,
+        fontSize: 25.0,
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
-        ),
+      enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
           color: primaryColor,
           width: 1.0,
           style: BorderStyle.solid,
         ),
       ),
-      prefixIconColor: primaryColor,
-      focusedBorder: OutlineInputBorder(
+      errorBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: tertiaryColor,
+          width: 1.0,
+          style: BorderStyle.solid,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
         borderSide: BorderSide(
           color: primaryColor,
-          width: 2.5,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
+          width: 1.0,
         ),
       ),
-      errorBorder: OutlineInputBorder(
+      focusedErrorBorder: UnderlineInputBorder(
         borderSide: BorderSide(
           color: tertiaryColor,
-          width: 2.5,
+          width: 1.0,
         ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: tertiaryColor,
-          width: 2.5,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
-        ),
-      ),
-      errorStyle: TextStyle(
-        color: tertiaryColor,
       ),
     ),
+    // inputDecorationTheme: const InputDecorationTheme(
+    //   labelStyle: TextStyle(
+    //     color: lightThemeTextColor,
+    //   ),
+    //   enabledBorder: OutlineInputBorder(
+    //     borderRadius: BorderRadius.all(
+    //       Radius.circular(20.0),
+    //     ),
+    //     borderSide: BorderSide(
+    //       color: primaryColor,
+    //       width: 1.0,
+    //       style: BorderStyle.solid,
+    //     ),
+    //   ),
+    //   prefixIconColor: primaryColor,
+    //   focusedBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(
+    //       color: primaryColor,
+    //       width: 2.5,
+    //     ),
+    //     borderRadius: BorderRadius.all(
+    //       Radius.circular(20.0),
+    //     ),
+    //   ),
+    //   errorBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(
+    //       color: tertiaryColor,
+    //       width: 2.5,
+    //     ),
+    //     borderRadius: BorderRadius.all(
+    //       Radius.circular(20.0),
+    //     ),
+    //   ),
+    //   focusedErrorBorder: OutlineInputBorder(
+    //     borderSide: BorderSide(
+    //       color: tertiaryColor,
+    //       width: 2.5,
+    //     ),
+    //     borderRadius: BorderRadius.all(
+    //       Radius.circular(20.0),
+    //     ),
+    //   ),
+    //   errorStyle: TextStyle(
+    //     color: tertiaryColor,
+    //   ),
+    // ),
   );
 }
 

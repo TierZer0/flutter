@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -80,11 +82,13 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
     return ReactiveFormBuilder(
       form: buildForm,
       builder: (context, formGroup, child) {
-        AbstractControl<dynamic> details = formGroup.control('details');
-        AbstractControl<dynamic> ingredients = formGroup.control('ingredients');
-        AbstractControl<dynamic> instructions = formGroup.control('instructions');
+        AbstractControl<dynamic> details = formGroup.control('details') as FormGroup;
+        AbstractControl<dynamic> ingredients = formGroup.control('ingredients') as FormGroup;
+        AbstractControl<dynamic> instructions = formGroup.control('instructions') as FormGroup;
 
         onTap(curr, goTo) {
+          final steps = ['details', 'ingredients', 'instructions'];
+
           return () {
             if (curr == 2) {
               recipe = RecipeModel(
@@ -99,25 +103,42 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               );
             }
 
+            var update = false;
+            switch (curr) {
+              case 0:
+                if (details.valid) {
+                  update = true;
+                }
+                break;
+              case 1:
+                if (ingredients.value['items'].length > 0) {
+                  update = true;
+                }
+                break;
+              case 2:
+                if (instructions.value['steps'].length > 0) {
+                  update = true;
+                }
+                break;
+            }
             setState(() {
-              completedSteps[curr] = true;
+              completedSteps[curr] = update;
             });
+
             return _tabController.animateTo(goTo);
           };
         }
 
-        submit() {
-          return () {
-            recipesService.upsertRecipe(recipe);
-            context.read<AppModel>().recipeBook = RecipeBookModel(
-              name: '',
-              category: '',
-              recipes: [],
-              createdBy: authService.user?.uid,
-              likes: 0,
-            );
-            context.go('/');
-          };
+        submit(File photo) {
+          recipesService.upsertRecipe(recipe, photo);
+          context.read<AppModel>().recipeBook = RecipeBookModel(
+            name: '',
+            category: '',
+            recipes: [],
+            createdBy: authService.user?.uid,
+            likes: 0,
+          );
+          context.go('/');
         }
 
         if (context.read<AppModel>().recipeBook.name != '' &&
@@ -193,7 +214,9 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 SaveStep(
                   recipe: recipe,
                   tapBack: onTap(3, 2),
-                  tapForward: submit(),
+                  tapForward: (photo) {
+                    submit(photo!);
+                  },
                 )
               ],
             ),
