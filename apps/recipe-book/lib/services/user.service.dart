@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/models/user.models.dart';
+import 'package:recipe_book/services/recipes.service.dart';
 
 class UserService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -53,10 +54,32 @@ class UserService {
         );
   }
 
+  Future<RecipeBookModel> getRecipeBook(String id) async {
+    final books = await recipeBooksRef;
+
+    return (await books.doc(id).get()).data();
+  }
+
   get categories async {
     final userSnap = await userRef.get();
     final user = userSnap.data();
     return user.categories;
+  }
+
+  Future<QuerySnapshot<RecipeModel>> likes() async {
+    final userSnap = await userRef.get();
+    final recipesRef = await recipesService.recipesRef;
+    UserModel user = userSnap.data();
+
+    return recipesRef.where(FieldPath.documentId, whereIn: user.likes).limit(5).get();
+  }
+
+  hasLiked(String recipeId) async {
+    final userSnap = await userRef.get();
+
+    UserModel user = userSnap.data();
+
+    return user.likes!.contains(recipeId);
   }
 
   deleteRecipeBook(String id) {
@@ -92,6 +115,18 @@ class UserService {
     _db.collection(collection).doc(authService.user?.uid).update({
       'categories': FieldValue.arrayUnion([category])
     });
+  }
+
+  likeRecipe(String recipeId) async {
+    if (await hasLiked(recipeId)) {
+      await _db.collection(collection).doc(authService.user?.uid).update({
+        'likes': FieldValue.arrayRemove(([recipeId]))
+      });
+    } else {
+      await _db.collection(collection).doc(authService.user?.uid).update({
+        'likes': FieldValue.arrayUnion(([recipeId]))
+      });
+    }
   }
 }
 

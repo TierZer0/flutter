@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
@@ -25,7 +27,7 @@ class RecipeBookModel {
   ) {
     final data = snapshot.data();
     return RecipeBookModel(
-      id: data?['id'],
+      id: data?['iid'],
       name: data?['name'],
       category: data?['category'],
       recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
@@ -56,6 +58,7 @@ class RecipeModel {
   String? id;
   String? createdBy;
   String? image;
+  List<ReviewModel>? reviews;
 
   RecipeModel({
     this.title,
@@ -68,6 +71,7 @@ class RecipeModel {
     this.id,
     this.createdBy,
     this.image,
+    this.reviews,
   });
 
   factory RecipeModel.fromFirestore(
@@ -89,6 +93,7 @@ class RecipeModel {
       id: data?['id'],
       createdBy: data?['createdBy'],
       image: data?['image'],
+      reviews: data?['reviews'] is Iterable ? ReviewModel().fromMap(data?['reviews']) : null,
     );
   }
 
@@ -103,7 +108,8 @@ class RecipeModel {
       if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toMap()),
       if (likes != null) "likes": likes,
       if (createdBy != null) "createdBy": createdBy,
-      if (image != null) "image": image
+      if (image != null) "image": image,
+      if (reviews != null) "reviews": reviews!.map((review) => review.toMap()),
     };
   }
 
@@ -210,5 +216,37 @@ class IngredientModel {
   @override
   String toString() {
     return '$item ($quantity $unit)';
+  }
+}
+
+class ReviewModel {
+  String? review;
+  String? createdBy;
+  int? stars;
+
+  ReviewModel({
+    this.review,
+    this.createdBy,
+    this.stars,
+  });
+
+  List<ReviewModel> fromMap(List<dynamic> reviews) {
+    return reviews
+        .map(
+          (review) => ReviewModel(
+            review: review['review'],
+            createdBy: review['createdBy'],
+            stars: review['stars'],
+          ),
+        )
+        .toList();
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      if (review != null) 'review': review,
+      if (createdBy != null) 'createdBy': createdBy,
+      if (stars != null) 'stars': stars,
+    };
   }
 }
