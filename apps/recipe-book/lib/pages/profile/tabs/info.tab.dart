@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/user.service.dart';
 import 'package:recipe_book/styles.dart';
+import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
-class InfoTab extends StatelessWidget {
+class InfoTab extends StatefulWidget {
   const InfoTab({super.key});
+
+  @override
+  State<InfoTab> createState() => _InfoTabState();
+}
+
+class _InfoTabState extends State<InfoTab> {
+  List<RecipeModel> recipes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // userService.likes().then((results) async {
+    //   List<RecipeModel> _recipes = [];
+    //   print(results);
+    //   results.forEach((result) async {
+    //     var item = await result;
+    //     setState(() {
+    //       _recipes.add(item);
+    //     });
+    //   });
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +69,76 @@ class InfoTab extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 125.0,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [],
+                  height: 150.0,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 0.0, left: 0.0),
+                    child: FutureBuilder(
+                      future: userService.likes(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final docs = snapshot.data!.docs;
+                          return ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: docs.map((doc) {
+                              final recipe = doc.data();
+
+                              return Hero(
+                                tag: 'recipe-${doc.id}-profileInfo',
+                                child: Card(
+                                  elevation: 2,
+                                  margin: EdgeInsets.only(right: 10.0, bottom: 15.0, left: 20.0),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: InkWell(
+                                    onTap: () => context.push('/recipe/${doc.id}/profileInfo'),
+                                    child: SizedBox(
+                                      height: 250,
+                                      width: 150,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.0,
+                                          horizontal: 10.0,
+                                        ),
+                                        child: CustomText(
+                                          text: recipe.title,
+                                          fontSize: 18.0,
+                                          fontFamily: "Lato",
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }
+                        return SkeletonLoader(
+                          builder: Row(
+                            children: [
+                              Card(
+                                margin: EdgeInsets.only(right: 10.0, bottom: 15.0, left: 20.0),
+                                child: SizedBox(
+                                  height: 135,
+                                  width: 150,
+                                ),
+                              ),
+                              Card(
+                                margin: EdgeInsets.only(right: 10.0, bottom: 15.0, left: 20.0),
+                                child: SizedBox(
+                                  height: 125,
+                                  width: 150,
+                                ),
+                              ),
+                            ],
+                          ),
+                          items: 1,
+                          period: Duration(seconds: 4),
+                          baseColor: theme.colorScheme.surface,
+                          highlightColor: primaryColor,
+                          direction: SkeletonDirection.ltr,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

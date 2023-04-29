@@ -12,12 +12,15 @@ import 'package:recipe_book/pages/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/pages/new-recipe/steps/save.step.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
+import 'package:recipe_book/services/user.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../styles.dart';
 
 class NewPage extends StatefulWidget {
-  const NewPage({super.key});
+  final String? id;
+
+  const NewPage({super.key, this.id});
 
   @override
   NewPageState createState() => NewPageState();
@@ -25,14 +28,37 @@ class NewPage extends StatefulWidget {
 
 class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   late TabController _tabController;
+  bool loading = false;
   @override
   void initState() {
     super.initState();
+
+    if (widget.id != null) {
+      loading = true;
+      getRecipe();
+    }
     _tabController = TabController(length: 4, vsync: this);
   }
 
-  int _stepIndex = 0;
+  getRecipe() {
+    recipesService.getRecipe(widget.id!).then((recipe) {
+      userService.getRecipeBook(recipe.recipeBook!).then((book) {
+        _formGroup.patchValue({
+          'details': {
+            'name': recipe.title,
+            'description': recipe.description,
+            'category': recipe.category,
+          }
+        });
+        setState(() {
+          context.read<AppModel>().recipeBook = book;
+          loading = false;
+        });
+      });
+    });
+  }
 
+  late FormGroup _formGroup;
   FormGroup buildForm() => fb.group(
         <String, Object>{
           'details': FormGroup(
@@ -85,6 +111,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         AbstractControl<dynamic> details = formGroup.control('details') as FormGroup;
         AbstractControl<dynamic> ingredients = formGroup.control('ingredients') as FormGroup;
         AbstractControl<dynamic> instructions = formGroup.control('instructions') as FormGroup;
+        _formGroup = formGroup;
 
         onTap(curr, goTo) {
           final steps = ['details', 'ingredients', 'instructions'];
@@ -150,7 +177,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
             backgroundColor: theme.colorScheme.surface,
             elevation: 0,
             title: CustomText(
-              text: "Create A New Recipe",
+              text: widget.id == null ? "Create A New Recipe" : "Edit Recipe",
               fontSize: 25.0,
               fontWeight: FontWeight.w500,
               color: theme.colorScheme.onBackground,
@@ -192,35 +219,39 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          body: Container(
-            color: theme.scaffoldBackgroundColor,
-            child: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                DetailsStep(
-                  onTap: onTap(0, 1),
-                ),
-                IngredientsStep(
-                  formGroup: formGroup,
-                  tapBack: onTap(1, 0),
-                  tapForward: onTap(1, 2),
-                ),
-                InstructionsStep(
-                  formGroup: formGroup,
-                  tapBack: onTap(2, 1),
-                  tapForward: onTap(2, 3),
-                ),
-                SaveStep(
-                  recipe: recipe,
-                  tapBack: onTap(3, 2),
-                  tapForward: (photo) {
-                    submit(photo!);
-                  },
+          body: loading
+              ? Center(
+                  child: CircularProgressIndicator(),
                 )
-              ],
-            ),
-          ),
+              : Container(
+                  color: theme.scaffoldBackgroundColor,
+                  child: TabBarView(
+                    controller: _tabController,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      DetailsStep(
+                        onTap: onTap(0, 1),
+                      ),
+                      IngredientsStep(
+                        formGroup: formGroup,
+                        tapBack: onTap(1, 0),
+                        tapForward: onTap(1, 2),
+                      ),
+                      InstructionsStep(
+                        formGroup: formGroup,
+                        tapBack: onTap(2, 1),
+                        tapForward: onTap(2, 3),
+                      ),
+                      SaveStep(
+                        recipe: recipe,
+                        tapBack: onTap(3, 2),
+                        tapForward: (photo) {
+                          submit(photo!);
+                        },
+                      )
+                    ],
+                  ),
+                ),
         );
       },
     );

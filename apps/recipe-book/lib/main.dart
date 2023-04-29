@@ -8,7 +8,7 @@ import 'package:recipe_book/main.view.dart';
 import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe-book.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
-import 'package:recipe_book/pages/recipe.page.dart';
+import 'package:recipe_book/pages/recipe/recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
 import 'firebase_options.dart';
@@ -70,6 +70,14 @@ class AppState extends State<App> {
         builder: (context, state) {
           return NewPage();
         },
+        routes: [
+          GoRoute(
+            path: ':recipeId',
+            builder: (context, state) {
+              return NewPage(id: state.params['recipeId']);
+            },
+          )
+        ],
       ),
       GoRoute(
         path: '/newRecipeBook',

@@ -19,6 +19,17 @@ class RecipesService {
         );
   }
 
+  Future<RecipeModel> getRecipe(String id) async {
+    final recipes = await recipesRef;
+    return (await recipes.doc(id).get()).data();
+  }
+
+  getImage(String image) {
+    final ref = _storage.ref().child('food/${authService.user?.uid}/${image}/file');
+    return ref.getDownloadURL();
+    // return url;
+  }
+
   upsertRecipe(RecipeModel recipe, File photo) async {
     final recipes = await recipesRef;
     await uploadFile(photo);
@@ -57,6 +68,16 @@ class RecipesService {
             .orderBy('likes')
             .get()
         : recipes.where('createdBy', isEqualTo: userUid).orderBy('likes').get();
+  }
+
+  Stream<DocumentSnapshot<dynamic?>> getRecipeReviews(id) {
+    return _db.collection(recipesCollection).doc(id).snapshots();
+  }
+
+  addReview(ReviewModel review, String id) {
+    _db.collection(recipesCollection).doc(id).update({
+      'reviews': FieldValue.arrayUnion([review.toMap()])
+    });
   }
 
   uploadFile(File file) async {
