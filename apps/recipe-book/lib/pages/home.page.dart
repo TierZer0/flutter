@@ -44,7 +44,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final appModel = Provider.of<AppModel>(context);
     var theme = Theme.of(context);
     userService.getUserTheme.then((theme) {
       context.read<AppModel>().theme = theme;

@@ -1,3 +1,5 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +21,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // FirebaseUIAuth.configureProviders([
+  //   GoogleProvider(clientId: '1:85740521128:android:3b8e9f6023aa844bc1249d'),
+  // ]);
 
   // runApp(App());
   runApp(

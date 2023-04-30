@@ -25,6 +25,7 @@ ThemeData buildLightTheme() {
       onBackground: lowerDarkColor,
       surface: elevatedLightColor,
       onSurface: lowerDarkColor,
+      outline: primaryColor,
     ),
     cardTheme: CardTheme(
       surfaceTintColor: elevatedLightColor,
@@ -41,13 +42,6 @@ ThemeData buildLightTheme() {
       backgroundColor: lightColor,
       indicatorColor: primaryColor,
     ),
-    // appBarTheme: const AppBarTheme(
-    //   backgroundColor: lightColor,
-    //   foregroundColor: lightThemeTextColor,
-    // ),
-    // tabBarTheme: const TabBarTheme(
-    //   labelColor: lightThemeTextColor,
-    // ),
     chipTheme: ChipThemeData(
       selectedColor: primaryColor,
     ),
@@ -85,52 +79,6 @@ ThemeData buildLightTheme() {
         ),
       ),
     ),
-    // inputDecorationTheme: const InputDecorationTheme(
-    //   labelStyle: TextStyle(
-    //     color: lightThemeTextColor,
-    //   ),
-    //   enabledBorder: OutlineInputBorder(
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //     borderSide: BorderSide(
-    //       color: primaryColor,
-    //       width: 1.0,
-    //       style: BorderStyle.solid,
-    //     ),
-    //   ),
-    //   prefixIconColor: primaryColor,
-    //   focusedBorder: OutlineInputBorder(
-    //     borderSide: BorderSide(
-    //       color: primaryColor,
-    //       width: 2.5,
-    //     ),
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //   ),
-    //   errorBorder: OutlineInputBorder(
-    //     borderSide: BorderSide(
-    //       color: tertiaryColor,
-    //       width: 2.5,
-    //     ),
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //   ),
-    //   focusedErrorBorder: OutlineInputBorder(
-    //     borderSide: BorderSide(
-    //       color: tertiaryColor,
-    //       width: 2.5,
-    //     ),
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //   ),
-    //   errorStyle: TextStyle(
-    //     color: tertiaryColor,
-    //   ),
-    // ),
   );
 }
 
@@ -155,6 +103,7 @@ ThemeData buildDarkTheme() {
       onBackground: darkText,
       surface: elevatedDarkColor,
       onSurface: darkText,
+      outline: primaryColor,
     ),
     cardTheme: CardTheme(
       surfaceTintColor: elevatedDarkColor,
@@ -174,13 +123,6 @@ ThemeData buildDarkTheme() {
       backgroundColor: lowerDarkColor,
       indicatorColor: primaryColor,
     ),
-    // appBarTheme: const AppBarTheme(
-    //   backgroundColor: lowerDarkColor,
-    //   foregroundColor: darkText,
-    // ),
-    // tabBarTheme: const TabBarTheme(
-    //   labelColor: darkText,
-    // ),
     shadowColor: Colors.transparent,
     inputDecorationTheme: const InputDecorationTheme(
       filled: true,
@@ -215,51 +157,5 @@ ThemeData buildDarkTheme() {
         ),
       ),
     ),
-    // inputDecorationTheme: const InputDecorationTheme(
-    //   labelStyle: TextStyle(
-    //     color: primaryColor,
-    //   ),
-    //   enabledBorder: OutlineInputBorder(
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //     borderSide: BorderSide(
-    //       color: primaryColor,
-    //       width: 1.0,
-    //       style: BorderStyle.solid,
-    //     ),
-    //   ),
-    //   errorBorder: OutlineInputBorder(
-    //     borderSide: BorderSide(
-    //       color: tertiaryColor,
-    //       width: 2.5,
-    //     ),
-    //     borderRadius: BorderRadius.all(
-    //       Radius.circular(20.0),
-    //     ),
-    //   ),
-    //   prefixIconColor: primaryColor,
-    // focusedBorder: OutlineInputBorder(
-    //   borderSide: BorderSide(
-    //     color: primaryColor,
-    //     width: 2.5,
-    //   ),
-    //   borderRadius: BorderRadius.all(
-    //     Radius.circular(20.0),
-    //   ),
-    // ),
-    // focusedErrorBorder: OutlineInputBorder(
-    //   borderSide: BorderSide(
-    //     color: tertiaryColor,
-    //     width: 2.5,
-    //   ),
-    //   borderRadius: BorderRadius.all(
-    //     Radius.circular(20.0),
-    //   ),
-    // ),
-    //   errorStyle: TextStyle(
-    //     color: tertiaryColor,
-    //   ),
-    // ),
   );
 }
