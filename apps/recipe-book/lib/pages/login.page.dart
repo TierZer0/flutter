@@ -1,11 +1,9 @@
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/firebase_options.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
@@ -25,24 +23,10 @@ class LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  // FormGroup buildForm() => fb.group(
-  //       <String, Object>{
-  //         'email': FormControl<String>(
-  //           validators: [Validators.required, Validators.email],
-  //         ),
-  //         'password': ['', Validators.required, Validators.minLength(8)],
-  //       },
-  //     );
-
   final form = FormGroup({
     'email': FormControl(validators: [Validators.required, Validators.email]),
     'password': FormControl(validators: [Validators.required, Validators.minLength(8)]),
   });
-
-  // final emailController = TextEditingController();
-  // var emailValidate = false;
-  // final passwordController = TextEditingController();
-  // var passwordValidate = false;
 
   @override
   Widget build(BuildContext context) {
