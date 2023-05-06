@@ -31,10 +31,7 @@ dependencies:
   provider: ^6.0.5
   google_fonts: ^4.0.3
   font_awesome_flutter: ^10.2.1
-<<<<<<< HEAD
   google_sign_in: ^6.1.0
-=======
->>>>>>> e8e37eabaa6a5bd45a5350ded958c562cb53adcb
   go_router: ^6.2.0
   reactive_forms: ^14.1.0
   image_picker: ^0.8.7
