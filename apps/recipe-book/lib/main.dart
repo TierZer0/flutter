@@ -1,3 +1,5 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +10,7 @@ import 'package:recipe_book/main.view.dart';
 import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe-book.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
-import 'package:recipe_book/pages/recipe.page.dart';
+import 'package:recipe_book/pages/recipe/recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
 import 'firebase_options.dart';
@@ -19,6 +21,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // FirebaseUIAuth.configureProviders([
+  //   GoogleProvider(clientId: '1:85740521128:android:3b8e9f6023aa844bc1249d'),
+  // ]);
 
   // runApp(App());
   runApp(
@@ -70,6 +75,14 @@ class AppState extends State<App> {
         builder: (context, state) {
           return NewPage();
         },
+        routes: [
+          GoRoute(
+            path: ':recipeId',
+            builder: (context, state) {
+              return NewPage(id: state.params['recipeId']);
+            },
+          )
+        ],
       ),
       GoRoute(
         path: '/newRecipeBook',

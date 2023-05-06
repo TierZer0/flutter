@@ -44,7 +44,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final appModel = Provider.of<AppModel>(context);
     var theme = Theme.of(context);
     userService.getUserTheme.then((theme) {
       context.read<AppModel>().theme = theme;
@@ -90,35 +89,40 @@ class HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 20.0,
+          horizontal: 0.0,
           vertical: 15.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 10.0,
-              children: _generalFilters
-                  .map(
-                    (filter) => ChoiceChip(
-                      label: CustomText(
-                        text: filter,
-                        fontSize: 18.0,
-                        fontFamily: "Lato",
-                        color: _generalFilter == filter
-                            ? theme.colorScheme.onPrimary
-                            : theme.colorScheme.onBackground,
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+              ),
+              child: Wrap(
+                spacing: 10.0,
+                children: _generalFilters
+                    .map(
+                      (filter) => ChoiceChip(
+                        label: CustomText(
+                          text: filter,
+                          fontSize: 18.0,
+                          fontFamily: "Lato",
+                          color: _generalFilter == filter
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.onBackground,
+                        ),
+                        selected: _generalFilter == filter,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            _generalFilter = selected ? filter : null;
+                          });
+                        },
                       ),
-                      selected: _generalFilter == filter,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _generalFilter = selected ? filter : null;
-                        });
-                      },
-                    ),
-                  )
-                  .toList(),
+                    )
+                    .toList(),
+              ),
             ),
             SizedBox(
               height: 250,
@@ -137,8 +141,9 @@ class HomePageState extends State<HomePage> {
                             tag: 'recipe-${doc.id}-general',
                             child: Card(
                               margin: EdgeInsets.only(
-                                right: 20.0,
+                                right: 5.0,
                                 bottom: 15.0,
+                                left: 20.0,
                               ),
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(
@@ -175,28 +180,33 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Wrap(
-              spacing: 10.0,
-              children: _categories
-                  .map(
-                    (filter) => ChoiceChip(
-                      label: CustomText(
-                        text: filter,
-                        fontSize: 18.0,
-                        fontFamily: "Lato",
-                        color: _categoryFilter == filter
-                            ? theme.colorScheme.onPrimary
-                            : theme.colorScheme.onBackground,
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+              ),
+              child: Wrap(
+                spacing: 10.0,
+                children: _categories
+                    .map(
+                      (filter) => ChoiceChip(
+                        label: CustomText(
+                          text: filter,
+                          fontSize: 18.0,
+                          fontFamily: "Lato",
+                          color: _categoryFilter == filter
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.onBackground,
+                        ),
+                        selected: _categoryFilter == filter,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            _categoryFilter = selected ? filter : null;
+                          });
+                        },
                       ),
-                      selected: _categoryFilter == filter,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _categoryFilter = selected ? filter : null;
-                        });
-                      },
-                    ),
-                  )
-                  .toList(),
+                    )
+                    .toList(),
+              ),
             ),
             SizedBox(
               height: 300,
@@ -218,8 +228,9 @@ class HomePageState extends State<HomePage> {
                             tag: 'recipe-${doc.id}-user',
                             child: Card(
                               margin: EdgeInsets.only(
-                                right: 20.0,
+                                right: 5.0,
                                 bottom: 15.0,
+                                left: 20.0,
                               ),
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(
@@ -261,106 +272,4 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-Widget buildTrendingCard(item, Color backgrounColor, Color shadowColor, Color textColor,
-    BuildContext context, VoidCallback onTap) {
-  return Container(
-    width: 200,
-    margin: const EdgeInsets.symmetric(
-      horizontal: 20.0,
-      vertical: 20.0,
-    ),
-    decoration: BoxDecoration(
-      color: backgrounColor,
-      boxShadow: [
-        BoxShadow(
-          color: shadowColor,
-          blurRadius: 10.0,
-        ),
-      ],
-      borderRadius: const BorderRadius.all(
-        Radius.circular(
-          20.0,
-        ),
-      ),
-    ),
-    child: Material(
-      color: Colors.transparent,
-      borderRadius: const BorderRadius.all(
-        Radius.circular(
-          20.0,
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CustomText(
-                text: item['title'],
-                fontSize: 20.0,
-                fontFamily: "Lato",
-                color: textColor,
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-// Widget buildCategoryChip(item, Color backgroundColor, Color borderColor, Color textColor, Color activeTextColor, Color activeColor)
-
-Widget buildRecipeCard(
-    item, bool active, Color backgroundColor, Color textColor, BuildContext context) {
-  final double blur = active ? 15 : 0;
-  final double opacity = active ? 1 : 0;
-  final double top = active ? 15 : 50;
-  final double bottom = active ? 25 : 50;
-  final double left = active ? 20 : 15;
-  final double right = active ? 20 : 15;
-
-  BorderRadius radius = const BorderRadius.all(
-    Radius.circular(20),
-  );
-
-  return AnimatedContainer(
-    duration: const Duration(
-      milliseconds: 400,
-    ),
-    margin: EdgeInsets.only(
-      top: top,
-      bottom: bottom,
-      left: left,
-      right: right,
-    ),
-    decoration: BoxDecoration(
-      color: backgroundColor,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black26,
-          blurRadius: blur,
-        ),
-      ],
-      borderRadius: radius,
-    ),
-    child: Material(
-      color: Colors.transparent,
-      clipBehavior: Clip.antiAlias,
-      borderRadius: radius,
-      child: InkWell(
-        onTap: () {},
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          children: [],
-        ),
-      ),
-    ),
-  );
 }
