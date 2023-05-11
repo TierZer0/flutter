@@ -67,6 +67,9 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               'description': FormControl<String>(),
               'category': FormControl<String>(),
               'book': FormControl<String>(),
+              'cookTime': FormControl<int>(validators: [Validators.required]),
+              'prepTime': FormControl<int>(validators: [Validators.required]),
+              'servings': FormControl<int>(validators: [Validators.required]),
             },
           ),
           'ingredients': FormGroup(
@@ -104,6 +107,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // _tabController.index = 2;
 
     return ReactiveFormBuilder(
       form: buildForm,

@@ -27,6 +27,10 @@ ThemeData buildLightTheme() {
       onSurface: lowerDarkColor,
       outline: primaryColor,
     ),
+    // searchBarTheme: SearchBarThemeData(
+    //   backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+    //       (Set<MaterialState> states) => elevatedLightColor),
+    // ),
     cardTheme: CardTheme(
       surfaceTintColor: elevatedLightColor,
       elevation: 2,
@@ -50,7 +54,8 @@ ThemeData buildLightTheme() {
       filled: true,
       prefixIconColor: primaryColor,
       labelStyle: TextStyle(
-        fontSize: 25.0,
+        fontWeight: FontWeight.w400,
+        fontSize: 20.0,
       ),
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(
@@ -128,7 +133,8 @@ ThemeData buildDarkTheme() {
       filled: true,
       prefixIconColor: primaryColor,
       labelStyle: TextStyle(
-        fontSize: 25.0,
+        fontWeight: FontWeight.w400,
+        fontSize: 20.0,
       ),
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(

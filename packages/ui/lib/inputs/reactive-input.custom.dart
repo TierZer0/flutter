@@ -8,6 +8,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
   Map<String, String Function(Object)> validationMessages;
   TextInputAction inputAction;
   int? maxLines;
+  TextInputType keyboardType;
 
   String label;
   Color textColor;
@@ -29,11 +30,13 @@ class CustomReactiveInput<T> extends StatelessWidget {
     this.onTap,
     this.readonly = false,
     this.obscureText = false,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField<T>(
+      keyboardType: keyboardType,
       onTap: onTap,
       maxLines: maxLines,
       formControlName: formName,

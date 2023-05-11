@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -30,7 +29,7 @@ class SaveStepState extends State<SaveStep> {
 
     setState(() {
       if (pickedFile != null) {
-        if (pickedFile!.name.indexOf('.jpg') != -1 || pickedFile!.name.indexOf('.png') != -1) {
+        if (pickedFile.name.indexOf('.jpg') != -1 || pickedFile.name.indexOf('.png') != -1) {
           _photo = File(pickedFile.path);
           widget.recipe.image = pickedFile.name;
         } else {

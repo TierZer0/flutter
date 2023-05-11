@@ -86,6 +86,10 @@ class HomePageState extends State<HomePage> {
                 ),
               )),
         ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(100.0),
+        //   child: SearchBar(),
+        // ),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

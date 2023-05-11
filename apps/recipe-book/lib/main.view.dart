@@ -27,11 +27,13 @@ class MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = (Theme.of(context).textTheme.titleLarge?.color)!;
+    // final textColor = (Theme.of(context).textTheme.titleLarge?.color)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: NavigationBar(
+        elevation: 4,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
@@ -43,7 +45,7 @@ class MainViewState extends State<MainView> {
             icon: Icon(
               Icons.home_outlined,
               size: 35.0,
-              color: textColor,
+              color: theme.colorScheme.onSurface,
             ),
             label: 'Home',
           ),
@@ -51,7 +53,7 @@ class MainViewState extends State<MainView> {
             icon: Icon(
               Icons.book_outlined,
               size: 35.0,
-              color: textColor,
+              color: theme.colorScheme.onSurface,
             ),
             label: 'Recipes',
           ),
@@ -59,7 +61,7 @@ class MainViewState extends State<MainView> {
             icon: Icon(
               Icons.favorite_outline,
               size: 35.0,
-              color: textColor,
+              color: theme.colorScheme.onSurface,
             ),
             label: 'Favorites',
           ),
@@ -67,20 +69,26 @@ class MainViewState extends State<MainView> {
             icon: Icon(
               Icons.person_outline_outlined,
               size: 35.0,
-              color: textColor,
+              color: theme.colorScheme.onSurface,
             ),
             label: 'Profile',
           ),
         ],
       ),
       body: views[currentPageIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
         backgroundColor: secondaryColor,
         onPressed: () => context.push('/newRecipe'),
-        child: const Icon(
+        icon: const Icon(
           Icons.add_outlined,
-          size: 40.0,
+          size: 30.0,
+        ),
+        label: CustomText(
+          text: 'New Recipe',
+          fontSize: 20.0,
+          fontFamily: "Lato",
+          color: theme.colorScheme.surface,
         ),
       ),
     );
