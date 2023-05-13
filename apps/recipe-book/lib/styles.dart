@@ -8,6 +8,7 @@ const tertiaryColor = Color(0xFF931a3e); //Color(0xFFE26D5A);
 
 const lightColor = Color(0xFFebfcf7); //Color(0xFFFDFFFC);
 const elevatedLightColor = Color(0xFFdbf9f0);
+
 ThemeData buildLightTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
@@ -31,6 +32,13 @@ ThemeData buildLightTheme() {
     //   backgroundColor: MaterialStateProperty.resolveWith<Color?>(
     //       (Set<MaterialState> states) => elevatedLightColor),
     // ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        padding: MaterialStatePropertyAll(
+          EdgeInsets.all(5.0),
+        ),
+      ),
+    ),
     cardTheme: CardTheme(
       surfaceTintColor: elevatedLightColor,
       elevation: 2,
