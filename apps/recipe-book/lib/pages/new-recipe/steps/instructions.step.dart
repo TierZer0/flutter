@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/shared/table.shared.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
-class InstructionsStep extends StatelessWidget {
+class InstructionsStep extends StatefulWidget {
   FormGroup formGroup;
 
   VoidCallback tapForward;
@@ -14,101 +15,133 @@ class InstructionsStep extends StatelessWidget {
   InstructionsStep({required this.formGroup, required this.tapForward, required this.tapBack});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 25.0,
-        vertical: 25.0,
-      ),
-      child: Column(
-        children: [
-          CustomReactiveInput(
-            formName: 'instructions.title',
-            inputAction: TextInputAction.next,
-            label: 'Title',
-            textColor: theme.colorScheme.onBackground,
-            validationMessages: {
-              ValidationMessage.required: (_) => 'The Instruction title must not be empty',
-            },
-          ),
-          const SizedBox(
-            height: 25.0,
-          ),
-          CustomReactiveInput(
-            formName: 'instructions.description',
-            inputAction: TextInputAction.next,
-            label: 'Description',
-            textColor: theme.colorScheme.onBackground,
-            validationMessages: {
-              ValidationMessage.required: (_) => 'The Instruction description must not be empty',
-            },
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          ReactiveFormConsumer(
-            builder: (context, form, child) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ElevatedButton(
-                    onPressed: form.control('instructions').invalid
+  _InstructionsStepState createState() => _InstructionsStepState();
+}
+
+class _InstructionsStepState extends State<InstructionsStep> {
+  List<InstructionModel> _instructions = [];
+
+  final fields = ['Title', 'Description', 'Order'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _instructions = widget.formGroup.control('instructions.steps').value;
+    });
+  }
+
+  Future<void> _addInstructionDialogBuilder(BuildContext context) {
+    widget.formGroup.control('instructions.title').reset();
+    widget.formGroup.control('instructions.description').reset();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        var theme = Theme.of(context);
+        return ReactiveForm(
+          formGroup: widget.formGroup,
+          child: AlertDialog(
+            backgroundColor: theme.colorScheme.surface,
+            title: CustomText(
+              text: "Add Instruction",
+              fontSize: 20.0,
+              fontFamily: "Lato",
+              color: theme.colorScheme.onSurface,
+            ),
+            content: Wrap(
+              spacing: 15.0,
+              runSpacing: 20.0,
+              children: [
+                CustomReactiveInput(
+                  formName: 'instructions.title',
+                  inputAction: TextInputAction.next,
+                  label: 'Title',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    ValidationMessage.required: (_) => 'The Instruction title must not be empty',
+                  },
+                ),
+                CustomReactiveInput(
+                  formName: 'instructions.description',
+                  inputAction: TextInputAction.next,
+                  label: 'Description',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    ValidationMessage.required: (_) =>
+                        'The Instruction description must not be empty',
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: CustomText(
+                  text: "Cancel",
+                  fontSize: 15.0,
+                  fontFamily: "Lato",
+                  color: theme.colorScheme.onSurface,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ReactiveFormConsumer(
+                builder: (context, formGroup, child) {
+                  return FilledButton(
+                    child: CustomText(
+                      text: "Submit",
+                      fontSize: 15.0,
+                      fontFamily: "Lato",
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    onPressed: formGroup.control('instructions').invalid
                         ? null
                         : () {
-                            form.markAsUntouched();
-                            AbstractControl<dynamic> group = form.control('instructions');
-                            if (group.invalid) {
-                              group.markAllAsTouched();
-                              return;
-                            }
-                            List<InstructionModel> steps = group.value['steps'] ?? [];
-
-                            steps.add(
-                              InstructionModel(
-                                title: group.value['title'],
-                                order: steps.length + 1,
-                                description: group.value['description'],
-                              ),
-                            );
-                            group.patchValue({'title': null, 'order': null, 'description': null});
-                            form.control('instructions').patchValue({'steps': steps});
+                            final value = formGroup.control('instructions').value;
+                            setState(() {
+                              _instructions.add(InstructionModel(
+                                title: value['title'],
+                                description: value['description'],
+                                order: _instructions.length + 1,
+                              ));
+                              widget.formGroup
+                                  .control('instructions.steps')
+                                  .patchValue(_instructions);
+                            });
+                            Navigator.of(context).pop();
                           },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-                      child: CustomText(
-                        text: "Add Instruction",
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 25.0,
-                  ),
-                  SizedBox(
-                    height: 200.0,
-                    child: ListView(
-                      children: form
-                          .control('instructions')
-                          .value['steps']
-                          .map<Widget>(
-                            (InstructionModel item) => CustomText(
-                              text: item.toString(),
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  );
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            TableShared<InstructionModel>(fields: fields, data: _instructions),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Wrap(
+                    spacing: 30,
                     children: [
                       ElevatedButton(
-                        onPressed: tapBack,
+                        onPressed: widget.tapBack,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                           child: CustomText(
@@ -119,6 +152,13 @@ class InstructionsStep extends StatelessWidget {
                           ),
                         ),
                       ),
+                      FloatingActionButton(
+                        onPressed: () => _addInstructionDialogBuilder(context),
+                        child: Icon(
+                          Icons.playlist_add,
+                          size: 30,
+                        ),
+                      ),
                       ElevatedButton(
                         onPressed: (form.control('instructions') as FormGroup)
                                     .control('steps')
@@ -126,7 +166,8 @@ class InstructionsStep extends StatelessWidget {
                                     .length ==
                                 0
                             ? null
-                            : tapForward,
+                            : widget.tapForward,
+                        // onPressed: widget.tapForward,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                           child: CustomText(
@@ -138,12 +179,12 @@ class InstructionsStep extends StatelessWidget {
                         ),
                       )
                     ],
-                  )
-                ],
-              );
-            },
-          ),
-        ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

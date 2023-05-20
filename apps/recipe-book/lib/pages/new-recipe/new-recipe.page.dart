@@ -67,6 +67,9 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               'description': FormControl<String>(),
               'category': FormControl<String>(),
               'book': FormControl<String>(),
+              'cookTime': FormControl<int>(validators: [Validators.required]),
+              'prepTime': FormControl<int>(validators: [Validators.required]),
+              'servings': FormControl<int>(validators: [Validators.required]),
             },
           ),
           'ingredients': FormGroup(
@@ -84,7 +87,11 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               'description': FormControl<String>(),
               'steps': FormControl<List<InstructionModel>>(value: []),
             },
-          )
+          ),
+          'settings': FormGroup({
+            'isPublic': FormControl<bool>(value: true),
+            'isShareable': FormControl<bool>(value: false),
+          }),
         },
       );
 
@@ -104,6 +111,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // _tabController.index = 2;
 
     return ReactiveFormBuilder(
       form: buildForm,
@@ -111,6 +119,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         AbstractControl<dynamic> details = formGroup.control('details') as FormGroup;
         AbstractControl<dynamic> ingredients = formGroup.control('ingredients') as FormGroup;
         AbstractControl<dynamic> instructions = formGroup.control('instructions') as FormGroup;
+        AbstractControl<dynamic> settings = formGroup.control('settings') as FormGroup;
         _formGroup = formGroup;
 
         onTap(curr, goTo) {
@@ -157,6 +166,8 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         }
 
         submit(File photo) {
+          recipe.isPublic = settings.value['isPublic'];
+          recipe.isShareable = settings.value['isShareable'];
           recipesService.upsertRecipe(recipe, photo);
           context.read<AppModel>().recipeBook = RecipeBookModel(
             name: '',
@@ -175,7 +186,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: theme.colorScheme.surface,
-            elevation: 0,
+            elevation: 10,
             title: CustomText(
               text: widget.id == null ? "Create A New Recipe" : "Edit Recipe",
               fontSize: 25.0,
@@ -243,6 +254,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                         tapForward: onTap(2, 3),
                       ),
                       SaveStep(
+                        formGroup: formGroup,
                         recipe: recipe,
                         tapBack: onTap(3, 2),
                         tapForward: (photo) {

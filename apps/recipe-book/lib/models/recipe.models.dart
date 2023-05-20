@@ -59,6 +59,8 @@ class RecipeModel {
   String? createdBy;
   String? image;
   List<ReviewModel>? reviews;
+  bool? isPublic;
+  bool? isShareable;
 
   RecipeModel({
     this.title,
@@ -72,6 +74,8 @@ class RecipeModel {
     this.createdBy,
     this.image,
     this.reviews,
+    this.isPublic,
+    this.isShareable,
   });
 
   factory RecipeModel.fromFirestore(
@@ -104,12 +108,14 @@ class RecipeModel {
       if (recipeBook != null) "recipeBook": recipeBook,
       if (description != null) "description": description,
       if (instructions != null)
-        "instructions": instructions!.map((instruction) => instruction.toMap()),
-      if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toMap()),
+        "instructions": instructions!.map((instruction) => instruction.toJson()),
+      if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toJson()),
       if (likes != null) "likes": likes,
       if (createdBy != null) "createdBy": createdBy,
       if (image != null) "image": image,
       if (reviews != null) "reviews": reviews!.map((review) => review.toMap()),
+      if (isPublic != null) "isPublic": isPublic,
+      if (isShareable != null) "isShareable": isShareable,
     };
   }
 
@@ -168,7 +174,7 @@ class InstructionModel {
         .toList();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       if (title != null) 'title': title,
       if (order != null) 'order': order,
@@ -205,7 +211,7 @@ class IngredientModel {
         .toList();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       if (item != null) 'item': item,
       if (quantity != null) 'quantity': quantity,

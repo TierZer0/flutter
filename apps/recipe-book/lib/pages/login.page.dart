@@ -35,6 +35,7 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        elevation: 10,
         toolbarHeight: 150.0,
         title: Column(
           children: [
