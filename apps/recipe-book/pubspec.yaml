@@ -36,6 +36,7 @@ dependencies:
   image_picker: ^0.8.7
   path: ^1.8.0
   skeleton_loader: ^2.0.0+4
+  dotted_border: ^2.0.0+3
 
   # firebase_core_desktop: ^1.0.2
   # firebase_auth_desktop: ^1.0.2

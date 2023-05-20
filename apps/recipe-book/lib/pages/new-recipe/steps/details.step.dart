@@ -79,6 +79,7 @@ class DetailsStepState extends State<DetailsStep> {
                     formControlName: 'details.category',
                     dropdownColor: theme.colorScheme.surface,
                     decoration: InputDecoration(
+                      filled: true,
                       label: CustomText(
                         text: "Category",
                         fontSize: 20.0,
@@ -109,6 +110,7 @@ class DetailsStepState extends State<DetailsStep> {
                     formControlName: 'details.book',
                     dropdownColor: theme.colorScheme.surface,
                     decoration: InputDecoration(
+                      filled: true,
                       label: CustomText(
                         text: "Recipe Book",
                         fontSize: 20.0,

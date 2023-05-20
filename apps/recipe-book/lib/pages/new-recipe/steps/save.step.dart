@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
@@ -6,17 +7,22 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class SaveStep extends StatefulWidget {
+  FormGroup formGroup;
   final RecipeModel recipe;
   VoidCallback tapBack;
   Function tapForward;
 
-  SaveStep({super.key, required this.recipe, required this.tapBack, required this.tapForward});
+  SaveStep({
+    super.key,
+    required this.recipe,
+    required this.tapBack,
+    required this.tapForward,
+    required this.formGroup,
+  });
 
   @override
   SaveStepState createState() => SaveStepState();
 }
-
-enum Recipe { details, ingredients, instructions, info }
 
 class SaveStepState extends State<SaveStep> {
   @override
@@ -44,14 +50,14 @@ class SaveStepState extends State<SaveStep> {
     });
   }
 
-  Recipe recipeView = Recipe.details;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      height: height,
       child: Padding(
         padding: EdgeInsets.all(20.0),
         child: Stack(
@@ -60,38 +66,97 @@ class SaveStepState extends State<SaveStep> {
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: double.maxFinite,
-                child: SegmentedButton<Recipe>(
-                  selected: <Recipe>{recipeView},
-                  onSelectionChanged: (Set<Recipe> newSelection) {
-                    setState(() {
-                      recipeView = newSelection.first;
-                    });
-                  },
-                  segments: const <ButtonSegment<Recipe>>[
-                    ButtonSegment(
-                      value: Recipe.details,
-                      label: Text('Details'),
-                    ),
-                    ButtonSegment(
-                      value: Recipe.ingredients,
-                      label: Text('Ingredients'),
-                    ),
-                    ButtonSegment(
-                      value: Recipe.instructions,
-                      label: Text('Instructions'),
-                    ),
-                    ButtonSegment(
-                      value: Recipe.info,
-                      label: Text('Info'),
-                    ),
-                  ],
+                child: ReactiveForm(
+                  formGroup: widget.formGroup,
+                  child: Wrap(
+                    spacing: 20.0,
+                    runSpacing: 20.0,
+                    children: [
+                      CustomText(
+                        text: "Recipe Settings",
+                        fontSize: 30.0,
+                        fontFamily: "Lato",
+                        color: theme.colorScheme.onBackground,
+                      ),
+                      SizedBox(
+                        width: width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: "Public - Viewable by anyone",
+                              fontSize: 20.0,
+                              fontFamily: "Lato",
+                              color: theme.colorScheme.onBackground,
+                            ),
+                            ReactiveSwitch(
+                              formControlName: 'settings.isPublic',
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: "Shareable - Can be saved to other recipe books",
+                              fontSize: 20.0,
+                              fontFamily: "Lato",
+                              color: theme.colorScheme.onBackground,
+                            ),
+                            ReactiveSwitch(
+                              formControlName: 'settings.isShareable',
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: width,
+                        height: 250,
+                        child: DottedBorder(
+                          dashPattern: [6, 6],
+                          borderType: BorderType.RRect,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          strokeWidth: 1.5,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                imgFromGallery();
+                              },
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: SizedBox(
+                                      height: 200,
+                                      // width: width,
+                                      child: _photo?.path != null
+                                          ? Image.file(_photo!)
+                                          : SizedBox.shrink(),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: CustomText(
+                                      text: "Add a photo",
+                                      fontSize: 20.0,
+                                      fontFamily: "Lato",
+                                      color: theme.colorScheme.onBackground,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Card(),
             ),
             ReactiveFormConsumer(
               builder: (context, form, child) {
@@ -113,7 +178,7 @@ class SaveStepState extends State<SaveStep> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => widget.tapForward(_photo),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                           child: CustomText(
@@ -133,108 +198,5 @@ class SaveStepState extends State<SaveStep> {
         ),
       ),
     );
-    // return Padding(*-
-    //   padding: const EdgeInsets.symmetric(
-    //     horizontal: 25.0,
-    //     vertical: 25.0,
-    //   ),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       CustomText(
-    //         text: widget.recipe.toString(),
-    //         fontSize: 25.0,
-    //         fontWeight: FontWeight.w700,
-    //         fontFamily: "Lato",
-    //         color: theme.colorScheme.onBackground,
-    //       ),
-    //       const SizedBox(
-    //         height: 25.0,
-    //       ),
-    //       CustomText(
-    //         text: 'Ingredients',
-    //         fontSize: 20.0,
-    //         fontWeight: FontWeight.w700,
-    //         fontFamily: "Lato",
-    //         color: theme.colorScheme.onBackground,
-    //       ),
-    //       SizedBox(
-    //         height: 100.0,
-    //         child: ListView(
-    //           children: widget.recipe.listIngredients(
-    //             (theme.textTheme.titleLarge?.color)!,
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 25.0,
-    //       ),
-    //       CustomText(
-    //         text: 'Steps',
-    //         fontSize: 20.0,
-    //         fontWeight: FontWeight.w700,
-    //         fontFamily: "Lato",
-    //         color: theme.colorScheme.onBackground,
-    //       ),
-    //       SizedBox(
-    //         height: 100.0,
-    //         child: ListView(
-    //           children: widget.recipe.listSteps(
-    //             (theme.textTheme.titleLarge?.color)!,
-    //           ),
-    //         ),
-    //       ),
-    //       _photo?.path != null
-    //           ? SizedBox(height: 200, child: Image.file(_photo!))
-    //           : SizedBox.shrink(),
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           imgFromGallery();
-    //         },
-    //         child: Padding(
-    //           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-    //           child: CustomText(
-    //             text: "Select Image",
-    //             fontSize: 15.0,
-    //             fontFamily: "Lato",
-    //             color: theme.colorScheme.onBackground,
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 25.0,
-    //       ),
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         children: [
-    //           ElevatedButton(
-    //             onPressed: widget.tapBack,
-    //             child: Padding(
-    //               padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-    //               child: CustomText(
-    //                 text: "Prior Step",
-    //                 fontSize: 20.0,
-    //                 fontFamily: "Lato",
-    //                 color: theme.colorScheme.onBackground,
-    //               ),
-    //             ),
-    //           ),
-    //           ElevatedButton(
-    //             onPressed: () => widget.tapForward(_photo),
-    //             child: Padding(
-    //               padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-    //               child: CustomText(
-    //                 text: "Save Recipe",
-    //                 fontSize: 20.0,
-    //                 fontFamily: "Lato",
-    //                 color: theme.colorScheme.onBackground,
-    //               ),
-    //             ),
-    //           )
-    //         ],
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }

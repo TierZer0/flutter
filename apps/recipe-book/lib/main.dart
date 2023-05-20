@@ -11,6 +11,7 @@ import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
 import 'package:recipe_book/pages/recipe/recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
+import 'package:recipe_book/styles/colors.scheme.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -126,11 +127,14 @@ class AppState extends State<App> {
                   systemNavigationBarIconBrightness: Brightness.light,
                 ),
         );
+        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         // appPreferences.getUserUIDPref().then((value) => context.read<AppModel>().uid = value);
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
-          theme: theme,
+          theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+          darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+          themeMode: mode,
         );
       },
     );

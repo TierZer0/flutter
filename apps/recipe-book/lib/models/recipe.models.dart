@@ -59,6 +59,8 @@ class RecipeModel {
   String? createdBy;
   String? image;
   List<ReviewModel>? reviews;
+  bool? isPublic;
+  bool? isShareable;
 
   RecipeModel({
     this.title,
@@ -72,6 +74,8 @@ class RecipeModel {
     this.createdBy,
     this.image,
     this.reviews,
+    this.isPublic,
+    this.isShareable,
   });
 
   factory RecipeModel.fromFirestore(
@@ -110,6 +114,8 @@ class RecipeModel {
       if (createdBy != null) "createdBy": createdBy,
       if (image != null) "image": image,
       if (reviews != null) "reviews": reviews!.map((review) => review.toMap()),
+      if (isPublic != null) "isPublic": isPublic,
+      if (isShareable != null) "isShareable": isShareable,
     };
   }
 

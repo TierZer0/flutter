@@ -38,7 +38,7 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
             bottom: 40.0,
           ),
         ),
-        elevation: 0,
+        elevation: 10,
         toolbarHeight: 85.0,
         bottom: TabBar(
           indicatorColor: primaryColor,

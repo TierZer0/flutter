@@ -10,7 +10,10 @@ const lightColor = Color(0xFFebfcf7); //Color(0xFFFDFFFC);
 const elevatedLightColor = Color(0xFFdbf9f0);
 
 ThemeData buildLightTheme() {
+  //return ThemeData(colorSchemeSeed: primaryColor, useMaterial3: true, brightness: Brightness.light);
+
   final ThemeData base = ThemeData.light();
+
   return base.copyWith(
     useMaterial3: true,
     canvasColor: Colors.transparent,
@@ -44,11 +47,12 @@ ThemeData buildLightTheme() {
       elevation: 2,
     ),
     scaffoldBackgroundColor: lightColor,
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        color: lightThemeTextColor,
-      ),
-    ),
+    // textTheme: const TextTheme(
+    //   titleLarge: TextStyle(
+    //     color: lightThemeTextColor,
+    //   ),
+    // ),
+    // textTheme: Typography.blackMountainView,
     navigationBarTheme: const NavigationBarThemeData(
       surfaceTintColor: lightColor,
       backgroundColor: lightColor,
@@ -100,6 +104,8 @@ const lowerDarkColor = Color(0xFF020e0a); //Color(0xFF090707);
 const elevatedDarkColor = Color(0xFF051e17); //Color(0xFF100F0F);
 const popupColor = Color(0xFF082f23);
 ThemeData buildDarkTheme() {
+  //return ThemeData(colorSchemeSeed: primaryColor, useMaterial3: true, brightness: Brightness.dark);
+
   final ThemeData base = ThemeData.dark();
   return base.copyWith(
     useMaterial3: true,

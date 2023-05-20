@@ -47,6 +47,7 @@ class CustomReactiveInput<T> extends StatelessWidget {
         labelText: label,
         helperStyle: const TextStyle(height: 0.7),
         errorStyle: const TextStyle(height: 0.7),
+        filled: true,
       ),
       style: TextStyle(
         color: textColor,

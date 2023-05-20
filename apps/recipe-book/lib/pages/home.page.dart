@@ -50,7 +50,8 @@ class HomePageState extends State<HomePage> {
     }).catchError((e) => print(e));
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60.0,
+        toolbarHeight: 100.0,
+        elevation: 10,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -68,38 +69,60 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(100.0),
-          child: ReactiveForm(
-              formGroup: formGroup,
-              child: Container(
-                padding: EdgeInsets.only(
-                  left: 20.0,
-                  right: 20.0,
-                  bottom: 20.0,
-                ),
-                child: CustomReactiveInput(
-                  inputAction: TextInputAction.done,
-                  formName: 'search',
-                  label: 'Search',
-                  textColor: theme.colorScheme.onSurface,
-                ),
-              )),
-        ),
         // bottom: PreferredSize(
         //   preferredSize: Size.fromHeight(100.0),
-        //   child: SearchBar(),
+        //   child: SizedBox.shrink(),
+        // ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(100.0),
+        //   child: ReactiveForm(
+        //       formGroup: formGroup,
+        //       child: Container(
+        //         padding: EdgeInsets.only(
+        //           left: 20.0,
+        //           right: 20.0,
+        //           bottom: 20.0,
+        //         ),
+        //         child: CustomReactiveInput(
+        //           inputAction: TextInputAction.done,
+        //           formName: 'search',
+        //           label: 'Search',
+        //           textColor: theme.colorScheme.onSurface,
+        //         ),
+        //       )),
+        // ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(100.0),
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(
+        //       vertical: 20.0,
+        //     ),
+        //     child: SearchBar(
+        //       elevation: MaterialStatePropertyAll(5),
+        //     ),
+        //   ),
         // ),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 0.0,
-          vertical: 15.0,
+          vertical: 5.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 10.0,
+              ),
+              child: SearchBar(
+                elevation: MaterialStatePropertyAll(1.0),
+                leading: Icon(Icons.search),
+                hintText: "Search Recipes",
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 left: 20.0,
@@ -113,9 +136,7 @@ class HomePageState extends State<HomePage> {
                           text: filter,
                           fontSize: 18.0,
                           fontFamily: "Lato",
-                          color: _generalFilter == filter
-                              ? theme.colorScheme.onPrimary
-                              : theme.colorScheme.onBackground,
+                          color: theme.colorScheme.onBackground,
                         ),
                         selected: _generalFilter == filter,
                         onSelected: (bool selected) {

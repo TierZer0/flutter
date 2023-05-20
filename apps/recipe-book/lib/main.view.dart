@@ -33,7 +33,7 @@ class MainViewState extends State<MainView> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: NavigationBar(
-        elevation: 4,
+        elevation: 0,
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
