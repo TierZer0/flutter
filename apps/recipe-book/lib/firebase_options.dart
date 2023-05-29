@@ -44,7 +44,8 @@ class DefaultFirebaseOptions {
     appId: '1:85740521128:web:f5e034fb18ebfdcec1249d',
     messagingSenderId: '85740521128',
     projectId: 'recipebook-2d734',
-    authDomain: 'recipebook-2d734.firebaseapp.com',
+    // authDomain: 'recipebook-2d734.firebaseapp.com',
+    authDomain: 'https://recipebook.tierzerostudios.com',
     storageBucket: 'recipebook-2d734.appspot.com',
     measurementId: 'G-REEVX0673J',
   );

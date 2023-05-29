@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ui/ui.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -27,7 +25,6 @@ class MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    // final textColor = (Theme.of(context).textTheme.titleLarge?.color)!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -76,19 +73,12 @@ class MainViewState extends State<MainView> {
         ],
       ),
       body: views[currentPageIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: secondaryColor,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/newRecipe'),
-        icon: const Icon(
+        child: const Icon(
           Icons.add_outlined,
           size: 30.0,
-        ),
-        label: CustomText(
-          text: 'New Recipe',
-          fontSize: 20.0,
-          fontFamily: "Lato",
-          color: theme.colorScheme.surface,
         ),
       ),
     );
