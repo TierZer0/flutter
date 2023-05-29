@@ -31,6 +31,7 @@ class SaveStepState extends State<SaveStep> {
   }
 
   File? _photo;
+  String? _name;
 
   imgFromGallery() async {
     final ImagePicker _picker = ImagePicker();
@@ -40,7 +41,8 @@ class SaveStepState extends State<SaveStep> {
       if (pickedFile != null) {
         if (pickedFile.name.indexOf('.jpg') != -1 || pickedFile.name.indexOf('.png') != -1) {
           _photo = File(pickedFile.path);
-          widget.recipe.image = pickedFile.name;
+          // widget.recipe.image = pickedFile.name;
+          _name = pickedFile.name;
         } else {
           _photo = null;
         }
@@ -178,7 +180,7 @@ class SaveStepState extends State<SaveStep> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () => widget.tapForward(_photo),
+                        onPressed: () => widget.tapForward(_photo, _name),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                           child: CustomText(

@@ -126,18 +126,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           final steps = ['details', 'ingredients', 'instructions'];
 
           return () {
-            if (curr == 2) {
-              recipe = RecipeModel(
-                title: details.value['name'],
-                category: details.value['category'] ?? '',
-                recipeBook: context.read<AppModel>().recipeBook.id ?? '',
-                description: details.value['description'] ?? '',
-                ingredients: ingredients.value['items'],
-                instructions: instructions.value['steps'],
-                likes: 0,
-                createdBy: authService.user!.uid,
-              );
-            }
+            if (curr == 2) {}
 
             var update = false;
             switch (curr) {
@@ -165,9 +154,21 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           };
         }
 
-        submit(File photo) {
-          recipe.isPublic = settings.value['isPublic'];
-          recipe.isShareable = settings.value['isShareable'];
+        submit(File photo, String imageName) {
+          recipe = RecipeModel(
+            title: details.value['name'],
+            category: details.value['category'] ?? '',
+            recipeBook: context.read<AppModel>().recipeBook.id ?? '',
+            description: details.value['description'] ?? '',
+            ingredients: ingredients.value['items'],
+            instructions: instructions.value['steps'],
+            likes: 0,
+            createdBy: authService.user!.uid,
+            isPublic: settings.value['isPublic'],
+            isShareable: settings.value['isShareable'],
+            prepTime: details.value['prepTime'],
+            cookTime: details.value['cookTime'],
+          );
           recipesService.upsertRecipe(recipe, photo);
           context.read<AppModel>().recipeBook = RecipeBookModel(
             name: '',
@@ -257,8 +258,8 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                         formGroup: formGroup,
                         recipe: recipe,
                         tapBack: onTap(3, 2),
-                        tapForward: (photo) {
-                          submit(photo!);
+                        tapForward: (photo, name) {
+                          submit(photo!, name!);
                         },
                       )
                     ],

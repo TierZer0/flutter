@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/ui.dart';
@@ -27,7 +25,7 @@ class RecipeBookModel {
   ) {
     final data = snapshot.data();
     return RecipeBookModel(
-      id: data?['iid'],
+      id: data?['id'],
       name: data?['name'],
       category: data?['category'],
       recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
@@ -61,6 +59,8 @@ class RecipeModel {
   List<ReviewModel>? reviews;
   bool? isPublic;
   bool? isShareable;
+  int? prepTime;
+  int? cookTime;
 
   RecipeModel({
     this.title,
@@ -76,6 +76,8 @@ class RecipeModel {
     this.reviews,
     this.isPublic,
     this.isShareable,
+    this.prepTime,
+    this.cookTime,
   });
 
   factory RecipeModel.fromFirestore(
@@ -96,8 +98,12 @@ class RecipeModel {
       likes: data?['likes'],
       id: data?['id'],
       createdBy: data?['createdBy'],
-      image: data?['image'],
+      image: data?['image'] ?? '',
       reviews: data?['reviews'] is Iterable ? ReviewModel().fromMap(data?['reviews']) : null,
+      isPublic: data?['isPublic'],
+      isShareable: data?['isShareable'],
+      prepTime: data?['prepTime'],
+      cookTime: data?['cookTime'],
     );
   }
 
@@ -116,12 +122,14 @@ class RecipeModel {
       if (reviews != null) "reviews": reviews!.map((review) => review.toMap()),
       if (isPublic != null) "isPublic": isPublic,
       if (isShareable != null) "isShareable": isShareable,
+      if (prepTime != null) "prepTime": prepTime,
+      if (cookTime != null) "cookTime": cookTime,
     };
   }
 
   @override
   String toString() {
-    return '$title - $description';
+    return '$title - $id';
   }
 
   List<Widget> listSteps(Color textColor) {

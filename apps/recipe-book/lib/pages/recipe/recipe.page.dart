@@ -13,9 +13,9 @@ import 'package:ui/ui.dart';
 
 class RecipePage extends StatefulWidget {
   final String recipeId;
-  final String source;
+  // final String source;
 
-  RecipePage({required this.recipeId, required this.source});
+  RecipePage({required this.recipeId});
 
   @override
   RecipePageState createState() => RecipePageState();
@@ -188,7 +188,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(150),
         child: Hero(
-          tag: 'recipe-${widget.recipeId}-${widget.source}',
+          tag: 'recipe-${widget.recipeId}',
           child: AppBar(
             shadowColor: Colors.black12,
             title: Column(

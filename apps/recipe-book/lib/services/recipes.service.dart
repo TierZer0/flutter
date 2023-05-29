@@ -25,9 +25,9 @@ class RecipesService {
   }
 
   getImage(String image) {
+    if (image == '') return null;
     final ref = _storage.ref().child('food/${authService.user?.uid}/${image}/file');
     return ref.getDownloadURL();
-    // return url;
   }
 
   upsertRecipe(RecipeModel recipe, File photo) async {
@@ -44,16 +44,54 @@ class RecipesService {
     });
   }
 
-  Future<QuerySnapshot<RecipeModel>> getRecipesByFilter(String type) async {
-    final recipes = await recipesRef;
-    switch (type) {
-      // case 'Trending':
-      //   break;
-      case 'New':
-        return recipes.orderBy('created').get();
-      default:
-        return recipes.get();
+  // Future<QuerySnapshot<RecipeModel>> getRecipesByFilter(String type) async {
+  //   final recipes = await recipesRef;
+  //   switch (type) {
+  //     // case 'Trending':
+  //     //   break;
+  //     case 'New':
+  //       return recipes.orderBy('created').get();
+  //     default:
+  //       return recipes.get();
+  //   }
+  // }
+
+  _buildFilterQuery(Query query, filters) {
+    for (String key in filters.keys) {
+      if (filters[key] != null && filters[key] != '') {
+        var value;
+        if (key.contains('Time')) {
+          value = int.parse(filters[key]);
+        } else {
+          value = filters[key];
+        }
+
+        if (key.contains('ingredient')) {
+          query = query.where('ingredientsList', arrayContains: value);
+        } else {
+          query = query.where(key, isEqualTo: value);
+        }
+      }
     }
+    return query;
+  }
+
+  Stream<QuerySnapshot<RecipeModel>> getRecipes({filters, sort, search}) {
+    Query<RecipeModel> query = recipesRef;
+
+    if (filters != null) {
+      query = _buildFilterQuery(query, filters);
+    }
+
+    print(filters);
+    print(sort);
+    if (sort != null) {
+      query = query.orderBy(sort);
+    } else {
+      query = query.orderBy('created');
+    }
+
+    return query.snapshots();
   }
 
   Future<QuerySnapshot<RecipeModel>> getRecipesByUser({
@@ -81,7 +119,7 @@ class RecipesService {
   }
 
   uploadFile(File file) async {
-    final fileName = basename(file!.path);
+    final fileName = basename(file.path);
     final destination = 'food/${authService.user?.uid}/$fileName';
 
     try {
