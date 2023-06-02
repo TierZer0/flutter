@@ -13,7 +13,7 @@ class CustomCard extends StatelessWidget {
     switch (card) {
       case ECard.elevated:
         return Card(
-          elevation: 5,
+          elevation: 2,
           clipBehavior: Clip.hardEdge,
           child: child,
         );

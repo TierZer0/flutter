@@ -7,16 +7,17 @@ import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 
 import 'package:recipe_book/app_model.dart';
+import 'package:recipe_book/shared/recipe-card.shared.dart';
 
 import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
 import '../models/recipe.models.dart';
-import 'recipe/recipe.page.dart';
+import '../pages/recipe/recipe.page.dart';
 
-class HomePage extends StatefulWidget {
+class HomeView extends StatefulWidget {
   @override
-  HomePageState createState() => HomePageState();
+  HomeViewState createState() => HomeViewState();
 }
 
 const generalFilters = [
@@ -25,7 +26,7 @@ const generalFilters = [
   'New',
 ];
 
-class HomePageState extends State<HomePage> {
+class HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
@@ -263,7 +264,7 @@ class HomePageState extends State<HomePage> {
     }).catchError((e) => print(e));
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60.0,
+        toolbarHeight: 85.0,
         elevation: 10,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,7 +327,7 @@ class HomePageState extends State<HomePage> {
           vertical: 0.0,
         ),
         child: StreamBuilder(
-          stream: recipesService.getRecipes(
+          stream: recipesService.getAllRecipes(
             filters: filters,
             sort: formGroup.control('sort').value,
           ),
@@ -346,84 +347,12 @@ class HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   final RecipeModel recipe = _recipes[index];
                   final String recipeId = recipes[index].id;
-                  return CustomCard(
-                    card: ECard.outlined,
-                    child: InkWell(
-                      splashColor: theme.colorScheme.primary.withOpacity(0.3),
-                      onTap: () => context.push('/recipe/${recipeId}'),
-                      onLongPress: () => _previewDialog(context, recipe, recipeId),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Stack(
-                          children: [
-                            FutureBuilder(
-                              future: recipesService.getImage(recipe.image!),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  final data = snapshot.data;
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                          5.0,
-                                        ),
-                                      ),
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.white.withOpacity(
-                                            Theme.of(context).brightness == Brightness.light
-                                                ? 0.5
-                                                : 0.3,
-                                          ),
-                                          BlendMode.dstATop,
-                                        ),
-                                        image: new NetworkImage(
-                                          data.toString(),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return SizedBox.shrink();
-                              },
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomText(
-                                    text: recipe.title,
-                                    fontSize: 20.0,
-                                    fontFamily: "Lato",
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onBackground,
-                                  ),
-                                  recipe.category != '' || recipe.description != ''
-                                      ? CustomText(
-                                          text: recipe.category ?? recipe.description,
-                                          fontSize: 15.0,
-                                          fontFamily: "Lato",
-                                          color: theme.colorScheme.onBackground,
-                                        )
-                                      : SizedBox.shrink(),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: CustomText(
-                                text: recipe.likes.toString() + ' likes',
-                                fontSize: 15.0,
-                                fontFamily: "Lato",
-                                color: theme.colorScheme.onBackground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  return RecipeCard(
+                    recipe: recipe,
+                    cardType: ECard.elevated,
+                    onTap: () => context.push('/recipe/${recipeId}'),
+                    onLongPress: () => _previewDialog(context, recipe, recipeId),
+                    useImage: true,
                   );
                 },
               );

@@ -29,11 +29,7 @@ class UserService {
   }
 
   Stream<QuerySnapshot> get userBooksStream {
-    return _db
-        .collection('users')
-        .doc(authService.user?.uid)
-        .collection(userBookCollection)
-        .snapshots();
+    return recipeBooksRef.snapshots();
   }
 
   get userRef {

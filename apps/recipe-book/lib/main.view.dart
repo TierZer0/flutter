@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/pages/home.page.dart';
-import 'package:recipe_book/pages/profile/profile.page.dart';
+import 'package:recipe_book/views/home.view.dart';
+import 'package:recipe_book/views/profile/profile.view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe_book/views/recipes/my-recipes.view.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -15,10 +16,10 @@ class MainViewState extends State<MainView> {
   }
 
   var views = [
-    HomePage(),
+    HomeView(),
+    RecipesView(),
     Container(),
-    Container(),
-    ProfilePage(),
+    ProfileView(),
   ];
 
   int currentPageIndex = 0;
@@ -40,11 +41,11 @@ class MainViewState extends State<MainView> {
         destinations: <Widget>[
           NavigationDestination(
             icon: Icon(
-              Icons.home_outlined,
+              Icons.groups_2_outlined,
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'Home',
+            label: 'Community',
           ),
           NavigationDestination(
             icon: Icon(
@@ -52,7 +53,7 @@ class MainViewState extends State<MainView> {
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'Recipes',
+            label: 'My Recipes',
           ),
           NavigationDestination(
             icon: Icon(
