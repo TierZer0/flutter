@@ -64,7 +64,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           'details': FormGroup(
             {
               'name': FormControl<String>(validators: [Validators.required]),
-              'description': FormControl<String>(),
+              'description': FormControl<String>(validators: [Validators.required]),
               'category': FormControl<String>(),
               'book': FormControl<String>(),
               'cookTime': FormControl<int>(validators: [Validators.required]),
@@ -158,7 +158,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           recipe = RecipeModel(
             title: details.value['name'],
             category: details.value['category'] ?? '',
-            recipeBook: context.read<AppModel>().recipeBook.id ?? '',
+            recipeBook: details.value['book'] ?? '',
             description: details.value['description'] ?? '',
             ingredients: ingredients.value['items'],
             instructions: instructions.value['steps'],
@@ -168,6 +168,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
             isShareable: settings.value['isShareable'],
             prepTime: details.value['prepTime'],
             cookTime: details.value['cookTime'],
+            servings: details.value['servings'],
           );
           recipesService.upsertRecipe(recipe, photo);
           context.read<AppModel>().recipeBook = RecipeBookModel(

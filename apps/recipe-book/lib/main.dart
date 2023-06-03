@@ -8,6 +8,7 @@ import 'package:recipe_book/main.view.dart';
 import 'package:recipe_book/pages/login.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe-book.page.dart';
 import 'package:recipe_book/pages/new-recipe/new-recipe.page.dart';
+import 'package:recipe_book/pages/recipe-book.page.dart';
 import 'package:recipe_book/pages/recipe/recipe.page.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/styles.dart';
@@ -97,6 +98,13 @@ class AppState extends State<App> {
           );
         },
       ),
+      GoRoute(
+          path: '/recipeBook/:recipeBookId',
+          builder: (context, state) {
+            return RecipeBookPage(
+              recipeBookId: state.params['recipeBookId']!,
+            );
+          }),
       GoRoute(
         path: '/',
         builder: (context, state) {

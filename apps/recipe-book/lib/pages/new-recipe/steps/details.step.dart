@@ -27,17 +27,6 @@ class DetailsStepState extends State<DetailsStep> {
     userService.recipeBooks.then((result) => setState(() => recipeBooks = result));
   }
 
-  Future<void> _recipeBookSelection(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          children: [],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

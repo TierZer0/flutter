@@ -29,11 +29,7 @@ class UserService {
   }
 
   Stream<QuerySnapshot> get userBooksStream {
-    return _db
-        .collection('users')
-        .doc(authService.user?.uid)
-        .collection(userBookCollection)
-        .snapshots();
+    return recipeBooksRef.snapshots();
   }
 
   get userRef {
@@ -109,6 +105,23 @@ class UserService {
         .collection(userBookCollection)
         .doc(id)
         .delete();
+  }
+
+  updateRecipeBook(String id, RecipeBookModel recipeBook) {
+    _db
+        .collection(collection)
+        .doc(authService.user?.uid)
+        .collection(userBookCollection)
+        .doc(id)
+        .update(recipeBook.toFirestore());
+  }
+
+  addRecipeToRecipeBook(String id, String recipeBookId) {
+    _db.collection('users').doc(authService.user?.uid).collection('books').doc(recipeBookId).update(
+      {
+        'recipes': FieldValue.arrayUnion([id])
+      },
+    );
   }
 
   createRecipeBook(RecipeBookModel recipeBook) async {

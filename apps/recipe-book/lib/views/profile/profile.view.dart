@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:recipe_book/pages/profile/tabs/books.tab.dart';
-import 'package:recipe_book/pages/profile/tabs/categories.tab.dart';
-import 'package:recipe_book/pages/profile/tabs/info.tab.dart';
-import 'package:recipe_book/pages/profile/tabs/settings.tab.dart';
+import 'package:recipe_book/views/profile/tabs/books.tab.dart';
+import 'package:recipe_book/views/profile/tabs/categories.tab.dart';
+import 'package:recipe_book/views/profile/tabs/info.tab.dart';
+import 'package:recipe_book/views/profile/tabs/settings.tab.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
-import 'package:recipe_book/app_model.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfileView extends StatefulWidget {
   @override
-  ProfilePageState createState() => ProfilePageState();
+  ProfileViewState createState() => ProfileViewState();
 }
 
-class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -39,7 +37,7 @@ class ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin 
           ),
         ),
         elevation: 10,
-        toolbarHeight: 85.0,
+        toolbarHeight: 110.0,
         bottom: TabBar(
           indicatorColor: primaryColor,
           controller: _tabController,

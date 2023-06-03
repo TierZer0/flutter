@@ -5,15 +5,16 @@ enum ECard { elevated, outlined, filled }
 class CustomCard extends StatelessWidget {
   final ECard card;
   final Widget child;
+  final double elevation;
 
-  const CustomCard({super.key, required this.card, required this.child});
+  const CustomCard({super.key, required this.card, required this.child, this.elevation = 2});
 
   @override
   Widget build(BuildContext context) {
     switch (card) {
       case ECard.elevated:
         return Card(
-          elevation: 5,
+          elevation: elevation,
           clipBehavior: Clip.hardEdge,
           child: child,
         );

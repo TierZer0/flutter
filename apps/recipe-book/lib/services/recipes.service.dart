@@ -32,7 +32,8 @@ class RecipesService {
 
   upsertRecipe(RecipeModel recipe, File photo) async {
     final recipes = await recipesRef;
-    await uploadFile(photo);
+    var result = await uploadFile(photo);
+    recipe.image = result;
     var postResult = await recipes.add(recipe);
     _db
         .collection('users')
@@ -43,18 +44,6 @@ class RecipesService {
       'recipes': FieldValue.arrayUnion([postResult.id])
     });
   }
-
-  // Future<QuerySnapshot<RecipeModel>> getRecipesByFilter(String type) async {
-  //   final recipes = await recipesRef;
-  //   switch (type) {
-  //     // case 'Trending':
-  //     //   break;
-  //     case 'New':
-  //       return recipes.orderBy('created').get();
-  //     default:
-  //       return recipes.get();
-  //   }
-  // }
 
   _buildFilterQuery(Query query, filters) {
     for (String key in filters.keys) {
@@ -76,15 +65,13 @@ class RecipesService {
     return query;
   }
 
-  Stream<QuerySnapshot<RecipeModel>> getRecipes({filters, sort, search}) {
+  Stream<QuerySnapshot<RecipeModel>> getAllRecipes({filters, sort, search}) {
     Query<RecipeModel> query = recipesRef;
 
     if (filters != null) {
       query = _buildFilterQuery(query, filters);
     }
 
-    print(filters);
-    print(sort);
     if (sort != null) {
       query = query.orderBy(sort);
     } else {
@@ -94,18 +81,20 @@ class RecipesService {
     return query.snapshots();
   }
 
-  Future<QuerySnapshot<RecipeModel>> getRecipesByUser({
-    required String userUid,
-    String? category,
-  }) async {
-    final recipes = await recipesRef;
-    return category != null
-        ? recipes
-            .where('createdBy', isEqualTo: userUid)
-            .where('category', isEqualTo: category)
-            .orderBy('likes')
-            .get()
-        : recipes.where('createdBy', isEqualTo: userUid).orderBy('likes').get();
+  Stream<QuerySnapshot<RecipeModel>> getRecipesInBook(List<dynamic> recipeIds) {
+    if (recipeIds.isEmpty) return Stream.empty();
+    return recipesRef.where(FieldPath.documentId, whereIn: recipeIds).snapshots();
+  }
+
+  Stream<QuerySnapshot<RecipeModel>> getMyRecipes() {
+    return recipesRef
+        .where('createdBy', isEqualTo: authService.user?.uid)
+        .orderBy('created')
+        .snapshots();
+  }
+
+  Future<QuerySnapshot<RecipeModel>> getMyRecipesFuture() {
+    return recipesRef.where('createdBy', isEqualTo: authService.user?.uid).orderBy('created').get();
   }
 
   Stream<DocumentSnapshot<dynamic?>> getRecipeReviews(id) {
@@ -118,14 +107,16 @@ class RecipesService {
     });
   }
 
-  uploadFile(File file) async {
+  Future<String> uploadFile(File file) async {
     final fileName = basename(file.path);
     final destination = 'food/${authService.user?.uid}/$fileName';
 
     try {
       final ref = _storage.ref(destination).child('file/');
-      return await ref.putFile(file);
+      await ref.putFile(file);
+      return ref.getDownloadURL();
     } catch (e) {}
+    return '';
   }
 }
 
