@@ -32,7 +32,8 @@ class RecipesService {
 
   upsertRecipe(RecipeModel recipe, File photo) async {
     final recipes = await recipesRef;
-    await uploadFile(photo);
+    var result = await uploadFile(photo);
+    recipe.image = result;
     var postResult = await recipes.add(recipe);
     _db
         .collection('users')
@@ -92,6 +93,10 @@ class RecipesService {
         .snapshots();
   }
 
+  Future<QuerySnapshot<RecipeModel>> getMyRecipesFuture() {
+    return recipesRef.where('createdBy', isEqualTo: authService.user?.uid).orderBy('created').get();
+  }
+
   Stream<DocumentSnapshot<dynamic?>> getRecipeReviews(id) {
     return _db.collection(recipesCollection).doc(id).snapshots();
   }
@@ -102,14 +107,16 @@ class RecipesService {
     });
   }
 
-  uploadFile(File file) async {
+  Future<String> uploadFile(File file) async {
     final fileName = basename(file.path);
     final destination = 'food/${authService.user?.uid}/$fileName';
 
     try {
       final ref = _storage.ref(destination).child('file/');
-      return await ref.putFile(file);
+      await ref.putFile(file);
+      return ref.getDownloadURL();
     } catch (e) {}
+    return '';
   }
 }
 

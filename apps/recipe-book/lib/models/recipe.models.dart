@@ -61,6 +61,7 @@ class RecipeModel {
   bool? isShareable;
   int? prepTime;
   int? cookTime;
+  int? servings;
 
   RecipeModel({
     this.title,
@@ -78,6 +79,7 @@ class RecipeModel {
     this.isShareable,
     this.prepTime,
     this.cookTime,
+    this.servings,
   });
 
   factory RecipeModel.fromFirestore(
@@ -104,6 +106,7 @@ class RecipeModel {
       isShareable: data?['isShareable'],
       prepTime: data?['prepTime'],
       cookTime: data?['cookTime'],
+      servings: data?['servings'],
     );
   }
 
@@ -124,6 +127,7 @@ class RecipeModel {
       if (isShareable != null) "isShareable": isShareable,
       if (prepTime != null) "prepTime": prepTime,
       if (cookTime != null) "cookTime": cookTime,
+      if (servings != null) "servings": servings,
     };
   }
 

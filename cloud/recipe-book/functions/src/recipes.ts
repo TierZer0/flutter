@@ -1,14 +1,5 @@
 import * as functions from "firebase-functions";
 
-// export const setRecipeCreatedDate = functions.firestore
-//   .document("recipes/{recipeId}")
-//   .onCreate(
-//     (snapshot, context) => {
-//       return snapshot.ref.set({
-//         created: Date.now(),
-//       }, {merge: true});
-//     }
-//   );
 
 export const onRecipeCreateActions = functions.firestore
   .document("recipes/{recipeId}")
@@ -29,3 +20,10 @@ export const onRecipeCreateActions = functions.firestore
       }, {merge: true});
     }
   );
+
+export const onRecipeDeleteActions = functions.firestore
+  .document("recipes/{recipeId}")
+  .onDelete((snapshot, context) => {
+    //handle cleanup
+    //delete from users recipebooks
+  });

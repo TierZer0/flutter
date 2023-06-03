@@ -36,35 +36,26 @@ class RecipeCard extends StatelessWidget {
           child: Stack(
             children: [
               useImage
-                  ? FutureBuilder(
-                      future: recipesService.getImage(recipe.image!),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final data = snapshot.data;
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  5.0,
-                                ),
-                              ),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                  Colors.white.withOpacity(
-                                    Theme.of(context).brightness == Brightness.light ? 0.5 : 0.3,
-                                  ),
-                                  BlendMode.dstATop,
-                                ),
-                                image: new NetworkImage(
-                                  data.toString(),
-                                ),
-                              ),
+                  ? Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            5.0,
+                          ),
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                            Colors.white.withOpacity(
+                              Theme.of(context).brightness == Brightness.light ? 0.5 : 0.3,
                             ),
-                          );
-                        }
-                        return SizedBox.shrink();
-                      },
+                            BlendMode.dstATop,
+                          ),
+                          image: new NetworkImage(
+                            recipe.image!,
+                          ),
+                        ),
+                      ),
                     )
                   : SizedBox.shrink(),
               Align(
