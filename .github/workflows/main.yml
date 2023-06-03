@@ -1,9 +1,0 @@
-name: CI
-on:
-  pull_request:
-    branches: 
-      - master
-jobs:
-  build_web:
-    name: Build Flutter (web)
-    runs_on: ubuntu-latest
