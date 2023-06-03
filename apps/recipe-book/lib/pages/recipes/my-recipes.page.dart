@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/views/recipes/tabs/my-recipe-books.tab.dart';
-import 'package:recipe_book/views/recipes/tabs/my-recipes.tab.dart';
+import 'package:recipe_book/pages/recipes/tabs/my-recipe-books.tab.dart';
+import 'package:recipe_book/pages/recipes/tabs/my-recipes.tab.dart';
 import 'package:ui/general/text.custom.dart';
 
 class RecipesView extends StatefulWidget {

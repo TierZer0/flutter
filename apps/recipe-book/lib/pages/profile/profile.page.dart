@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/views/profile/tabs/books.tab.dart';
-import 'package:recipe_book/views/profile/tabs/categories.tab.dart';
-import 'package:recipe_book/views/profile/tabs/info.tab.dart';
-import 'package:recipe_book/views/profile/tabs/settings.tab.dart';
+import 'package:recipe_book/pages/profile/tabs/books.tab.dart';
+import 'package:recipe_book/pages/profile/tabs/categories.tab.dart';
+import 'package:recipe_book/pages/profile/tabs/info.tab.dart';
+import 'package:recipe_book/pages/profile/tabs/settings.tab.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/views/home.view.dart';
-import 'package:recipe_book/views/profile/profile.view.dart';
+import 'package:recipe_book/pages/home.page.dart';
+import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_book/views/recipes/my-recipes.view.dart';
+import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
 
 class MainView extends StatefulWidget {
   @override
