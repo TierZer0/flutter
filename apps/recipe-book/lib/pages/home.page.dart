@@ -13,7 +13,7 @@ import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
 import '../models/recipe.models.dart';
-import '../pages/recipe/recipe.page.dart';
+import '../views/recipe/recipe.view.dart';
 
 class HomeView extends StatefulWidget {
   @override

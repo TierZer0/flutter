@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/pages/recipe/shared/instructions-table.shared.dart';
+import 'package:recipe_book/views/recipe/shared/instructions-table.shared.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/styles.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
