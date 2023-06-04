@@ -32,7 +32,7 @@ class NewRecipeBookPageState extends State<NewRecipeBookPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final appModel = Provider.of<AppModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
