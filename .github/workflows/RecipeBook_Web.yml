@@ -22,7 +22,7 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
           channel: 'dev' 
-    - run: cd apps/recipe-book
+#     - run: cd apps/recipe-book
     - run: flutter pub get
     - run: flutter config --enable-web
     - run: flutter build web
