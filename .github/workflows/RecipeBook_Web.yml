@@ -2,12 +2,14 @@ name: RecipeBook_Web_CI
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches: 
       - main
     paths:
       - apps/recipe-book/**
+  # pull_request:
+  #   branches: 
+  #     - main
+  #   paths:
+  #     - apps/recipe-book/**
 jobs:
   build_web:
     name: Build Flutter (web)
