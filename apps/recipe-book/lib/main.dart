@@ -21,11 +21,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // FirebaseUIAuth.configureProviders([
-  //   GoogleProvider(clientId: '1:85740521128:android:3b8e9f6023aa844bc1249d'),
-  // ]);
 
-  // runApp(App());
   runApp(
     MultiProvider(
       providers: [
@@ -42,8 +38,6 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  // AppModel appModel = AppModel();
-
   @override
   void initState() {
     super.initState();
@@ -61,7 +55,6 @@ class AppState extends State<App> {
           return state.location == '/login' ? '/' : state.location;
         }
       });
-      // final appModel = Provider.of<AppModel>(context);
     },
     routes: <RouteBase>[
       GoRoute(
@@ -118,29 +111,29 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
       builder: (context, value, child) {
-        ThemeData theme = context.read<AppModel>().theme ? buildDarkTheme() : buildLightTheme();
-        SystemChrome.setSystemUIOverlayStyle(
-          context.read<AppModel>().theme
-              ? const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  systemNavigationBarColor: primaryColor,
-                  statusBarIconBrightness: Brightness.light,
-                  systemNavigationBarIconBrightness: Brightness.dark,
-                )
-              : const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  systemNavigationBarColor: primaryColor,
-                  statusBarIconBrightness: Brightness.dark,
-                  systemNavigationBarIconBrightness: Brightness.light,
-                ),
-        );
+        // ThemeData theme = context.read<AppModel>().theme ? buildDarkTheme() : buildLightTheme();
+        // SystemChrome.setSystemUIOverlayStyle(
+        //   SystemUiOverlayStyle(
+        //     statusBarColor: Colors.transparent,
+        //     systemNavigationBarColor: theme.colorScheme.primaryContainer,
+        //     statusBarIconBrightness: Brightness.dark,
+        //     systemNavigationBarIconBrightness: Brightness.light,
+        //   ),
+        // );
         var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
-        // appPreferences.getUserUIDPref().then((value) => context.read<AppModel>().uid = value);
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
-          theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-          darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: lightColorScheme,
+            fontFamily: 'Lato',
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            colorScheme: darkColorScheme,
+            fontFamily: 'Lato',
+          ),
           themeMode: mode,
         );
       },

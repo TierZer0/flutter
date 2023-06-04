@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class SettingsTab extends StatefulWidget {
@@ -43,26 +42,19 @@ class SettingsTabState extends State<SettingsTab> {
               bottom: 10.0,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: "Dark Theme",
-                fontSize: 20.0,
-                // padding: const EdgeInsets.only(left: 30.0),
-                fontFamily: "Lato",
-                color: theme.colorScheme.onBackground,
-              ),
-              Switch(
-                value: context.read<AppModel>().theme,
-                onChanged: (value) {
-                  userService.setUserTheme(value);
-                  setState(() {
-                    context.read<AppModel>().theme = value;
-                  });
-                },
-              ),
-            ],
+          SwitchListTile(
+            title: Text(
+              "Dark Theme",
+              textScaleFactor: 1.0,
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+            value: context.read<AppModel>().theme,
+            onChanged: (value) {
+              userService.setUserTheme(value);
+              setState(() {
+                context.read<AppModel>().theme = value;
+              });
+            },
           ),
           Divider(
             height: 25.0,
