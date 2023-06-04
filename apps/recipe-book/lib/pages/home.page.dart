@@ -53,7 +53,7 @@ class HomeViewState extends State<HomeView> {
   String sort = '';
   String _search = '';
 
-  Future<void> _filterDialog(BuildContext context) {
+  Future<void> _filterDialog(BuildContext context, {bool isMobile = true}) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -66,7 +66,7 @@ class HomeViewState extends State<HomeView> {
             color: theme.colorScheme.onBackground,
           ),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
             child: ReactiveForm(
               formGroup: formGroup.control('filter') as FormGroup,
               child: Wrap(
@@ -134,7 +134,7 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
-  Future<void> _sortDialog(BuildContext context) {
+  Future<void> _sortDialog(BuildContext context, {bool isMobile = true}) {
     List<String> _sortables = ['title', 'category', 'created', 'likes', 'prepTime', 'cookTime'];
 
     return showDialog(
@@ -149,7 +149,7 @@ class HomeViewState extends State<HomeView> {
             color: theme.colorScheme.onBackground,
           ),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
             child: ReactiveForm(
               formGroup: formGroup,
               child: Wrap(
@@ -220,20 +220,21 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
-  Future<void> _previewDialog(BuildContext context, RecipeModel recipe, String recipeId) {
+  Future<void> _previewDialog(BuildContext context, RecipeModel recipe, String recipeId,
+      {bool isMobile = true}) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         var theme = Theme.of(context);
         return AlertDialog(
-          // title: CustomText(
-          //   text: recipe.title,
-          //   fontSize: 20.0,
-          //   fontFamily: "Lato",
-          //   color: theme.colorScheme.onBackground,
-          // ),
+          title: CustomText(
+            text: recipe.title,
+            fontSize: 20.0,
+            fontFamily: "Lato",
+            color: theme.colorScheme.onBackground,
+          ),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
             // child: RecipePage(
             //   recipeId: recipeId,
             // ),
@@ -262,6 +263,115 @@ class HomeViewState extends State<HomeView> {
     userService.getUserTheme.then((theme) {
       context.read<AppModel>().theme = theme;
     }).catchError((e) => print(e));
+
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 660) {
+        return buildDesktop(context);
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    var theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        // toolbarHeight: 50.0,
+        title: Text(
+          'Welcome, What would you like to cook today?',
+          textScaleFactor: 1.25,
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(75),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: SizedBox(
+              width: double.maxFinite,
+              child: SearchBar(
+                elevation: MaterialStatePropertyAll(2.0),
+                leading: Icon(Icons.search),
+                hintText: "Search Recipes",
+                onChanged: (value) {
+                  setState(() {
+                    _search = value;
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: IconButton(
+              onPressed: () => _filterDialog(context, isMobile: false),
+              icon: Icon(Icons.filter_alt_outlined),
+              iconSize: 35.0,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: IconButton(
+              onPressed: () => _sortDialog(context, isMobile: false),
+              icon: Icon(Icons.sort_outlined),
+              iconSize: 35.0,
+            ),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 0.0,
+        ),
+        child: StreamBuilder(
+          stream: recipesService.getAllRecipes(
+            filters: filters,
+            sort: formGroup.control('sort').value,
+          ),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              var recipes = snapshot.data.docs;
+              List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
+              _recipes = _recipes
+                  .where((element) => element.title!.toLowerCase().contains(_search.toLowerCase()))
+                  .toList();
+              return GridView.builder(
+                itemCount: _recipes.length,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 300,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemBuilder: (context, index) {
+                  final RecipeModel recipe = _recipes[index];
+                  final String recipeId = recipes[index].id;
+                  return RecipeCard(
+                    recipe: recipe,
+                    cardType: ECard.elevated,
+                    onTap: () => context.push('/recipe/${recipeId}'),
+                    onLongPress: () => _previewDialog(context, recipe, recipeId, isMobile: false),
+                    useImage: true,
+                  );
+                },
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 85.0,
@@ -335,12 +445,14 @@ class HomeViewState extends State<HomeView> {
             if (snapshot.hasData) {
               var recipes = snapshot.data.docs;
               List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
-              _recipes = _recipes.where((element) => element.title!.contains(_search)).toList();
+              _recipes = _recipes
+                  .where((element) => element.title!.toLowerCase().contains(_search.toLowerCase()))
+                  .toList();
               return GridView.builder(
                 itemCount: _recipes.length,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300,
-                  childAspectRatio: 2 / 2,
+                  childAspectRatio: 3 / 2,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                 ),

@@ -39,7 +39,6 @@ dependencies:
   path: ^1.8.0
   skeleton_loader: ^2.0.0+4
   dotted_border: ^2.0.0+3
-  flutter_layout_grid: ^2.0.3
   google_sign_in_web: ^0.12.0
 
   # firebase_core_desktop: ^1.0.2
