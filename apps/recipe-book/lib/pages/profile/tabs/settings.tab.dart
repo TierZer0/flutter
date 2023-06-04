@@ -22,7 +22,7 @@ class SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    // final appModel = Provider.of<AppModel>(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 20.0,
