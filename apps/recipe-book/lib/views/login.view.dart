@@ -204,22 +204,6 @@ class LoginPageState extends State<LoginPage> {
                         )
                       ],
                     )
-                    // GoogleSignInButton(
-                    //   loadingIndicator: CircularProgressIndicator(),
-                    //   clientId: DefaultFirebaseOptions.currentPlatform.appId,
-                    //   onSignedIn: (user) {
-                    //     context.read<AppModel>().uid = user.user!.uid;
-                    //     context.go('/');
-                    //   },
-                    // ),
-                    // GoogleSignInIconButton(
-                    //   loadingIndicator: CircularProgressIndicator(),
-                    //   clientId: '1:85740521128:android:3b8e9f6023aa844bc1249d',
-                    //   onSignedIn: (user) {
-                    //     context.read<AppModel>().uid = user.user!.uid;
-                    //     context.go('/');
-                    //   },
-                    // )
                   ],
                 ),
               ),
