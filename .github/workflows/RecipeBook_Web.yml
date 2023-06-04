@@ -1,5 +1,8 @@
 name: RecipeBook_Web_CI
 on:
+  push:
+    branches:
+      - master
   pull_request:
     branches: 
       - master
