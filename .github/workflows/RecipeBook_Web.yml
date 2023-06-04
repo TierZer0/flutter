@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./app/recipe-book
+        working-directory: apps/recipe-book
     steps:
     - uses: actions/checkout@v1
     - uses: subosito/flutter-action@v1
@@ -36,9 +36,6 @@ jobs:
     name: Deploy Web to Firebase Hosting
     needs: build_web
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/recipe-book
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
