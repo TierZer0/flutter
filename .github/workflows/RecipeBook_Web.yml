@@ -7,7 +7,7 @@ on:
     branches: 
       - main
     paths:
-      - apps/recipe-book
+      - apps/recipe-book/**
 jobs:
   build_web:
     name: Build Flutter (web)
