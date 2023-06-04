@@ -4,7 +4,6 @@ import 'package:recipe_book/services/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 class ReviewsTab extends StatefulWidget {
-  // final RecipeModel recipe;
   final String? id;
 
   const ReviewsTab({super.key, required this.id});
