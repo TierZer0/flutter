@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class CategoriesTab extends StatefulWidget {

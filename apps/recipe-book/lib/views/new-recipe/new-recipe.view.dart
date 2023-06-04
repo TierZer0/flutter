@@ -15,8 +15,6 @@ import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
 import 'package:ui/ui.dart';
 
-import '../../styles.dart';
-
 class NewPage extends StatefulWidget {
   final String? id;
 
@@ -199,7 +197,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               preferredSize: Size.fromHeight(85.0),
               child: IgnorePointer(
                 child: TabBar(
-                  indicatorColor: primaryColor,
+                  indicatorColor: theme.colorScheme.primary,
                   controller: _tabController,
                   physics: NeverScrollableScrollPhysics(),
                   tabs: [

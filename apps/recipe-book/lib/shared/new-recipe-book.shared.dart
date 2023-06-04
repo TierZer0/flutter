@@ -5,7 +5,6 @@ import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class NewRecipeBookShared extends StatefulWidget {
@@ -20,12 +19,6 @@ class NewRecipeBookShared extends StatefulWidget {
 }
 
 class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
-  // final form = FormGroup({
-  //   'prevName': FormControl<String>(value: '', validators: [Validators.required]),
-  //   'prevCategory': FormControl<String>(value: ''),
-  //   'id': FormControl<String>(),
-  // });
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -72,10 +65,10 @@ class NewRecipeBookSharedState extends State<NewRecipeBookShared> {
                                 right: 10.0,
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.favorite,
                               size: 25.0,
-                              color: secondaryColor,
+                              color: theme.colorScheme.secondary,
                             ),
                             PopupMenuButton(
                               elevation: 5.0,

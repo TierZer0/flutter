@@ -4,7 +4,6 @@ import 'package:recipe_book/pages/profile/tabs/categories.tab.dart';
 import 'package:recipe_book/pages/profile/tabs/info.tab.dart';
 import 'package:recipe_book/pages/profile/tabs/settings.tab.dart';
 import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class ProfileView extends StatefulWidget {
@@ -39,7 +38,7 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
         elevation: 10,
         toolbarHeight: 110.0,
         bottom: TabBar(
-          indicatorColor: primaryColor,
+          indicatorColor: theme.colorScheme.primary,
           controller: _tabController,
           tabs: const [
             Tab(

@@ -7,7 +7,6 @@ import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
@@ -226,7 +225,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   icon: Icon(
                     liked ? Icons.favorite : Icons.favorite_outline_outlined,
                     fill: 1.0,
-                    color: secondaryColor,
+                    color: theme.colorScheme.secondary,
                   ),
                 ),
               ),
@@ -247,7 +246,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             elevation: 0,
             toolbarHeight: 85.0,
             bottom: TabBar(
-              indicatorColor: primaryColor,
+              indicatorColor: theme.colorScheme.primary,
               controller: _tabController,
               tabs: [
                 Tab(

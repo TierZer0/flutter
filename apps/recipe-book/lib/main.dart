@@ -11,7 +11,6 @@ import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
 import 'package:recipe_book/views/recipe-book.view.dart';
 import 'package:recipe_book/views/recipe/recipe.view.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:recipe_book/styles/colors.scheme.dart';
 import 'firebase_options.dart';
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/views/recipe/shared/instructions-table.shared.dart';
 import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
@@ -69,7 +68,7 @@ class RecipeTabState extends State<RecipeTab> {
                   items: 1,
                   period: Duration(seconds: 4),
                   baseColor: theme.colorScheme.surface,
-                  highlightColor: primaryColor,
+                  highlightColor: theme.colorScheme.primary,
                   direction: SkeletonDirection.ltr,
                   builder: Card(
                     margin: EdgeInsets.only(right: 10.0, bottom: 15.0, left: 20.0),

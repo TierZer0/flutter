@@ -6,7 +6,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ui/ui.dart';
 
@@ -46,14 +45,14 @@ class LoginPageState extends State<LoginPage> {
                 fontSize: 55.0,
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
-                color: primaryColor,
+                color: theme.colorScheme.onBackground,
               ),
             ),
             CustomText(
               text: "Recipe Book",
               fontSize: 30.0,
               fontWeight: FontWeight.w400,
-              color: lightThemeTextColor,
+              color: theme.colorScheme.onBackground,
               fontFamily: 'Lato',
             ),
             CustomText(
@@ -61,7 +60,7 @@ class LoginPageState extends State<LoginPage> {
               fontSize: 18.0,
               fontWeight: FontWeight.w300,
               fontFamily: 'Lato',
-              color: lightThemeTextColor,
+              color: theme.colorScheme.onBackground,
               padding: const EdgeInsets.symmetric(
                 vertical: 5.0,
               ),

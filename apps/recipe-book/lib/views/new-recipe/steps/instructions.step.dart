@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/shared/table.shared.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class InstructionsStep extends StatefulWidget {

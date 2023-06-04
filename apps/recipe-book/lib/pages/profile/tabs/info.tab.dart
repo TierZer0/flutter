@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
@@ -64,7 +63,7 @@ class _InfoTabState extends State<InfoTab> {
                         size: 25.0,
                       ),
                       onPressed: () {},
-                      color: primaryColor,
+                      color: theme.colorScheme.primary,
                     )
                   ],
                 ),
@@ -134,7 +133,7 @@ class _InfoTabState extends State<InfoTab> {
                           items: 1,
                           period: Duration(seconds: 4),
                           baseColor: theme.colorScheme.surface,
-                          highlightColor: primaryColor,
+                          highlightColor: theme.colorScheme.primary,
                           direction: SkeletonDirection.ltr,
                         );
                       },
@@ -167,7 +166,7 @@ class _InfoTabState extends State<InfoTab> {
                         size: 25.0,
                       ),
                       onPressed: () {},
-                      color: primaryColor,
+                      color: theme.colorScheme.primary,
                     )
                   ],
                 ),
@@ -204,7 +203,7 @@ class _InfoTabState extends State<InfoTab> {
                         size: 25.0,
                       ),
                       onPressed: () {},
-                      color: primaryColor,
+                      color: theme.colorScheme.primary,
                     )
                   ],
                 ),

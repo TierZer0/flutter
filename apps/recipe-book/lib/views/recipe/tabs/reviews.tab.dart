@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/styles.dart';
 import 'package:ui/ui.dart';
 
 class ReviewsTab extends StatefulWidget {
@@ -60,7 +59,7 @@ class ReviewsTabState extends State<ReviewsTab> {
                                     review.stars ?? 0,
                                     (index) => Icon(
                                       Icons.star_rate,
-                                      color: primaryColor,
+                                      color: theme.colorScheme.primary,
                                     ),
                                   ).toList(),
                                 )
