@@ -35,8 +35,6 @@ class MainViewState extends State<MainView> {
             child: Row(
               children: [
                 NavigationRail(
-                  // elevation: 2,
-                  // backgroundColor: theme.colorScheme.tertiaryContainer,
                   labelType: NavigationRailLabelType.all,
                   onDestinationSelected: (int index) {
                     setState(() {
