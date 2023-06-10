@@ -103,7 +103,6 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
       builder: (context, value, child) {
-        // ThemeData theme = context.read<AppModel>().theme ? buildDarkTheme() : buildLightTheme();
         SystemChrome.setSystemUIOverlayStyle(
           SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
