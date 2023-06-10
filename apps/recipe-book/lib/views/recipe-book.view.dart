@@ -57,9 +57,9 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
           formGroup: formGroup,
           child: AlertDialog(
             backgroundColor: theme.colorScheme.surface,
-            title: Text(
+            title: CText(
               'Add Recipe to Book',
-              // textScaleFactor: 1.0,
+              textLevel: EText.title2,
             ),
             content: FutureBuilder(
               future: recipesService.getMyRecipesFuture(),
@@ -87,22 +87,18 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
             ),
             actions: [
               TextButton(
-                child: CustomText(
-                  text: "Cancel",
-                  fontSize: 15.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onSurface,
+                child: CText(
+                  "Cancel",
+                  textLevel: EText.button,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: CustomText(
-                  text: "Submit",
-                  fontSize: 15.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onSurface,
+                child: CText(
+                  "Submit",
+                  textLevel: EText.button,
                 ),
                 onPressed: () {
                   setState(() {
@@ -130,11 +126,11 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            CText(
               recipeBook.name ?? '',
-              textScaleFactor: 1.2,
+              textLevel: EText.title,
             ),
-            Text(recipeBook.category ?? ''),
+            CText(recipeBook.category ?? '', textLevel: EText.subtitle),
           ],
         ),
         elevation: 5,
@@ -181,8 +177,9 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                         color: theme.colorScheme.onSurfaceVariant,
                         strokeWidth: 1.5,
                         child: ListTile(
-                          title: Text(
+                          title: CText(
                             'Add Recipe',
+                            textLevel: EText.title2,
                           ),
                           trailing: IconButton(
                             onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
@@ -209,20 +206,15 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(recipe.image!),
                       ),
-                      title: Text(
+                      title: CText(
                         recipe.title!,
-                        textScaleFactor: 1.3,
+                        textLevel: EText.title,
                       ),
-                      subtitle: Text(
+                      subtitle: CText(
                         recipe.description! + '\n' + recipe.category!,
-                        textScaleFactor: 1.1,
+                        textLevel: EText.subtitle,
                       ),
                       tileColor: theme.colorScheme.surfaceVariant.withOpacity(0.2),
-                      // shape: RoundedRectangleBorder(
-                      //   side: BorderSide(
-                      //     color: theme.colorScheme.surfaceVariant,
-                      //   ),
-                      // ),
                       trailing: IconButton(
                         onPressed: () => {
                           setState(() {
@@ -280,8 +272,9 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                     color: theme.colorScheme.onSurfaceVariant,
                     strokeWidth: 1.5,
                     child: ListTile(
-                      title: Text(
+                      title: CText(
                         'Add Recipe',
+                        textLevel: EText.title,
                       ),
                       trailing: IconButton(
                         onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
@@ -293,7 +286,10 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                     ),
                   ),
                 ),
-                Text('No Recipes in this book', textScaleFactor: 1.2),
+                CText(
+                  'No Recipes in this book',
+                  textLevel: EText.title2,
+                ),
               ],
             );
           }

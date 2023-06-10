@@ -26,14 +26,11 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
 
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(
-          text: authService.user?.displayName,
-          fontSize: 35.0,
-          fontFamily: "Lato",
-          color: theme.colorScheme.onBackground,
-          padding: EdgeInsets.only(
-            bottom: 40.0,
-          ),
+        title: CText(
+          authService.user?.displayName ?? '',
+          textLevel: EText.title,
+          scaleFactor: 1.0,
+          weight: FontWeight.bold,
         ),
         elevation: 10,
         toolbarHeight: 110.0,

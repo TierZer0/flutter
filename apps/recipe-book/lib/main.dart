@@ -6,7 +6,6 @@ import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
 import 'package:recipe_book/views/login.view.dart';
-import 'package:recipe_book/views/new-recipe/new-recipe-book.view.dart';
 import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
 import 'package:recipe_book/views/recipe-book.view.dart';
 import 'package:recipe_book/views/recipe/recipe.view.dart';
@@ -77,12 +76,6 @@ class AppState extends State<App> {
         ],
       ),
       GoRoute(
-        path: '/newRecipeBook',
-        builder: (context, state) {
-          return NewRecipeBookPage();
-        },
-      ),
-      GoRoute(
         path: '/recipe/:recipeId',
         builder: (context, state) {
           return RecipePage(
@@ -111,14 +104,15 @@ class AppState extends State<App> {
     return Consumer<AppModel>(
       builder: (context, value, child) {
         // ThemeData theme = context.read<AppModel>().theme ? buildDarkTheme() : buildLightTheme();
-        // SystemChrome.setSystemUIOverlayStyle(
-        //   SystemUiOverlayStyle(
-        //     statusBarColor: Colors.transparent,
-        //     systemNavigationBarColor: theme.colorScheme.primaryContainer,
-        //     statusBarIconBrightness: Brightness.dark,
-        //     systemNavigationBarIconBrightness: Brightness.light,
-        //   ),
-        // );
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: lightColorScheme.primary,
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarIconBrightness: Brightness.light,
+          ),
+        );
+
         var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,

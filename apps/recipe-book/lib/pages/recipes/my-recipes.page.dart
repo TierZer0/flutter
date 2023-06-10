@@ -36,13 +36,12 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
     return Scaffold(
       appBar: AppBar(
         title: Wrap(
-          runSpacing: 5.0,
+          runSpacing: 10.0,
           children: [
-            CustomText(
-              text: 'My Recipes',
-              fontSize: 35.0,
-              fontFamily: "Lato",
-              color: theme.colorScheme.onBackground,
+            CText(
+              'My Recipes',
+              textLevel: EText.title,
+              weight: FontWeight.bold,
             ),
             SearchBar(
               elevation: MaterialStateProperty.all(1.0),

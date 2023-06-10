@@ -69,12 +69,7 @@ class DetailsStepState extends State<DetailsStep> {
                     dropdownColor: theme.colorScheme.surface,
                     decoration: InputDecoration(
                       filled: true,
-                      label: CustomText(
-                        text: "Category",
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
-                      ),
+                      labelText: 'Category',
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                     elevation: 2,
@@ -82,11 +77,9 @@ class DetailsStepState extends State<DetailsStep> {
                         .map(
                           (e) => DropdownMenuItem(
                             value: e,
-                            child: CustomText(
-                              text: e,
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            child: CText(
+                              e,
+                              textLevel: EText.body,
                             ),
                           ),
                         )
@@ -100,23 +93,16 @@ class DetailsStepState extends State<DetailsStep> {
                     dropdownColor: theme.colorScheme.surface,
                     decoration: InputDecoration(
                       filled: true,
-                      label: CustomText(
-                        text: "Recipe Book",
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
-                      ),
+                      labelText: 'Recipe Book',
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                     elevation: 2,
                     selectedItemBuilder: (context) {
                       return recipeBooks
                           .map(
-                            (e) => CustomText(
-                              text: e.name,
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            (e) => CText(
+                              e.name!,
+                              textLevel: EText.body,
                             ),
                           )
                           .toList();
@@ -128,17 +114,13 @@ class DetailsStepState extends State<DetailsStep> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CustomText(
-                                  text: e.name,
-                                  fontSize: 20.0,
-                                  fontFamily: "Lato",
-                                  color: theme.colorScheme.onBackground,
+                                CText(
+                                  e.name!,
+                                  textLevel: EText.body,
                                 ),
-                                CustomText(
-                                  text: e.category,
-                                  fontSize: 15.0,
-                                  fontFamily: "Lato",
-                                  color: theme.colorScheme.onBackground,
+                                CText(
+                                  e.category!,
+                                  textLevel: EText.caption,
                                 ),
                               ],
                             ),
@@ -188,11 +170,9 @@ class DetailsStepState extends State<DetailsStep> {
                   onPressed: formGroup.control('details').invalid ? null : widget.onTap,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                    child: CustomText(
-                      text: "Next Step",
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      color: theme.colorScheme.onBackground,
+                    child: CText(
+                      "Next Step",
+                      textLevel: EText.body,
                     ),
                   ),
                 ),

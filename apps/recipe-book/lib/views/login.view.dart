@@ -38,32 +38,23 @@ class LoginPageState extends State<LoginPage> {
         toolbarHeight: 150.0,
         title: Column(
           children: [
-            CustomText(
-              text: "Livre de Recettes",
-              overrideStyle: true,
+            CText(
+              "Livre de Recettes",
+              textLevel: EText.custom,
               textStyle: GoogleFonts.poly(
                 fontSize: 55.0,
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
-                color: theme.colorScheme.onBackground,
+                color: theme.colorScheme.primary,
               ),
             ),
-            CustomText(
-              text: "Recipe Book",
-              fontSize: 30.0,
-              fontWeight: FontWeight.w400,
-              color: theme.colorScheme.onBackground,
-              fontFamily: 'Lato',
+            CText(
+              "Recipe Book",
+              textLevel: EText.title2,
             ),
-            CustomText(
-              text: "By TierZero Studios",
-              fontSize: 18.0,
-              fontWeight: FontWeight.w300,
-              fontFamily: 'Lato',
-              color: theme.colorScheme.onBackground,
-              padding: const EdgeInsets.symmetric(
-                vertical: 5.0,
-              ),
+            CText(
+              "By TierZero Studios",
+              textLevel: EText.caption,
             ),
           ],
         ),
@@ -92,16 +83,14 @@ class LoginPageState extends State<LoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomText(
-                          text: "Welcome",
-                          fontSize: 28.0,
-                          fontFamily: 'Lato',
-                          fontWeight: FontWeight.w600,
+                        CText(
+                          "Welcome",
+                          textLevel: EText.title,
+                          weight: FontWeight.w600,
                         ),
-                        CustomText(
-                          text: 'Login to your account',
-                          fontSize: 20.0,
-                          fontFamily: 'Lato',
+                        CText(
+                          "Login to your account",
+                          textLevel: EText.title2,
                         ),
                       ],
                     ),
@@ -149,12 +138,10 @@ class LoginPageState extends State<LoginPage> {
                                   );
                                 },
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-                            child: CustomText(
-                              text: "Login",
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                            child: CText(
+                              "Login",
+                              textLevel: EText.button,
                             ),
                           ),
                         );
@@ -167,7 +154,7 @@ class LoginPageState extends State<LoginPage> {
                       spacing: 20.0,
                       children: [
                         SizedBox(
-                          width: 225,
+                          width: 200,
                           child: OutlinedButton(
                             onPressed: () async {
                               await authService.googleSSO().then((value) {
@@ -185,16 +172,14 @@ class LoginPageState extends State<LoginPage> {
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
                               child: Center(
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     FaIcon(
                                       FontAwesomeIcons.google,
                                     ),
-                                    CustomText(
-                                      text: "Google Signin",
-                                      fontSize: 20.0,
-                                      fontFamily: "Lato",
-                                      color: theme.colorScheme.onBackground,
+                                    CText(
+                                      "Google Signin",
+                                      textLevel: EText.button,
                                     ),
                                   ],
                                 ),

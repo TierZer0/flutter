@@ -32,20 +32,15 @@ class SettingsTabState extends State<SettingsTab> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(
-            text: "Application",
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onBackground,
-            padding: EdgeInsets.only(
-              bottom: 10.0,
-            ),
+          CText(
+            'Application',
+            textLevel: EText.title,
+            weight: FontWeight.bold,
           ),
           SwitchListTile(
-            title: Text(
+            title: CText(
               "Dark Theme",
-              textScaleFactor: 1.0,
+              textLevel: EText.button,
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             value: context.read<AppModel>().theme,
@@ -59,15 +54,13 @@ class SettingsTabState extends State<SettingsTab> {
           Divider(
             height: 25.0,
           ),
-          CustomText(
-            text: "User",
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onBackground,
-            padding: EdgeInsets.only(
-              bottom: 10.0,
-            ),
+          CText(
+            "User",
+            textLevel: EText.title,
+            weight: FontWeight.bold,
+          ),
+          SizedBox(
+            height: 20.0,
           ),
           ElevatedButton(
             onPressed: () {
@@ -86,15 +79,10 @@ class SettingsTabState extends State<SettingsTab> {
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(theme.colorScheme.error),
             ),
-            child: CustomText(
-              text: "Logout",
-              fontSize: 25.0,
-              padding: EdgeInsets.symmetric(
-                horizontal: 25.0,
-                vertical: 10.0,
-              ),
-              fontFamily: "Lato",
-              color: theme.colorScheme.onError,
+            child: CText(
+              'Logout',
+              textLevel: EText.dangerbutton,
+              theme: theme,
             ),
           ),
         ],

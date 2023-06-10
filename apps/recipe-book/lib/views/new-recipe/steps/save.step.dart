@@ -74,22 +74,19 @@ class SaveStepState extends State<SaveStep> {
                     spacing: 20.0,
                     runSpacing: 20.0,
                     children: [
-                      CustomText(
-                        text: "Recipe Settings",
-                        fontSize: 30.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
+                      CText(
+                        "Recipe Settings",
+                        textLevel: EText.title,
+                        weight: FontWeight.bold,
                       ),
                       SizedBox(
                         width: width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: "Public - Viewable by anyone",
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            CText(
+                              "Public - Viewable by anyone",
+                              textLevel: EText.body,
                             ),
                             ReactiveSwitch(
                               formControlName: 'settings.isPublic',
@@ -102,11 +99,9 @@ class SaveStepState extends State<SaveStep> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: "Shareable - Can be saved to other recipe books",
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            CText(
+                              "Shareable - Can be saved to other recipe books",
+                              textLevel: EText.body,
                             ),
                             ReactiveSwitch(
                               formControlName: 'settings.isShareable',
@@ -134,7 +129,6 @@ class SaveStepState extends State<SaveStep> {
                                     alignment: Alignment.topCenter,
                                     child: SizedBox(
                                       height: 200,
-                                      // width: width,
                                       child: _photo?.path != null
                                           ? Image.file(_photo!)
                                           : SizedBox.shrink(),
@@ -142,11 +136,9 @@ class SaveStepState extends State<SaveStep> {
                                   ),
                                   Align(
                                     alignment: Alignment.bottomCenter,
-                                    child: CustomText(
-                                      text: "Add a photo",
-                                      fontSize: 20.0,
-                                      fontFamily: "Lato",
-                                      color: theme.colorScheme.onBackground,
+                                    child: CText(
+                                      "Add a photo",
+                                      textLevel: EText.body,
                                     ),
                                   ),
                                 ],
@@ -171,11 +163,9 @@ class SaveStepState extends State<SaveStep> {
                         onPressed: widget.tapBack,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CustomText(
-                            text: "Edit Recipe",
-                            fontSize: 20.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                          child: CText(
+                            "Edit Recipe",
+                            textLevel: EText.button,
                           ),
                         ),
                       ),
@@ -183,11 +173,9 @@ class SaveStepState extends State<SaveStep> {
                         onPressed: () => widget.tapForward(_photo, _name),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CustomText(
-                            text: "Save Recipe",
-                            fontSize: 20.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                          child: CText(
+                            "Save Recipe",
+                            textLevel: EText.button,
                           ),
                         ),
                       )

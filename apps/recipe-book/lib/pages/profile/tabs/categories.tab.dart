@@ -50,11 +50,9 @@ class CategoriesTabState extends State<CategoriesTab> {
                                   horizontal: 15.0,
                                 ),
                                 tileColor: theme.colorScheme.surface,
-                                title: CustomText(
-                                  text: e,
-                                  fontSize: 25.0,
-                                  fontFamily: "Lato",
-                                  color: theme.colorScheme.onBackground,
+                                title: CText(
+                                  e,
+                                  textLevel: EText.body,
                                 ),
                                 trailing: SizedBox(
                                   width: 50.0,
@@ -64,8 +62,12 @@ class CategoriesTabState extends State<CategoriesTab> {
                                         elevation: 5.0,
                                         itemBuilder: (context) => <PopupMenuEntry>[
                                           PopupMenuItem(
-                                            child: Text(
+                                            // child: Text(
+                                            //   'Edit',
+                                            // ),
+                                            child: CText(
                                               'Edit',
+                                              textLevel: EText.button,
                                             ),
                                             onTap: () {
                                               formGroup.patchValue({
@@ -75,8 +77,9 @@ class CategoriesTabState extends State<CategoriesTab> {
                                             },
                                           ),
                                           PopupMenuItem(
-                                            child: Text(
+                                            child: CText(
                                               'Delete',
+                                              textLevel: EText.button,
                                             ),
                                             onTap: () {
                                               userService.deleteCategory(e);
@@ -103,15 +106,9 @@ class CategoriesTabState extends State<CategoriesTab> {
                         ),
                         Align(
                           alignment: Alignment.topLeft,
-                          child: CustomText(
-                            text: "New Category",
-                            fontSize: 25.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
-                            padding: const EdgeInsets.only(
-                              left: 20.0,
-                              bottom: 20.0,
-                            ),
+                          child: CText(
+                            'New Category',
+                            textLevel: EText.title,
                           ),
                         ),
                         Padding(
@@ -128,11 +125,9 @@ class CategoriesTabState extends State<CategoriesTab> {
                             return ElevatedButton(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-                                child: CustomText(
-                                  text: "Create Category",
-                                  fontSize: 20.0,
-                                  fontFamily: "Lato",
-                                  color: theme.colorScheme.onBackground,
+                                child: CText(
+                                  'Create Category',
+                                  textLevel: EText.button,
                                 ),
                               ),
                               onPressed: form.invalid
