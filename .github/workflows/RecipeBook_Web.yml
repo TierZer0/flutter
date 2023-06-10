@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - apps/recipe-book/**
+      - packages/**
   # pull_request:
   #   branches: 
   #     - main
