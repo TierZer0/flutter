@@ -30,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: web-build
-        path: build/web
+        path: ./build/web
         
   deploy_web:
     name: Deploy Web to Firebase Hosting
