@@ -57,12 +57,17 @@ class CustomBottomNavBar extends StatelessWidget {
                               ),
                               child: item.icon,
                             ),
-                            CustomText(
-                              text: item.label,
-                              fontSize: 12.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
-                            )
+                            // CustomText(
+                            //   text: item.label,
+                            //   fontSize: 12.0,
+                            //   fontFamily: "Lato",
+                            //   color: theme.colorScheme.onBackground,
+                            // )
+                            CText(
+                              item.label,
+                              textLevel: EText.caption,
+                              theme: theme,
+                            ),
                           ],
                         ),
                       ),

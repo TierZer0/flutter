@@ -63,12 +63,16 @@ class CustomActionChip extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Center(
-            child: CustomText(
-              text: label,
-              fontSize: 18.0,
-              color: active ? activeTextColor : textColor,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Lato',
+            // child: CustomText(
+            //   text: label,
+            //   fontSize: 18.0,
+            //   color: active ? activeTextColor : textColor,
+            //   fontWeight: FontWeight.w500,
+            //   fontFamily: 'Lato',
+            // ),
+            child: CText(
+              label,
+              textLevel: EText.button,
             ),
           ),
         ),
