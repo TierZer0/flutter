@@ -135,32 +135,6 @@ class RecipeModel {
   String toString() {
     return '$title - $id';
   }
-
-  List<Widget> listSteps(Color textColor) {
-    return instructions!
-        .map<Widget>(
-          (InstructionModel item) => CustomText(
-            text: item.toString(),
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: textColor,
-          ),
-        )
-        .toList();
-  }
-
-  List<Widget> listIngredients(Color textColor) {
-    return ingredients!
-        .map<Widget>(
-          (IngredientModel item) => CustomText(
-            text: item.toString(),
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: textColor,
-          ),
-        )
-        .toList();
-  }
 }
 
 class InstructionModel {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
+import 'package:ui/general/text.custom.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -16,7 +18,7 @@ class MainViewState extends State<MainView> {
   }
 
   var views = [
-    HomeView(),
+    HomePage(),
     RecipesView(),
     Container(),
     ProfileView(),
@@ -56,7 +58,9 @@ class MainViewState extends State<MainView> {
                         size: 35.0,
                         color: theme.colorScheme.onSurface,
                       ),
-                      label: Text('Community'),
+                      label: CText(
+                        'Community',
+                      ),
                     ),
                     NavigationRailDestination(
                       icon: Icon(

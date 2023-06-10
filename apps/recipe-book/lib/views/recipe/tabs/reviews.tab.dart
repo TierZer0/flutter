@@ -45,11 +45,10 @@ class ReviewsTabState extends State<ReviewsTab> {
                             horizontal: 15.0,
                           ),
                           tileColor: theme.colorScheme.surface,
-                          title: CustomText(
-                            text: review.review,
-                            fontSize: 25.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                          title: CText(
+                            review.review ?? '',
+                            textLevel: EText.title2,
+                            theme: theme,
                           ),
                           subtitle: review.stars! > 0
                               ? Wrap(

@@ -15,9 +15,9 @@ import 'package:utils/functions/case.dart';
 import '../models/recipe.models.dart';
 import '../views/recipe/recipe.view.dart';
 
-class HomeView extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  HomeViewState createState() => HomeViewState();
+  HomePageState createState() => HomePageState();
 }
 
 const generalFilters = [
@@ -26,7 +26,7 @@ const generalFilters = [
   'New',
 ];
 
-class HomeViewState extends State<HomeView> {
+class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -59,11 +59,9 @@ class HomeViewState extends State<HomeView> {
       builder: (BuildContext context) {
         var theme = Theme.of(context);
         return AlertDialog(
-          title: CustomText(
-            text: 'Filter Recipes',
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onBackground,
+          title: CText(
+            'Filter Recipes',
+            textLevel: EText.subtitle,
           ),
           content: SizedBox(
             width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
@@ -104,22 +102,18 @@ class HomeViewState extends State<HomeView> {
           ),
           actions: [
             TextButton(
-              child: CustomText(
-                text: "Cancel",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                'Cancel',
+                textLevel: EText.button,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: CustomText(
-                text: "Submit",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                'Submit',
+                textLevel: EText.button,
               ),
               onPressed: () {
                 setState(() {
@@ -142,11 +136,9 @@ class HomeViewState extends State<HomeView> {
       builder: (BuildContext context) {
         var theme = Theme.of(context);
         return AlertDialog(
-          title: CustomText(
-            text: 'Sort Recipes',
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onBackground,
+          title: CText(
+            'Sort Recipes',
+            textLevel: EText.subtitle,
           ),
           content: SizedBox(
             width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
@@ -157,23 +149,16 @@ class HomeViewState extends State<HomeView> {
                 children: [
                   ReactiveDropdownField(
                     decoration: InputDecoration(
+                      labelText: 'Sort',
                       filled: true,
-                    ),
-                    hint: CustomText(
-                      text: "Sort",
-                      fontSize: 15.0,
-                      fontFamily: "Lato",
-                      color: theme.colorScheme.onSurface,
                     ),
                     items: _sortables
                         .map(
                           (e) => DropdownMenuItem(
                             value: e,
-                            child: CustomText(
-                              text: properCase(e),
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            child: CText(
+                              properCase(e),
+                              textLevel: EText.body,
                             ),
                           ),
                         )
@@ -186,11 +171,9 @@ class HomeViewState extends State<HomeView> {
           ),
           actions: [
             TextButton(
-              child: CustomText(
-                text: "Cancel",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                'Cancel',
+                textLevel: EText.button,
               ),
               onPressed: () {
                 formGroup.control('sort').reset();
@@ -201,11 +184,9 @@ class HomeViewState extends State<HomeView> {
               },
             ),
             TextButton(
-              child: CustomText(
-                text: "Submit",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                'Submit',
+                textLevel: EText.button,
               ),
               onPressed: () {
                 setState(() {
@@ -227,11 +208,9 @@ class HomeViewState extends State<HomeView> {
       builder: (BuildContext context) {
         var theme = Theme.of(context);
         return AlertDialog(
-          title: CustomText(
-            text: recipe.title,
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onBackground,
+          title: CText(
+            recipe.title!,
+            textLevel: EText.title2,
           ),
           content: SizedBox(
             width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
@@ -241,11 +220,9 @@ class HomeViewState extends State<HomeView> {
           ),
           actions: [
             TextButton(
-              child: CustomText(
-                text: "Close",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                'Close',
+                textLevel: EText.button,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -279,9 +256,9 @@ class HomeViewState extends State<HomeView> {
       appBar: AppBar(
         elevation: 1,
         // toolbarHeight: 50.0,
-        title: Text(
+        title: CText(
           'Welcome, What would you like to cook today?',
-          textScaleFactor: 1.25,
+          textLevel: EText.title,
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(75),
@@ -379,17 +356,13 @@ class HomeViewState extends State<HomeView> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomText(
-              text: 'Welcome, ',
-              fontSize: 35.0,
-              fontFamily: "Lato",
-              color: theme.colorScheme.onBackground,
+            CText(
+              'Welcome, ',
+              textLevel: EText.title,
             ),
-            CustomText(
-              text: 'What would you like to cook today?',
-              fontSize: 25.0,
-              fontFamily: "Lato",
-              color: theme.colorScheme.onBackground,
+            CText(
+              'What would you like to cook today?',
+              textLevel: EText.subtitle,
             ),
           ],
         ),

@@ -80,11 +80,9 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         var theme = Theme.of(context);
         return AlertDialog(
           backgroundColor: theme.colorScheme.surface,
-          title: CustomText(
-            text: "Review Recipe",
-            fontSize: 20.0,
-            fontFamily: "Lato",
-            color: theme.colorScheme.onSurface,
+          title: CText(
+            "Review Recipe",
+            textLevel: EText.title2,
           ),
           content: SizedBox(
             height: 250,
@@ -106,23 +104,17 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   ),
                   ReactiveDropdownField(
                     decoration: InputDecoration(
-                      label: CustomText(
-                        text: "Rating",
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
-                      ),
+                      labelText: 'Rating',
+                      filled: true,
                     ),
                     formControlName: 'stars',
                     dropdownColor: theme.colorScheme.surface,
                     items: List<DropdownMenuItem>.generate(
                       6,
                       (index) => DropdownMenuItem(
-                        child: CustomText(
-                          text: "$index of 5 Stars",
-                          fontSize: 20.0,
-                          fontFamily: "Lato",
-                          color: theme.colorScheme.onSurface,
+                        child: CText(
+                          "$index of 5 Stars",
+                          textLevel: EText.body,
                         ),
                         value: index,
                       ),
@@ -134,22 +126,18 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
           ),
           actions: [
             TextButton(
-              child: CustomText(
-                text: "Cancel",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                "Cancel",
+                textLevel: EText.button,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: CustomText(
-                text: "Submit",
-                fontSize: 15.0,
-                fontFamily: "Lato",
-                color: theme.colorScheme.onSurface,
+              child: CText(
+                "Submit",
+                textLevel: EText.button,
               ),
               onPressed: () {
                 AbstractControl<dynamic> _form = formGroup;
@@ -194,18 +182,14 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(
-                  text: recipe?.title ?? '',
-                  fontSize: 35.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onBackground,
+                CText(
+                  recipe?.title ?? '',
+                  textLevel: EText.title,
                 ),
                 recipe?.description != ''
-                    ? CustomText(
-                        text: recipe?.description ?? '',
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
+                    ? CText(
+                        recipe?.description ?? '',
+                        textLevel: EText.subtitle,
                       )
                     : SizedBox.shrink()
               ],

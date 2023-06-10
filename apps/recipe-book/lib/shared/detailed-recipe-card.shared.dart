@@ -94,7 +94,7 @@ class DetailedRecipeCard extends StatelessWidget {
               right: 0,
               child: Column(
                 children: [
-                  TableShared<RecipeModel>(
+                  TableShared<IngredientModel>(
                     fields: ['Item', 'Quantity', 'Measurement'],
                     data: recipe.ingredients!,
                   ),

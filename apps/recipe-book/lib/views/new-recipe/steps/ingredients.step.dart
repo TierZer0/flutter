@@ -54,11 +54,9 @@ class IngredientsStepState extends State<IngredientsStep> {
           formGroup: widget.formGroup,
           child: AlertDialog(
             backgroundColor: theme.colorScheme.surface,
-            title: CustomText(
-              text: "Add Ingredient",
-              fontSize: 20.0,
-              fontFamily: "Lato",
-              color: theme.colorScheme.onSurface,
+            title: CText(
+              "Add Ingredient",
+              textLevel: EText.subtitle,
             ),
             content: Wrap(
               spacing: 15.0,
@@ -89,12 +87,8 @@ class IngredientsStepState extends State<IngredientsStep> {
                   width: MediaQuery.of(context).size.width * .35,
                   child: ReactiveDropdownField(
                     decoration: InputDecoration(
-                      label: CustomText(
-                        text: "Unit",
-                        fontSize: 20.0,
-                        fontFamily: "Lato",
-                        color: theme.colorScheme.onBackground,
-                      ),
+                      labelText: "Unit",
+                      filled: true,
                     ),
                     formControlName: 'ingredients.unit',
                     dropdownColor: theme.colorScheme.surface,
@@ -103,11 +97,9 @@ class IngredientsStepState extends State<IngredientsStep> {
                         .map(
                           (item) => DropdownMenuItem(
                             value: item,
-                            child: CustomText(
-                              text: item,
-                              fontSize: 20.0,
-                              fontFamily: "Lato",
-                              color: theme.colorScheme.onBackground,
+                            child: CText(
+                              item,
+                              textLevel: EText.body,
                             ),
                           ),
                         )
@@ -118,11 +110,9 @@ class IngredientsStepState extends State<IngredientsStep> {
             ),
             actions: [
               TextButton(
-                child: CustomText(
-                  text: "Cancel",
-                  fontSize: 15.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onSurface,
+                child: CText(
+                  "Cancel",
+                  textLevel: EText.button,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -131,11 +121,9 @@ class IngredientsStepState extends State<IngredientsStep> {
               ReactiveFormConsumer(
                 builder: (context, formGroup, child) {
                   return FilledButton(
-                    child: CustomText(
-                      text: "Submit",
-                      fontSize: 15.0,
-                      fontFamily: "Lato",
-                      color: theme.colorScheme.onSurface,
+                    child: CText(
+                      "Submit",
+                      textLevel: EText.button,
                     ),
                     onPressed: formGroup.control('ingredients').invalid
                         ? null
@@ -166,8 +154,6 @@ class IngredientsStepState extends State<IngredientsStep> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Padding(
@@ -186,11 +172,9 @@ class IngredientsStepState extends State<IngredientsStep> {
                       onPressed: widget.tapBack,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                        child: CustomText(
-                          text: "Prior Step",
-                          fontSize: 20.0,
-                          fontFamily: "Lato",
-                          color: theme.colorScheme.onBackground,
+                        child: CText(
+                          "Prior Step",
+                          textLevel: EText.button,
                         ),
                       ),
                     ),
@@ -212,11 +196,9 @@ class IngredientsStepState extends State<IngredientsStep> {
                       // onPressed: widget.tapForward,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                        child: CustomText(
-                          text: "Next Step",
-                          fontSize: 20.0,
-                          fontFamily: "Lato",
-                          color: theme.colorScheme.onBackground,
+                        child: CText(
+                          "Next Step",
+                          textLevel: EText.button,
                         ),
                       ),
                     )

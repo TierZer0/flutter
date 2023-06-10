@@ -42,11 +42,9 @@ class _InstructionsStepState extends State<InstructionsStep> {
           formGroup: widget.formGroup,
           child: AlertDialog(
             backgroundColor: theme.colorScheme.surface,
-            title: CustomText(
-              text: "Add Instruction",
-              fontSize: 20.0,
-              fontFamily: "Lato",
-              color: theme.colorScheme.onSurface,
+            title: CText(
+              "Add Instruction",
+              textLevel: EText.subtitle,
             ),
             content: Wrap(
               spacing: 15.0,
@@ -75,11 +73,9 @@ class _InstructionsStepState extends State<InstructionsStep> {
             ),
             actions: [
               TextButton(
-                child: CustomText(
-                  text: "Cancel",
-                  fontSize: 15.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onSurface,
+                child: CText(
+                  "Cancel",
+                  textLevel: EText.button,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -88,11 +84,9 @@ class _InstructionsStepState extends State<InstructionsStep> {
               ReactiveFormConsumer(
                 builder: (context, formGroup, child) {
                   return FilledButton(
-                    child: CustomText(
-                      text: "Submit",
-                      fontSize: 15.0,
-                      fontFamily: "Lato",
-                      color: theme.colorScheme.onSurface,
+                    child: CText(
+                      "Submit",
+                      textLevel: EText.button,
                     ),
                     onPressed: formGroup.control('instructions').invalid
                         ? null
@@ -122,8 +116,6 @@ class _InstructionsStepState extends State<InstructionsStep> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Padding(
@@ -143,11 +135,9 @@ class _InstructionsStepState extends State<InstructionsStep> {
                         onPressed: widget.tapBack,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CustomText(
-                            text: "Prior Step",
-                            fontSize: 20.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                          child: CText(
+                            "Prior Step",
+                            textLevel: EText.button,
                           ),
                         ),
                       ),
@@ -169,11 +159,9 @@ class _InstructionsStepState extends State<InstructionsStep> {
                         // onPressed: widget.tapForward,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CustomText(
-                            text: "Next Step",
-                            fontSize: 20.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                          child: CText(
+                            "Next Step",
+                            textLevel: EText.button,
                           ),
                         ),
                       )

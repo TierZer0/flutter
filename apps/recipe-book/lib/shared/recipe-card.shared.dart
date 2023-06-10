@@ -63,19 +63,15 @@ class RecipeCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomText(
-                      text: recipe.title,
-                      fontSize: 20.0,
-                      fontFamily: "Lato",
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onBackground,
+                    CText(
+                      recipe.title!,
+                      textLevel: EText.title,
+                      weight: FontWeight.bold,
                     ),
                     recipe.category != '' || recipe.description != ''
-                        ? CustomText(
-                            text: recipe.category ?? recipe.description,
-                            fontSize: 15.0,
-                            fontFamily: "Lato",
-                            color: theme.colorScheme.onBackground,
+                        ? CText(
+                            recipe.category ?? recipe.description!,
+                            textLevel: EText.title2,
                           )
                         : SizedBox.shrink(),
                   ],
@@ -83,11 +79,9 @@ class RecipeCard extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: CustomText(
-                  text: recipe.likes.toString() + ' likes',
-                  fontSize: 15.0,
-                  fontFamily: "Lato",
-                  color: theme.colorScheme.onBackground,
+                child: CText(
+                  recipe.likes.toString() + ' likes',
+                  textLevel: EText.subtitle,
                 ),
               ),
             ],

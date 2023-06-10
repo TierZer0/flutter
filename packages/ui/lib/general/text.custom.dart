@@ -1,43 +1,99 @@
 import 'package:flutter/material.dart';
 
-class CustomText extends StatelessWidget {
-  String? text;
-  double fontSize;
-  FontWeight fontWeight;
-  Color color;
-  String fontFamily;
+enum EText { title, title2, subtitle, body, button, dangerbutton, caption, custom }
 
-  EdgeInsets padding;
+class CText extends StatelessWidget {
+  final EText? textLevel;
+  final String text;
+  final FontWeight weight;
+  final TextStyle textStyle;
 
-  TextStyle textStyle;
-  bool overrideStyle;
+  final double scaleFactor;
+  final ThemeData? theme;
 
-  CustomText({
-    this.text = "",
-    this.fontSize = 0.0,
-    this.fontWeight = FontWeight.normal,
-    this.color = Colors.black,
-    this.fontFamily = "",
+  const CText(
+    this.text, {
+    Key? key,
+    this.textLevel,
+    this.weight = FontWeight.normal,
+    this.scaleFactor = 1.0,
+    this.theme,
     this.textStyle = const TextStyle(),
-    this.overrideStyle = false,
-    this.padding = const EdgeInsets.all(0.0),
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Text(
-        text ?? '',
-        style: overrideStyle
-            ? textStyle
-            : TextStyle(
-                fontSize: fontSize,
-                fontWeight: fontWeight,
-                fontFamily: fontFamily,
-                color: color,
-              ),
-      ),
-    );
+    switch (textLevel) {
+      case EText.title:
+        return Text(
+          text,
+          textScaleFactor: 1.5,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.title2:
+        return Text(
+          text,
+          textScaleFactor: 1.2,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.subtitle:
+        return Text(
+          text,
+          textScaleFactor: .95,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.body:
+        return Text(
+          text,
+          textScaleFactor: 1.1,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.button:
+        return Text(
+          text,
+          textScaleFactor: 1.1,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.dangerbutton:
+        return Text(
+          text,
+          textScaleFactor: 1.1,
+          style: TextStyle(
+            fontWeight: weight,
+            color: theme!.colorScheme.onError,
+          ),
+        );
+      case EText.caption:
+        return Text(
+          text,
+          textScaleFactor: .8,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+      case EText.custom:
+        return Text(
+          text,
+          style: textStyle,
+        );
+      default:
+        return Text(
+          text,
+          textScaleFactor: scaleFactor,
+          style: TextStyle(
+            fontWeight: weight,
+          ),
+        );
+    }
   }
 }

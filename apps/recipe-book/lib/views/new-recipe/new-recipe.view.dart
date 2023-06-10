@@ -187,11 +187,10 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           appBar: AppBar(
             backgroundColor: theme.colorScheme.surface,
             elevation: 10,
-            title: CustomText(
-              text: widget.id == null ? "Create A New Recipe" : "Edit Recipe",
-              fontSize: 25.0,
-              fontWeight: FontWeight.w500,
-              color: theme.colorScheme.onBackground,
+            title: CText(
+              widget.id == null ? "Create A New Recipe" : "Edit Recipe",
+              textLevel: EText.title,
+              weight: FontWeight.bold,
             ),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(85.0),
