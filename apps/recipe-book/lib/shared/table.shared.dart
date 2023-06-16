@@ -62,22 +62,30 @@ class _TableSharedState<T> extends State<TableShared<T>> {
               ),
             ),
           ),
-          rows: items.map((index) {
+          rows: items.map((itemIndex) {
+            print(itemIndex);
             return DataRow(
               cells: List<DataCell>.generate(widget.fields.length, (index) {
-                final obj = jsonDecode(jsonEncode(widget.data[index]));
-                return DataCell(
-                  CText(
-                    obj[widget.fields[index].toLowerCase()].toString(),
-                    textLevel: EText.body,
-                  ),
-                );
+                try {
+                  final obj = jsonDecode(jsonEncode(widget.data[itemIndex]));
+                  print(obj);
+                  return DataCell(
+                    CText(
+                      obj[widget.fields[index].toLowerCase()].toString(),
+                      textLevel: EText.body,
+                    ),
+                  );
+                } catch (e) {
+                  return DataCell(
+                    SizedBox.shrink(),
+                  );
+                }
               }).toList(),
-              selected: selected[index],
+              selected: selected[itemIndex],
               onSelectChanged: widget.useCheckbox
                   ? (bool? value) {
                       setState(() {
-                        selected[index] = value!;
+                        selected[itemIndex] = value!;
                       });
                     }
                   : null,

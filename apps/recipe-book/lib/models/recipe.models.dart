@@ -97,7 +97,7 @@ class RecipeModel {
           : null,
       ingredients:
           data?['ingredients'] is Iterable ? IngredientModel().fromMap(data?['ingredients']) : null,
-      likes: data?['likes'],
+      likes: data?['likes'] < 0 ? 0 : data?['likes'],
       id: data?['id'],
       createdBy: data?['createdBy'],
       image: data?['image'] ?? '',

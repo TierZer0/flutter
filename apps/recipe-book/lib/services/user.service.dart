@@ -149,15 +149,18 @@ class UserService {
     });
   }
 
-  likeRecipe(String recipeId) async {
-    if (await hasLiked(recipeId)) {
-      await _db.collection(collection).doc(authService.user?.uid).update({
-        'likes': FieldValue.arrayRemove(([recipeId]))
-      });
-    } else {
-      await _db.collection(collection).doc(authService.user?.uid).update({
+  likeRecipe(String recipeId, bool liked) async {
+    if (liked) {
+      _db.collection(collection).doc(authService.user?.uid).update({
         'likes': FieldValue.arrayUnion(([recipeId]))
       });
+      recipesService.updateLikes(recipeId, liked);
+    } else {
+      _db.collection(collection).doc(authService.user?.uid).update({
+        'likes': FieldValue.arrayRemove(([recipeId]))
+      });
+
+      recipesService.updateLikes(recipeId, liked);
     }
   }
 }

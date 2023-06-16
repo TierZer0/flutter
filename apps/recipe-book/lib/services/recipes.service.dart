@@ -107,6 +107,18 @@ class RecipesService {
     });
   }
 
+  incrementView(String id) {
+    _db.collection(recipesCollection).doc(id).update({'views': FieldValue.increment(1)});
+  }
+
+  Future<void> updateLikes(String id, bool liked) {
+    if (liked) {
+      return _db.collection(recipesCollection).doc(id).update({'likes': FieldValue.increment(1)});
+    } else {
+      return _db.collection(recipesCollection).doc(id).update({'likes': FieldValue.increment(-1)});
+    }
+  }
+
   Future<String> uploadFile(File file) async {
     final fileName = basename(file.path);
     final destination = 'food/${authService.user?.uid}/$fileName';

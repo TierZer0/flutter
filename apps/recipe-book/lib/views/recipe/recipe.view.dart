@@ -12,7 +12,6 @@ import 'package:ui/ui.dart';
 
 class RecipePage extends StatefulWidget {
   final String recipeId;
-  // final String source;
 
   RecipePage({required this.recipeId});
 
@@ -31,12 +30,15 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
 
-    userService.hasLiked(widget.recipeId).then((result) => liked = result);
+    userService.hasLiked(widget.recipeId).then(
+          (result) => setState(() {
+            liked = result;
+          }),
+        );
 
     getRecipe();
-    trackView();
   }
 
   getRecipe() {
@@ -44,28 +46,14 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     recipesService.getRecipe(widget.recipeId).then((result) {
       if (result.createdBy == authService.user?.uid) {
         _canEdit = true;
+      } else {
+        recipesService.incrementView(widget.recipeId);
       }
       setState(() {
         recipe = result;
         canEdit = _canEdit;
       });
     });
-  }
-
-  trackView() async {
-    //   try {
-    //     var instance = FirebaseFunctions.instance;
-    //     FirebaseFunctions.
-    //     // instance.useFunctionsEmulator('localhost', 5001);
-    //     print(FirebaseAuth.instance.currentUser);
-    //     final result = await instance.httpsCallable('viewOnRecipe').call([
-    //       {"recipeId": widget.recipeId}
-    //     ]);
-    //   } on FirebaseFunctionsException catch (error) {
-    //     print(error.code);
-    //     print(error.details);
-    //     print(error.message);
-    //   }
   }
 
   Future<void> _reviewDialogBuilder(BuildContext context) {
@@ -110,10 +98,10 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     formControlName: 'stars',
                     dropdownColor: theme.colorScheme.surface,
                     items: List<DropdownMenuItem>.generate(
-                      6,
+                      5,
                       (index) => DropdownMenuItem(
                         child: CText(
-                          "$index of 5 Stars",
+                          "${index + 1} of 5 Stars",
                           textLevel: EText.body,
                         ),
                         value: index,
@@ -172,82 +160,106 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     });
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(150),
-        child: Hero(
-          tag: 'recipe-${widget.recipeId}',
-          child: AppBar(
-            shadowColor: Colors.black12,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CText(
-                  recipe?.title ?? '',
-                  textLevel: EText.title,
-                ),
-                recipe?.description != ''
-                    ? CText(
-                        recipe?.description ?? '',
-                        textLevel: EText.subtitle,
-                      )
-                    : SizedBox.shrink()
-              ],
+      appBar: AppBar(
+        elevation: 1,
+        toolbarHeight: 75,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CText(
+              recipe?.title ?? '',
+              textLevel: EText.title,
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 5.0,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    userService.likeRecipe(widget.recipeId);
-                    setState(() {
-                      liked = !liked;
-                    });
-                  },
-                  icon: Icon(
-                    liked ? Icons.favorite : Icons.favorite_outline_outlined,
-                    fill: 1.0,
-                    color: theme.colorScheme.secondary,
-                  ),
+            recipe?.description != ''
+                ? CText(
+                    recipe?.description ?? '',
+                    textLevel: EText.subtitle,
+                  )
+                : SizedBox.shrink()
+          ],
+        ),
+        actions: [
+          Wrap(
+            spacing: 10.0,
+            children: [
+              IconButton(
+                onPressed: () {
+                  userService.likeRecipe(widget.recipeId, !liked);
+                  setState(() {
+                    liked = !liked;
+                  });
+                },
+                icon: Icon(
+                  liked ? Icons.favorite : Icons.favorite_outline_outlined,
+                  fill: 1.0,
+                  color: theme.colorScheme.secondary,
                 ),
               ),
               canEdit
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.0,
-                      ),
-                      child: IconButton(
-                        onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
-                        icon: Icon(
-                          Icons.edit_outlined,
-                        ),
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.add_outlined),
+                    ),
+              canEdit
+                  ? IconButton(
+                      onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
+                      icon: Icon(
+                        Icons.edit_outlined,
                       ),
                     )
                   : SizedBox.shrink(),
             ],
-            elevation: 0,
-            toolbarHeight: 85.0,
-            bottom: TabBar(
-              indicatorColor: theme.colorScheme.primary,
-              controller: _tabController,
-              tabs: [
-                Tab(
-                  text: "Recipe",
-                  icon: Icon(Icons.dinner_dining_outlined),
-                ),
-                Tab(
-                  text: "Reviews",
-                  icon: Icon(Icons.reviews_outlined),
-                ),
-                Tab(
-                  text: 'Info',
-                  icon: Icon(Icons.info_outline_rounded),
-                )
-              ],
-            ),
           ),
+        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.symmetric(
+        //       horizontal: 5.0,
+        //     ),
+        // child: IconButton(
+        //   onPressed: () {
+        //     userService.likeRecipe(widget.recipeId, !liked);
+        //     setState(() {
+        //       liked = !liked;
+        //     });
+        //   },
+        //   icon: Icon(
+        //     liked ? Icons.favorite : Icons.favorite_outline_outlined,
+        //     fill: 1.0,
+        //     color: theme.colorScheme.secondary,
+        //   ),
+        // ),
+        //   ),
+        //   canEdit
+        //       ? Padding(
+        //           padding: EdgeInsets.symmetric(
+        //             horizontal: 5.0,
+        //           ),
+        // child: IconButton(
+        //   onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
+        //   icon: Icon(
+        //     Icons.edit_outlined,
+        //   ),
+        // ),
+        //         )
+        //       : SizedBox.shrink(),
+        // ],
+        bottom: TabBar(
+          indicatorColor: theme.colorScheme.primary,
+          controller: _tabController,
+          tabs: [
+            Tab(
+              text: "Recipe",
+            ),
+            Tab(
+              text: "Reviews",
+            ),
+            // Tab(
+            //   text: 'Info',
+            // )
+          ],
         ),
       ),
       floatingActionButton: showAddReview
@@ -264,7 +276,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   recipe: recipe!,
                 ),
                 ReviewsTab(id: widget.recipeId),
-                SizedBox(),
+                // SizedBox(),
               ],
             )
           : Center(
