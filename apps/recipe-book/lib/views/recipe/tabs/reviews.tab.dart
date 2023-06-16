@@ -19,7 +19,7 @@ class ReviewsTabState extends State<ReviewsTab> {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: StreamBuilder(
           stream: recipesService.getRecipeReviews(widget.id),
           builder: (context, snapshot) {
@@ -36,33 +36,29 @@ class ReviewsTabState extends State<ReviewsTab> {
               return ListView(
                 children: reviews
                     .map(
-                      (review) => Card(
-                        elevation: 1,
-                        clipBehavior: Clip.antiAlias,
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 5.0,
-                            horizontal: 15.0,
-                          ),
-                          tileColor: theme.colorScheme.surface,
-                          title: CText(
-                            review.review ?? '',
-                            textLevel: EText.title2,
-                            theme: theme,
-                          ),
-                          subtitle: review.stars! > 0
-                              ? Wrap(
-                                  spacing: 4,
-                                  children: List<Widget>.generate(
-                                    review.stars ?? 0,
-                                    (index) => Icon(
-                                      Icons.star_rate,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ).toList(),
-                                )
-                              : null,
+                      (review) => ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0.0,
+                          horizontal: 10.0,
                         ),
+                        tileColor: theme.colorScheme.surface,
+                        title: CText(
+                          review.review ?? '',
+                          textLevel: EText.title2,
+                          theme: theme,
+                        ),
+                        subtitle: review.stars! > 0
+                            ? Wrap(
+                                spacing: 4,
+                                children: List<Widget>.generate(
+                                  review.stars ?? 1,
+                                  (index) => Icon(
+                                    Icons.star_rate,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ).toList(),
+                              )
+                            : null,
                       ),
                     )
                     .toList(),

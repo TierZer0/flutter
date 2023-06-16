@@ -348,7 +348,6 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget buildMobile(BuildContext context) {
-    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 85.0,

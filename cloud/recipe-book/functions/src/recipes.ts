@@ -24,6 +24,6 @@ export const onRecipeCreateActions = functions.firestore
 export const onRecipeDeleteActions = functions.firestore
   .document("recipes/{recipeId}")
   .onDelete((snapshot, context) => {
-    //handle cleanup
-    //delete from users recipebooks
+    // handle cleanup
+    // delete from users recipebooks
   });
