@@ -4,6 +4,7 @@ import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
+import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
 class MainView extends StatefulWidget {
@@ -33,24 +34,55 @@ class MainViewState extends State<MainView> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 660) {
-          return SafeArea(
-            child: Row(
+          return Scaffold(
+            appBar: AppBar(
+              title: CText(
+                'Recipe Book',
+                textLevel: EText.title2,
+              ),
+            ),
+            body: Row(
               children: [
                 NavigationRail(
-                  labelType: NavigationRailLabelType.all,
+                  labelType: NavigationRailLabelType.none,
                   onDestinationSelected: (int index) {
                     setState(() {
                       currentPageIndex = index;
                     });
                   },
-                  leading: FloatingActionButton(
-                    onPressed: () => context.push('/newRecipe'),
-                    child: const Icon(
-                      Icons.add_outlined,
-                      size: 30.0,
+                  trailing: Expanded(
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 20.0,
+                          ),
+                          child: FloatingActionButton.extended(
+                            onPressed: () => context.push('/newRecipe'),
+                            // child: const Icon(
+                            //   Icons.add_outlined,
+                            //   size: 30.0,
+                            // ),
+                            icon: const Icon(
+                              Icons.add_outlined,
+                              size: 30.0,
+                            ),
+                            label: CText(
+                              'New Recipe',
+                              textLevel: EText.button,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   groupAlignment: -1.0,
+                  extended: true,
+                  selectedLabelTextStyle: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
                   destinations: <NavigationRailDestination>[
                     NavigationRailDestination(
                       icon: Icon(
@@ -58,8 +90,14 @@ class MainViewState extends State<MainView> {
                         size: 35.0,
                         color: theme.colorScheme.onSurface,
                       ),
+                      selectedIcon: Icon(
+                        Icons.groups_2,
+                        size: 35.0,
+                        color: theme.colorScheme.onSurface,
+                      ),
                       label: CText(
                         'Community',
+                        textLevel: EText.title,
                       ),
                     ),
                     NavigationRailDestination(
@@ -68,7 +106,15 @@ class MainViewState extends State<MainView> {
                         size: 35.0,
                         color: theme.colorScheme.onSurface,
                       ),
-                      label: Text('My Recipes'),
+                      selectedIcon: Icon(
+                        Icons.book,
+                        size: 35.0,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      label: CText(
+                        'My Recipes',
+                        textLevel: EText.title,
+                      ),
                     ),
                     NavigationRailDestination(
                       icon: Icon(
@@ -76,7 +122,10 @@ class MainViewState extends State<MainView> {
                         size: 35.0,
                         color: theme.colorScheme.onSurface,
                       ),
-                      label: Text('Favorites'),
+                      label: CText(
+                        'Favorites',
+                        textLevel: EText.title,
+                      ),
                     ),
                     NavigationRailDestination(
                       icon: Icon(
@@ -84,18 +133,19 @@ class MainViewState extends State<MainView> {
                         size: 35.0,
                         color: theme.colorScheme.onSurface,
                       ),
-                      label: Text('Profile'),
+                      label: CText(
+                        'Profile',
+                        textLevel: EText.title,
+                      ),
                     ),
                   ],
                   selectedIndex: currentPageIndex,
                 ),
-                VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: theme.colorScheme.outlineVariant,
-                ),
                 Expanded(
-                  child: views[currentPageIndex],
+                  child: CustomCard(
+                    child: views[currentPageIndex],
+                    card: ECard.elevated,
+                  ),
                 )
               ],
             ),
