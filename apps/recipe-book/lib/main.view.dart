@@ -25,7 +25,7 @@ class MainViewState extends State<MainView> {
     ProfileView(),
   ];
 
-  int currentPageIndex = 3;
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
