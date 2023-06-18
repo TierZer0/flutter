@@ -22,8 +22,68 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 660) {
+        return buildDesktop(context);
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
 
+  Widget buildDesktop(BuildContext context) {
+    var theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.all(0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppBar(
+            backgroundColor: Colors.transparent,
+            title: CText(
+              authService.user?.displayName ?? authService.user?.email ?? '',
+              textLevel: EText.title,
+              weight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .35,
+            child: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(
+                  text: 'Info',
+                ),
+                Tab(
+                  text: 'Categories',
+                ),
+                Tab(
+                  text: 'Recipe Books',
+                ),
+                Tab(
+                  text: 'Settings',
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                InfoTab(),
+                CategoriesTab(),
+                BooksTab(),
+                SettingsTab(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: CText(

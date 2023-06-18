@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
@@ -130,7 +131,9 @@ class SaveStepState extends State<SaveStep> {
                                     child: SizedBox(
                                       height: 200,
                                       child: _photo?.path != null
-                                          ? Image.file(_photo!)
+                                          ? kIsWeb
+                                              ? Image.network(_photo!.path)
+                                              : Image.file(_photo!)
                                           : SizedBox.shrink(),
                                     ),
                                   ),
