@@ -63,12 +63,10 @@ class _TableSharedState<T> extends State<TableShared<T>> {
             ),
           ),
           rows: items.map((itemIndex) {
-            print(itemIndex);
             return DataRow(
               cells: List<DataCell>.generate(widget.fields.length, (index) {
                 try {
                   final obj = jsonDecode(jsonEncode(widget.data[itemIndex]));
-                  print(obj);
                   return DataCell(
                     CText(
                       obj[widget.fields[index].toLowerCase()].toString(),

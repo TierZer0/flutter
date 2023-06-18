@@ -253,7 +253,7 @@ class HomePageState extends State<HomePage> {
   Widget buildDesktop(BuildContext context) {
     var theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -261,7 +261,8 @@ class HomePageState extends State<HomePage> {
             backgroundColor: Colors.transparent,
             title: CText(
               'Welcome, What would you like to cook today?',
-              textLevel: EText.title2,
+              textLevel: EText.title,
+              weight: FontWeight.bold,
             ),
             actions: [
               Padding(
@@ -306,7 +307,7 @@ class HomePageState extends State<HomePage> {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 0.0,
+                horizontal: 10.0,
                 vertical: 0.0,
               ),
               child: StreamBuilder(

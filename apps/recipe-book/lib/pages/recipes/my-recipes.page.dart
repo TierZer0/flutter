@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_book/main.dart';
 import 'package:recipe_book/pages/recipes/tabs/my-recipe-books.tab.dart';
 import 'package:recipe_book/pages/recipes/tabs/my-recipes.tab.dart';
 import 'package:ui/general/text.custom.dart';
@@ -25,7 +26,6 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     _tabController.addListener(() {
       setState(() {
         _searchController.text = '';
@@ -33,6 +33,64 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
         _search = '';
       });
     });
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 660) {
+        return buildDesktop(context);
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppBar(
+            backgroundColor: Colors.transparent,
+            title: CText(
+              'My Recipes',
+              textLevel: EText.title,
+              weight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .25,
+            child: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(
+                  text: 'Recipes',
+                  // icon: Icon(Icons.dinner_dining_outlined),
+                ),
+                Tab(
+                  text: 'Recipe Books',
+                  // icon: Icon(Icons.menu_book_sharp),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                MyRecipesTab(
+                  search: _search,
+                ),
+                MyRecipeBooksTab(
+                  search: _search,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Wrap(
