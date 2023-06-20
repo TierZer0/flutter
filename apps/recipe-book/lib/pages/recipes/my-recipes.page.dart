@@ -116,7 +116,7 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
           ],
         ),
         toolbarHeight: 110.0,
-        elevation: 10,
+        elevation: 5,
         bottom: TabBar(
           controller: _tabController,
           tabs: [

@@ -74,27 +74,37 @@ class UserService {
         id: e.id,
         name: data['name'],
         category: data['category'],
-        recipes: data['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
+        recipes: data['recipes'] is Iterable ? List<String>.from(data['recipes']) : null,
         createdBy: data['createdBy'],
         likes: data['likes'],
       );
     }).toList();
   }
 
-  Future<QuerySnapshot<RecipeModel>> likes() async {
+  Future<QuerySnapshot<RecipeModel>?> likes(bool hasMade) async {
     final userSnap = await userRef.get();
     final recipesRef = await recipesService.recipesRef;
     UserModel user = userSnap.data();
 
-    return recipesRef.where(FieldPath.documentId, whereIn: user.likes).limit(5).get();
+    final recipes =
+        user.likes!.where((element) => element.hasMade == hasMade).map((e) => e.recipeId);
+    return recipes.length > 0
+        ? recipesRef.where(FieldPath.documentId, whereIn: recipes).get()
+        : null;
   }
 
   hasLiked(String recipeId) async {
     final userSnap = await userRef.get();
 
     UserModel user = userSnap.data();
+    return user.likes!.any((element) => element.recipeId == recipeId);
+  }
 
-    return user.likes!.contains(recipeId);
+  hasMade(String recipeId) async {
+    final userSnap = await userRef.get();
+
+    UserModel user = userSnap.data();
+    return user.likes!.any((element) => element.recipeId == recipeId && element.hasMade == true);
   }
 
   deleteRecipeBook(String id) {
@@ -149,17 +159,34 @@ class UserService {
     });
   }
 
-  likeRecipe(String recipeId, bool liked) async {
+  madeRecipe(String recipeId) async {
+    var items =
+        (await _db.collection(collection).doc(authService.user?.uid).get()).data()!['likes'];
+    items.forEach((element) {
+      if (element['recipeId'] == recipeId) {
+        element['hasMade'] = true;
+      }
+    });
+    print(items);
+    _db.collection(collection).doc(authService.user?.uid).update({
+      'likes': items,
+    });
+  }
+
+  likeRecipe(String recipeId, bool liked) {
     if (liked) {
       _db.collection(collection).doc(authService.user?.uid).update({
-        'likes': FieldValue.arrayUnion(([recipeId]))
+        'likes': FieldValue.arrayUnion(([
+          {'recipeId': recipeId, 'hasMade': false}
+        ]))
       });
       recipesService.updateLikes(recipeId, liked);
     } else {
       _db.collection(collection).doc(authService.user?.uid).update({
-        'likes': FieldValue.arrayRemove(([recipeId]))
+        'likes': FieldValue.arrayRemove(([
+          {'recipeId': recipeId, 'hasMade': false}
+        ]))
       });
-
       recipesService.updateLikes(recipeId, liked);
     }
   }

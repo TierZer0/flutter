@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:recipe_book/pages/favorites/favorites.page.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +22,7 @@ class MainViewState extends State<MainView> {
   var views = [
     HomePage(),
     RecipesView(),
-    Container(),
+    FavoritesPage(),
     ProfileView(),
   ];
 
