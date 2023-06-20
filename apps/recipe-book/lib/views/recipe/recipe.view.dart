@@ -25,7 +25,9 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   bool liked = false;
   RecipeModel? recipe = null;
 
-  bool showAddReview = false;
+  // bool showAddReview = false;
+  String fab = 'made';
+  bool hasMade = false;
 
   @override
   void initState() {
@@ -35,6 +37,13 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     userService.hasLiked(widget.recipeId).then(
           (result) => setState(() {
             liked = result;
+          }),
+        );
+
+    userService.hasMade(widget.recipeId).then(
+          (result) => setState(() {
+            hasMade = result;
+            fab = result ? '' : 'made';
           }),
         );
 
@@ -54,6 +63,33 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         canEdit = _canEdit;
       });
     });
+  }
+
+  Widget? buildFAB() {
+    switch (fab) {
+      case 'review':
+        return FloatingActionButton.extended(
+          onPressed: () => _reviewDialogBuilder(context),
+          icon: Icon(Icons.add_outlined),
+          label: CText(
+            'Add Review',
+            textLevel: EText.button,
+          ),
+        );
+      case 'made':
+        return hasMade
+            ? null
+            : FloatingActionButton.extended(
+                onPressed: () => userService.madeRecipe(widget.recipeId),
+                icon: Icon(Icons.check),
+                label: CText(
+                  'Made Recipe',
+                  textLevel: EText.button,
+                ),
+              );
+      default:
+        return null;
+    }
   }
 
   Future<void> _reviewDialogBuilder(BuildContext context) {
@@ -148,15 +184,21 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     _tabController.addListener(() {
-      if (_tabController.index == 1) {
-        setState(() {
-          showAddReview = true;
-        });
-      } else {
-        setState(() {
-          showAddReview = false;
-        });
+      var _fab = '';
+      switch (_tabController.index) {
+        case 0:
+          _fab = 'made';
+          break;
+        case 1:
+          _fab = 'review';
+          break;
+        default:
+          _fab = '';
+          break;
       }
+      setState(() {
+        fab = _fab;
+      });
     });
 
     return Scaffold(
@@ -213,39 +255,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             ],
           ),
         ],
-        // actions: [
-        //   Padding(
-        //     padding: EdgeInsets.symmetric(
-        //       horizontal: 5.0,
-        //     ),
-        // child: IconButton(
-        //   onPressed: () {
-        //     userService.likeRecipe(widget.recipeId, !liked);
-        //     setState(() {
-        //       liked = !liked;
-        //     });
-        //   },
-        //   icon: Icon(
-        //     liked ? Icons.favorite : Icons.favorite_outline_outlined,
-        //     fill: 1.0,
-        //     color: theme.colorScheme.secondary,
-        //   ),
-        // ),
-        //   ),
-        //   canEdit
-        //       ? Padding(
-        //           padding: EdgeInsets.symmetric(
-        //             horizontal: 5.0,
-        //           ),
-        // child: IconButton(
-        //   onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
-        //   icon: Icon(
-        //     Icons.edit_outlined,
-        //   ),
-        // ),
-        //         )
-        //       : SizedBox.shrink(),
-        // ],
         bottom: TabBar(
           indicatorColor: theme.colorScheme.primary,
           controller: _tabController,
@@ -262,12 +271,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
           ],
         ),
       ),
-      floatingActionButton: showAddReview
-          ? FloatingActionButton(
-              onPressed: () => _reviewDialogBuilder(context),
-              child: Icon(Icons.add_outlined),
-            )
-          : null,
+      floatingActionButton: buildFAB(),
       body: recipe != null
           ? TabBarView(
               controller: _tabController,
