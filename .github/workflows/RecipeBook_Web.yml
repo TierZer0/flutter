@@ -37,6 +37,9 @@ jobs:
     name: Deploy Web to Firebase Hosting
     needs: build_web
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/recipe-book
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
