@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -7,158 +8,207 @@ import 'package:recipe_book/services/user.service.dart';
 import 'package:ui/ui.dart';
 
 class CategoriesTab extends StatefulWidget {
+  UserModel user;
+
+  CategoriesTab({super.key, required this.user});
+
   CategoriesTabState createState() => CategoriesTabState();
 }
 
 class CategoriesTabState extends State<CategoriesTab> {
   final formGroup = FormGroup({
     'name': FormControl<String>(validators: [Validators.required]),
-    'prevName': FormControl<String>(),
+    'prevName': FormControl<String>(value: ''),
   });
 
   reload() {
     setState(() {});
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+  Future<void> _categoryDialogBuilder({
+    required BuildContext context,
+    required UserModel user,
+    int? index = null,
+  }) {
+    if (index != null) {
+      formGroup.control('name').value = user.categories![index];
+      formGroup.control('prevName').value = user.categories![index];
+    } else {
+      formGroup.reset();
+    }
 
-    return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      future: userService.getUser,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          var data = UserModel.fromFirestore(snapshot.data!, SnapshotOptions());
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              child: Column(
+    return showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return AlertDialog(
+          title: CText(
+            'Add Category',
+            textLevel: EText.title2,
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: ReactiveForm(
+              formGroup: formGroup,
+              child: Wrap(
                 children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .5,
-                    child: ListView(
-                      children: data.categories!
-                          .map(
-                            (e) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5.0,
-                                  horizontal: 15.0,
-                                ),
-                                tileColor: theme.colorScheme.surface,
-                                title: CText(
-                                  e,
-                                  textLevel: EText.body,
-                                ),
-                                trailing: SizedBox(
-                                  width: 50.0,
-                                  child: Row(
-                                    children: [
-                                      PopupMenuButton(
-                                        elevation: 5.0,
-                                        itemBuilder: (context) => <PopupMenuEntry>[
-                                          PopupMenuItem(
-                                            // child: Text(
-                                            //   'Edit',
-                                            // ),
-                                            child: CText(
-                                              'Edit',
-                                              textLevel: EText.button,
-                                            ),
-                                            onTap: () {
-                                              formGroup.patchValue({
-                                                'name': e,
-                                                'prevName': e,
-                                              });
-                                            },
-                                          ),
-                                          PopupMenuItem(
-                                            child: CText(
-                                              'Delete',
-                                              textLevel: EText.button,
-                                            ),
-                                            onTap: () {
-                                              userService.deleteCategory(e);
-                                              reload();
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                  ReactiveForm(
-                    formGroup: formGroup,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 25.0,
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: CText(
-                            'New Category',
-                            textLevel: EText.title,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                          child: CustomReactiveInput(
-                            inputAction: TextInputAction.done,
-                            formName: 'name',
-                            label: 'Name',
-                            textColor: theme.colorScheme.onBackground,
-                          ),
-                        ),
-                        ReactiveFormConsumer(
-                          builder: (context, form, child) {
-                            return ElevatedButton(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-                                child: CText(
-                                  'Create Category',
-                                  textLevel: EText.button,
-                                ),
-                              ),
-                              onPressed: form.invalid
-                                  ? null
-                                  : () {
-                                      userService.createCategory(
-                                        category: form.control('name').value,
-                                      );
-                                      form.reset();
-                                      reload();
-                                    },
-                            );
-                          },
-                        )
-                      ],
-                    ),
+                  CustomReactiveInput(
+                    formName: 'name',
+                    label: 'Category',
+                    textColor: theme.colorScheme.onBackground,
+                    inputAction: TextInputAction.done,
                   ),
                 ],
               ),
             ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: CText(
+                'Cancel',
+                textLevel: EText.button,
+              ),
+            ),
+            index != null
+                ? FilledButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.error),
+                    ),
+                    onPressed: () => {
+                      userService.deleteCategory(
+                        formGroup.control('name').value,
+                      ),
+                      Navigator.of(context).pop(),
+                      formGroup.reset(),
+                      reload(),
+                    },
+                    child: CText(
+                      'Delete',
+                      theme: theme,
+                      textLevel: EText.dangerbutton,
+                    ),
+                  )
+                : SizedBox.shrink(),
+            FilledButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.secondary),
+              ),
+              onPressed: () async {
+                if (formGroup.valid) {
+                  await userService.createCategory(
+                    category: formGroup.control('name').value,
+                    oldCategory: formGroup.control('prevName').value,
+                  );
+                  Navigator.of(context).pop();
+                  formGroup.reset();
+                  reload();
+                }
+              },
+              child: CText(
+                'Add',
+                textLevel: EText.button,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 660) {
+        return buildDesktop(context);
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListView.builder(
+      padding: EdgeInsets.all(10.0),
+      itemCount: widget.user.categories!.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return DottedBorder(
+            dashPattern: [6, 6],
+            borderType: BorderType.RRect,
+            color: theme.colorScheme.onSurfaceVariant,
+            child: ListTile(
+              title: CText(
+                'New Category',
+                textLevel: EText.title2,
+              ),
+              trailing: Icon(Icons.add),
+              onTap: () => _categoryDialogBuilder(
+                context: context,
+                user: widget.user,
+              ),
+            ),
           );
         }
-        return Container(
-          padding: const EdgeInsets.only(
-            top: 20.0,
+        index -= 1;
+        return ListTile(
+          title: CText(
+            widget.user.categories![index],
+            textLevel: EText.body,
           ),
-          color: theme.scaffoldBackgroundColor,
-          height: MediaQuery.of(context).size.height - 90.0,
-          width: MediaQuery.of(context).size.width,
-          child: const Center(
-            child: CircularProgressIndicator(),
+          trailing: IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () => _categoryDialogBuilder(
+              context: context,
+              user: widget.user,
+              index: index,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListView.builder(
+      padding: EdgeInsets.all(10.0),
+      itemCount: widget.user.categories!.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return DottedBorder(
+            dashPattern: [6, 6],
+            borderType: BorderType.RRect,
+            color: theme.colorScheme.onSurfaceVariant,
+            child: ListTile(
+              title: CText(
+                'New Category',
+                textLevel: EText.title2,
+              ),
+              trailing: Icon(Icons.add),
+              onTap: () => _categoryDialogBuilder(
+                context: context,
+                user: widget.user,
+              ),
+            ),
+          );
+        }
+        index -= 1;
+        return ListTile(
+          title: CText(
+            widget.user.categories![index],
+            textLevel: EText.body,
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () => _categoryDialogBuilder(
+              context: context,
+              user: widget.user,
+              index: index,
+            ),
           ),
         );
       },
