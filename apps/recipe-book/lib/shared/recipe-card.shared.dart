@@ -25,6 +25,7 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    print(recipe.image);
     return CustomCard(
       card: cardType,
       child: InkWell(

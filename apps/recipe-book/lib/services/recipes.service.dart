@@ -46,6 +46,8 @@ class RecipesService {
   }
 
   _buildFilterQuery(Query query, filters) {
+    if (filters == null) return query;
+
     for (String key in filters.keys) {
       if (filters[key] != null && filters[key] != '') {
         var value;
@@ -86,18 +88,28 @@ class RecipesService {
     return recipesRef.where(FieldPath.documentId, whereIn: recipeIds).snapshots();
   }
 
-  Stream<QuerySnapshot<RecipeModel>> getMyRecipes() {
-    return recipesRef
+  Future<QuerySnapshot<RecipeModel>> getRecipesInBookFuture({List<String>? recipeIds = const []}) {
+    print(recipeIds);
+
+    if (recipeIds == null || recipeIds!.isEmpty)
+      return Future.error(Exception('No recipes in book'));
+    return recipesRef.where(FieldPath.documentId, whereIn: recipeIds).get();
+  }
+
+  Stream<QuerySnapshot<RecipeModel>> getMyRecipes({filters}) {
+    Query<RecipeModel> query = _buildFilterQuery(recipesRef, filters);
+    return query
         .where('createdBy', isEqualTo: authService.user?.uid)
         .orderBy('created')
         .snapshots();
   }
 
-  Future<QuerySnapshot<RecipeModel>> getMyRecipesFuture() {
-    return recipesRef.where('createdBy', isEqualTo: authService.user?.uid).orderBy('created').get();
+  Future<QuerySnapshot<RecipeModel>> getMyRecipesFuture({filters}) {
+    Query<RecipeModel> query = _buildFilterQuery(recipesRef, filters);
+    return query.where('createdBy', isEqualTo: authService.user?.uid).orderBy('created').get();
   }
 
-  Stream<DocumentSnapshot<dynamic?>> getRecipeReviews(id) {
+  Stream<DocumentSnapshot<dynamic>> getRecipeReviews(id) {
     return _db.collection(recipesCollection).doc(id).snapshots();
   }
 

@@ -130,7 +130,6 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
               recipeBook.name ?? '',
               textLevel: EText.title,
             ),
-            CText(recipeBook.category ?? '', textLevel: EText.subtitle),
           ],
         ),
         elevation: 5,

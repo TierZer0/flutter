@@ -24,8 +24,12 @@ class UserService {
     return snapshot['darkTheme'];
   }
 
-  get getUser {
-    return _db.collection(collection).doc(authService.user?.uid).get();
+  get getUserFuture async {
+    return (await userRef.get()).data();
+  }
+
+  get getUserStream {
+    return userRef.snapshots();
   }
 
   Stream<QuerySnapshot> get userBooksStream {
@@ -62,23 +66,8 @@ class UserService {
     return user.categories;
   }
 
-  get recipeBooks async {
-    final snap = await _db
-        .collection(collection)
-        .doc(authService.user?.uid)
-        .collection(userBookCollection)
-        .get();
-    return snap.docs.map((e) {
-      var data = e.data();
-      return RecipeBookModel(
-        id: e.id,
-        name: data['name'],
-        category: data['category'],
-        recipes: data['recipes'] is Iterable ? List<String>.from(data['recipes']) : null,
-        createdBy: data['createdBy'],
-        likes: data['likes'],
-      );
-    }).toList();
+  Future<QuerySnapshot<RecipeBookModel>> myRecipeBooks() async {
+    return recipeBooksRef.get();
   }
 
   Future<QuerySnapshot<RecipeModel>?> likes(bool hasMade) async {
@@ -150,8 +139,8 @@ class UserService {
   }
 
   createCategory({required String category, String? oldCategory = ''}) async {
-    if (oldCategory != '') {
-      deleteCategory(oldCategory!);
+    if (oldCategory != '' && oldCategory != null) {
+      deleteCategory(oldCategory);
       //find and update references to old category
     }
     _db.collection(collection).doc(authService.user?.uid).update({
