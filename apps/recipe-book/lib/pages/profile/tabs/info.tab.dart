@@ -38,34 +38,38 @@ class _InfoTabState extends State<InfoTab> {
 
   Widget buildDesktop(BuildContext context) {
     Map data = new Map.from(widget.user.toFirestore());
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * .45,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Wrap(
-          runSpacing: 15.0,
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CText(
-              'User Info',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
-            ),
-            Container(
-              height: 200,
-              child: FieldGridShared<RecipeModel>(
-                fields: ['name'],
-                data: data,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Wrap(
+            runSpacing: 15.0,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CText(
+                'User Info',
+                textLevel: EText.title,
+                weight: FontWeight.bold,
               ),
-            ),
-            CText(
-              'Recipes Info',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
-            ),
-          ],
+              Container(
+                height: 200,
+                child: FieldGridShared<RecipeModel>(
+                  fields: [
+                    'name',
+                    'darkTheme',
+                  ],
+                  data: data,
+                ),
+              ),
+              CText(
+                'Recipes Info',
+                textLevel: EText.title,
+                weight: FontWeight.bold,
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

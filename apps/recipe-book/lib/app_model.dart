@@ -35,7 +35,6 @@ class AppModel extends ChangeNotifier {
   //CURRENT RECIPE BOOK state
   RecipeBookModel _recipeBook = RecipeBookModel(
     name: '',
-    category: '',
     recipes: [],
     createdBy: '',
     likes: 0,

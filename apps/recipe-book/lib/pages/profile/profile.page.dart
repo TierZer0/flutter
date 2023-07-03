@@ -17,6 +17,7 @@ class ProfileView extends StatefulWidget {
 
 class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin {
   late TabController _tabController;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -42,55 +43,69 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
           final UserModel user = snapshot.data!.data() as UserModel;
-          return Padding(
-            padding: EdgeInsets.all(0.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          final _destinations = [
+            InfoTab(
+              user: user,
+            ),
+            CategoriesTab(
+              user: user,
+            ),
+            BooksTab(),
+            SettingsTab(),
+          ];
+          return Scaffold(
+            appBar: AppBar(
+              title: CText(
+                authService.user?.displayName ?? authService.user?.email ?? '',
+                textLevel: EText.title,
+                weight: FontWeight.bold,
+              ),
+            ),
+            body: Row(
               children: [
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  title: CText(
-                    authService.user?.displayName ?? authService.user?.email ?? '',
-                    textLevel: EText.title,
-                    weight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .35,
-                  child: TabBar(
-                    controller: _tabController,
-                    tabs: [
-                      Tab(
-                        text: 'Info',
+                NavigationRail(
+                  labelType: NavigationRailLabelType.all,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.info_outline),
+                      label: CText(
+                        'Info',
+                        textLevel: EText.button,
                       ),
-                      Tab(
-                        text: 'Categories',
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.category_outlined),
+                      label: CText(
+                        'Categories',
+                        textLevel: EText.button,
                       ),
-                      Tab(
-                        text: 'Recipe Books',
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.bookmarks_outlined),
+                      label: CText(
+                        'Books',
+                        textLevel: EText.button,
                       ),
-                      Tab(
-                        text: 'Settings',
-                      )
-                    ],
-                  ),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.settings),
+                      label: CText(
+                        'Settings',
+                        textLevel: EText.button,
+                      ),
+                    ),
+                  ],
+                  selectedIndex: _selectedIndex,
                 ),
                 Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      InfoTab(
-                        user: user,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .35,
-                        child: CategoriesTab(
-                          user: user,
-                        ),
-                      ),
-                      BooksTab(),
-                      SettingsTab(),
-                    ],
+                  child: CustomCard(
+                    card: ECard.filled,
+                    child: _destinations[_selectedIndex],
                   ),
                 )
               ],

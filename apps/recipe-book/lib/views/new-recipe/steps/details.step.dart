@@ -22,7 +22,9 @@ class DetailsStepState extends State<DetailsStep> {
   void initState() {
     super.initState();
     userService.categories.then((result) => setState(() => categories = result));
-    userService.recipeBooks.then((result) => setState(() => recipeBooks = result));
+    userService
+        .myRecipeBooks()
+        .then((result) => setState(() => recipeBooks = result.docs.map((e) => e.data()).toList()));
   }
 
   @override
@@ -115,10 +117,6 @@ class DetailsStepState extends State<DetailsStep> {
                                 CText(
                                   e.name!,
                                   textLevel: EText.body,
-                                ),
-                                CText(
-                                  e.category!,
-                                  textLevel: EText.caption,
                                 ),
                               ],
                             ),

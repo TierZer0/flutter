@@ -66,23 +66,8 @@ class UserService {
     return user.categories;
   }
 
-  get recipeBooks async {
-    final snap = await _db
-        .collection(collection)
-        .doc(authService.user?.uid)
-        .collection(userBookCollection)
-        .get();
-    return snap.docs.map((e) {
-      var data = e.data();
-      return RecipeBookModel(
-        id: e.id,
-        name: data['name'],
-        category: data['category'],
-        recipes: data['recipes'] is Iterable ? List<String>.from(data['recipes']) : null,
-        createdBy: data['createdBy'],
-        likes: data['likes'],
-      );
-    }).toList();
+  Future<QuerySnapshot<RecipeBookModel>> myRecipeBooks() async {
+    return recipeBooksRef.get();
   }
 
   Future<QuerySnapshot<RecipeModel>?> likes(bool hasMade) async {

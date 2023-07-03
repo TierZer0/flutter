@@ -171,7 +171,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           recipesService.upsertRecipe(recipe, photo);
           context.read<AppModel>().recipeBook = RecipeBookModel(
             name: '',
-            category: '',
             recipes: [],
             createdBy: authService.user?.uid,
             likes: 0,
