@@ -236,7 +236,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     userService.getUserTheme.then((theme) {
       context.read<AppModel>().theme = theme;
     }).catchError((e) => print(e));
@@ -251,48 +250,49 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget buildDesktop(BuildContext context) {
-    var theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppBar(
-            backgroundColor: Colors.transparent,
-            title: CText(
-              'Welcome, What would you like to cook today?',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: CText(
+          'Welcome, What would you like to cook today?',
+          textLevel: EText.title,
+          weight: FontWeight.bold,
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                ),
-                child: IconButton(
-                  onPressed: () => _filterDialog(context, isMobile: false),
-                  icon: Icon(Icons.filter_alt_outlined),
-                  iconSize: 30.0,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                ),
-                child: IconButton(
-                  onPressed: () => _sortDialog(context, isMobile: false),
-                  icon: Icon(Icons.sort_outlined),
-                  iconSize: 30.0,
-                ),
-              ),
-            ],
+            child: IconButton(
+              onPressed: () => _filterDialog(context, isMobile: false),
+              icon: Icon(Icons.filter_alt_outlined),
+              iconSize: 30.0,
+            ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.25,
-              child: SearchBar(
-                backgroundColor: MaterialStatePropertyAll(theme.colorScheme.surfaceVariant),
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: IconButton(
+              onPressed: () => _sortDialog(context, isMobile: false),
+              icon: Icon(Icons.sort_outlined),
+              iconSize: 30.0,
+            ),
+          ),
+        ],
+      ),
+      body: CustomCard(
+        card: ECard.filled,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.0,
+            vertical: 10.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SearchBar(
+                // backgroundColor: MaterialStatePropertyAll(theme.colorScheme.),
                 elevation: MaterialStatePropertyAll(2.0),
                 leading: Icon(Icons.search),
                 hintText: "Search Recipes",
@@ -302,55 +302,50 @@ class HomePageState extends State<HomePage> {
                   });
                 },
               ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.0,
-                vertical: 0.0,
-              ),
-              child: StreamBuilder(
-                stream: recipesService.getAllRecipes(
-                  filters: filters,
-                  sort: formGroup.control('sort').value,
+              SizedBox(height: 10.0),
+              Expanded(
+                child: StreamBuilder(
+                  stream: recipesService.getAllRecipes(
+                    filters: filters,
+                    sort: formGroup.control('sort').value,
+                  ),
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData) {
+                      var recipes = snapshot.data.docs;
+                      List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
+                      _recipes = _recipes
+                          .where((element) =>
+                              element.title!.toLowerCase().contains(_search.toLowerCase()))
+                          .toList();
+                      return GridView.builder(
+                        itemCount: _recipes.length,
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 300,
+                          childAspectRatio: 3 / 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                        ),
+                        itemBuilder: (context, index) {
+                          final RecipeModel recipe = _recipes[index];
+                          final String recipeId = recipes[index].id;
+                          return RecipeCard(
+                            recipe: recipe,
+                            cardType: ECard.elevated,
+                            onTap: () => context.push('/recipe/${recipeId}'),
+                            onLongPress: () =>
+                                _previewDialog(context, recipe, recipeId, isMobile: false),
+                            useImage: true,
+                          );
+                        },
+                      );
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
                 ),
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData) {
-                    var recipes = snapshot.data.docs;
-                    List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
-                    _recipes = _recipes
-                        .where((element) =>
-                            element.title!.toLowerCase().contains(_search.toLowerCase()))
-                        .toList();
-                    return GridView.builder(
-                      itemCount: _recipes.length,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 300,
-                        childAspectRatio: 3 / 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                      ),
-                      itemBuilder: (context, index) {
-                        final RecipeModel recipe = _recipes[index];
-                        final String recipeId = recipes[index].id;
-                        return RecipeCard(
-                          recipe: recipe,
-                          cardType: ECard.elevated,
-                          onTap: () => context.push('/recipe/${recipeId}'),
-                          onLongPress: () =>
-                              _previewDialog(context, recipe, recipeId, isMobile: false),
-                          useImage: true,
-                        );
-                      },
-                    );
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -358,14 +353,15 @@ class HomePageState extends State<HomePage> {
   Widget buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 85.0,
-        elevation: 10,
+        toolbarHeight: 80.0,
+        elevation: 0,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CText(
               'Welcome, ',
               textLevel: EText.title,
+              weight: FontWeight.bold,
             ),
             CText(
               'What would you like to cook today?',
@@ -394,7 +390,7 @@ class HomePageState extends State<HomePage> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(100),
+          preferredSize: Size.fromHeight(75),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: SearchBar(
@@ -413,7 +409,7 @@ class HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 20.0,
+          horizontal: 15.0,
           vertical: 0.0,
         ),
         child: StreamBuilder(
@@ -433,8 +429,8 @@ class HomePageState extends State<HomePage> {
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300,
                   childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
                 ),
                 itemBuilder: (context, index) {
                   final RecipeModel recipe = _recipes[index];

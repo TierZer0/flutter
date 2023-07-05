@@ -3,6 +3,7 @@ import 'package:recipe_book/main.dart';
 import 'package:recipe_book/pages/recipes/tabs/my-recipe-books.tab.dart';
 import 'package:recipe_book/pages/recipes/tabs/my-recipes.tab.dart';
 import 'package:ui/general/text.custom.dart';
+import 'package:ui/ui.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -42,47 +43,58 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
     });
   }
 
+  var _selectedIndex = 0;
   Widget buildDesktop(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: CText(
+          'My Recipes',
+          textLevel: EText.title,
+          weight: FontWeight.bold,
+        ),
+      ),
+      body: Row(
         children: [
-          AppBar(
-            backgroundColor: Colors.transparent,
-            title: CText(
-              'My Recipes',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .25,
-            child: TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(
-                  text: 'Recipes',
-                  // icon: Icon(Icons.dinner_dining_outlined),
+          NavigationRail(
+            labelType: NavigationRailLabelType.all,
+            onDestinationSelected: (value) {
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
+            selectedIndex: _selectedIndex,
+            destinations: [
+              NavigationRailDestination(
+                icon: Icon(Icons.dinner_dining_outlined),
+                label: CText(
+                  'Recipes',
+                  textLevel: EText.button,
                 ),
-                Tab(
-                  text: 'Recipe Books',
-                  // icon: Icon(Icons.menu_book_sharp),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.menu_book_sharp),
+                label: CText(
+                  'Books',
+                  textLevel: EText.button,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                MyRecipesTab(
-                  search: _search,
-                ),
-                MyRecipeBooksTab(
-                  search: _search,
-                ),
-              ],
+            child: CustomCard(
+              card: ECard.filled,
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: [
+                  MyRecipesTab(
+                    search: _search,
+                  ),
+                  MyRecipeBooksTab(
+                    search: _search,
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -93,6 +105,9 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
   Widget buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (ScrollNotification notification) {
+          return notification.depth == 1;
+        },
         title: Wrap(
           runSpacing: 10.0,
           children: [
@@ -116,17 +131,16 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
           ],
         ),
         toolbarHeight: 110.0,
-        elevation: 5,
+        elevation: 0,
         bottom: TabBar(
           controller: _tabController,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(
               text: 'Recipes',
-              icon: Icon(Icons.dinner_dining_outlined),
             ),
             Tab(
               text: 'Recipe Books',
-              icon: Icon(Icons.menu_book_sharp),
             ),
           ],
         ),

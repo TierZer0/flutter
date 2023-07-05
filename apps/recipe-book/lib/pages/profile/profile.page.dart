@@ -37,86 +37,87 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
   }
 
   Widget buildDesktop(BuildContext context) {
-    var theme = Theme.of(context);
-    return StreamBuilder(
-      stream: userService.getUserStream,
-      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasData) {
-          final UserModel user = snapshot.data!.data() as UserModel;
-          final _destinations = [
-            InfoTab(
-              user: user,
-            ),
-            CategoriesTab(
-              user: user,
-            ),
-            BooksTab(),
-            SettingsTab(),
-          ];
-          return Scaffold(
-            appBar: AppBar(
-              title: CText(
-                authService.user?.displayName ?? authService.user?.email ?? '',
-                textLevel: EText.title,
-                weight: FontWeight.bold,
-              ),
-            ),
-            body: Row(
-              children: [
-                NavigationRail(
-                  labelType: NavigationRailLabelType.all,
-                  onDestinationSelected: (int index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  destinations: [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.info_outline),
-                      label: CText(
-                        'Info',
-                        textLevel: EText.button,
-                      ),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.category_outlined),
-                      label: CText(
-                        'Categories',
-                        textLevel: EText.button,
-                      ),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.bookmarks_outlined),
-                      label: CText(
-                        'Books',
-                        textLevel: EText.button,
-                      ),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.settings),
-                      label: CText(
-                        'Settings',
-                        textLevel: EText.button,
-                      ),
-                    ),
-                  ],
-                  selectedIndex: _selectedIndex,
+    return Scaffold(
+      appBar: AppBar(
+        title: CText(
+          authService.user?.displayName ?? authService.user?.email ?? '',
+          textLevel: EText.title,
+          weight: FontWeight.bold,
+        ),
+      ),
+      body: Row(
+        children: [
+          NavigationRail(
+            labelType: NavigationRailLabelType.all,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            destinations: [
+              NavigationRailDestination(
+                icon: Icon(Icons.info_outline),
+                label: CText(
+                  'Info',
+                  textLevel: EText.button,
                 ),
-                Expanded(
-                  child: CustomCard(
-                    card: ECard.filled,
-                    child: _destinations[_selectedIndex],
-                  ),
-                )
-              ],
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.category_outlined),
+                label: CText(
+                  'Categories',
+                  textLevel: EText.button,
+                ),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.menu_book_sharp),
+                label: CText(
+                  'Books',
+                  textLevel: EText.button,
+                ),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.settings),
+                label: CText(
+                  'Settings',
+                  textLevel: EText.button,
+                ),
+              ),
+            ],
+            selectedIndex: _selectedIndex,
+          ),
+          Expanded(
+            child: CustomCard(
+              card: ECard.filled,
+              child: StreamBuilder(
+                stream: userService.getUserStream,
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    final UserModel user = snapshot.data!.data() as UserModel;
+                    final _destinations = [
+                      InfoTab(
+                        user: user,
+                      ),
+                      CategoriesTab(
+                        user: user,
+                      ),
+                      BooksTab(),
+                      SettingsTab(),
+                    ];
+                    return _destinations[_selectedIndex];
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+              // child: _destinations[_selectedIndex],
             ),
-          );
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          )
+        ],
+      ),
     );
+    // return ;
   }
 
   Widget buildMobile(BuildContext context) {
@@ -129,27 +130,26 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
           scaleFactor: 1.0,
           weight: FontWeight.bold,
         ),
-        elevation: 5,
-        toolbarHeight: 110.0,
+        elevation: 0,
+        toolbarHeight: 50.0,
+        notificationPredicate: (ScrollNotification notification) {
+          return notification.depth == 1;
+        },
         bottom: TabBar(
-          indicatorColor: theme.colorScheme.primary,
           controller: _tabController,
+          dividerColor: Colors.transparent,
           tabs: const [
             Tab(
               text: 'Info',
-              icon: Icon(Icons.info_outline),
             ),
             Tab(
               text: 'Categories',
-              icon: Icon(Icons.category_outlined),
             ),
             Tab(
               text: 'Recipe Books',
-              icon: Icon(Icons.book_outlined),
             ),
             Tab(
               text: 'Settings',
-              icon: Icon(Icons.settings_outlined),
             )
           ],
         ),
