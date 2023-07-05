@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "label": "Recipe Book - Build Web",
+      "type": "shell",
+      "command": "flutter build web --web-renderer canvaskit",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/recipe-book"
+      }
+    },
+    {
+      "label": "Recipe Book - Deploy Web",
+      "type": "shell",
+      "command": "firebase deploy --only hosting",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/recipe-book"
+      }
+    },
+    {
+      "label": "Recipe Book - Deploy Functions",
+      "type": "shell",
+      "command": "firebase deploy --only functions",
+      "options": {
+        "cwd": "${workspaceFolder}/cloud/recipe-book"
+      }
+    } 
+  ]
+}
