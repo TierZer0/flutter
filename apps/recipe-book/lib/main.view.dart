@@ -157,10 +157,6 @@ class MainViewState extends State<MainView> {
             selectedIndex: currentPageIndex,
           ),
           Expanded(
-            // child: CustomCard(
-            //   child: views[currentPageIndex],
-            //   card: ECard.filled,
-            // ),
             child: views[currentPageIndex],
           )
         ],

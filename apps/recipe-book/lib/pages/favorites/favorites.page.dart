@@ -32,38 +32,52 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
     });
   }
 
+  var _selectedIndex = 0;
+  final _destinations = [
+    MadeFavoritesTab(),
+    NotMadeFavoritesTab(),
+  ];
   Widget buildDesktop(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: CText(
+          'Favorite Recipes',
+          textLevel: EText.title,
+          weight: FontWeight.bold,
+        ),
+      ),
+      body: Row(
         children: [
-          AppBar(
-            backgroundColor: Colors.transparent,
-            title: CText(
-              'Favorite Recipes',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .25,
-            child: TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(
-                  text: 'Made',
+          NavigationRail(
+            labelType: NavigationRailLabelType.all,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            selectedIndex: _selectedIndex,
+            destinations: [
+              NavigationRailDestination(
+                icon: Icon(Icons.check),
+                label: CText(
+                  'Made',
+                  textLevel: EText.button,
                 ),
-                Tab(
-                  text: "Haven't Made",
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.clear),
+                label: CText(
+                  "Not Made",
+                  textLevel: EText.button,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [MadeFavoritesTab(), NotMadeFavoritesTab()],
+            child: CustomCard(
+              card: ECard.filled,
+              child: _destinations[_selectedIndex],
             ),
           )
         ],
@@ -74,23 +88,25 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
   Widget buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (ScrollNotification notification) {
+          return notification.depth == 1;
+        },
         title: CText(
           'Favorite Recipes',
           textLevel: EText.title,
           weight: FontWeight.bold,
         ),
-        toolbarHeight: 110,
-        elevation: 5,
+        toolbarHeight: 50.0,
+        elevation: 0,
         bottom: TabBar(
           controller: _tabController,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(
               text: 'Made',
-              icon: Icon(Icons.check),
             ),
             Tab(
               text: "Haven't Made",
-              icon: Icon(Icons.clear),
             ),
           ],
         ),

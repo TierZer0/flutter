@@ -122,7 +122,19 @@ class SettingsTabState extends State<SettingsTab> {
                     ),
                   ],
                 ),
-              )
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Column(
+                  children: [
+                    CText(
+                      "App Details",
+                      textLevel: EText.title,
+                      weight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
