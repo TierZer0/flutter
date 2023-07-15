@@ -7,7 +7,6 @@ import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
 import 'package:recipe_book/services/auth.service.dart';
 import 'package:recipe_book/services/recipes.service.dart';
 import 'package:recipe_book/services/user.service.dart';
-import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
 class RecipePage extends StatefulWidget {
@@ -182,7 +181,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
     _tabController.addListener(() {
       var _fab = '';
       switch (_tabController.index) {
@@ -201,6 +199,72 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
       });
     });
 
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 1200) {
+        return buildDesktop(context);
+        // } else if (constraints.maxWidth > 800 && constraints.maxWidth < 1200) {
+        //   return buildTablet(context);
+        // } else {
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
+
+  int _selectedIndex = 0;
+
+  Widget buildDesktop(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: CText(
+          recipe?.title ?? '',
+          textLevel: EText.title,
+        ),
+      ),
+      body: Row(
+        children: [
+          NavigationRail(
+            labelType: NavigationRailLabelType.selected,
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            destinations: <NavigationRailDestination>[
+              NavigationRailDestination(
+                icon: Icon(Icons.restaurant_outlined),
+                label: CText(
+                  'Recipe',
+                  textLevel: EText.title,
+                ),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.reviews_outlined),
+                label: CText(
+                  'Reviews',
+                  textLevel: EText.title,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: recipe != null
+                ? CustomCard(
+                    card: ECard.filled,
+                    child: [
+                      RecipeTab(recipe: recipe!),
+                      ReviewsTab(id: widget.recipeId),
+                    ][_selectedIndex])
+                : Center(child: CircularProgressIndicator()),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
