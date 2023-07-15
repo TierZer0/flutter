@@ -15,7 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
   shared_preferences: ^2.0.13
-  fluent_ui: ^3.10.0
+  # fluent_ui: ^3.10.0
   firebase_core: ^1.15.0
   firebase_auth: ^3.3.15
   firebase_core_desktop: ^1.0.0
