@@ -243,7 +243,7 @@ class _BooksTabState extends State<BooksTab> {
                 _books = items.map((e) => e.data()).toList();
                 return ListView.builder(
                   padding: EdgeInsets.all(10.0),
-                  itemCount: items.length,
+                  itemCount: items.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return DottedBorder(
@@ -355,7 +355,7 @@ class _BooksTabState extends State<BooksTab> {
           _books = items.map((e) => e.data()).toList();
           return ListView.builder(
             padding: EdgeInsets.all(10.0),
-            itemCount: items.length,
+            itemCount: items.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return DottedBorder(

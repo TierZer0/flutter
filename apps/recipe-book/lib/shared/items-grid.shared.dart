@@ -21,7 +21,7 @@ class FieldGridShared<T> extends StatelessWidget {
       itemCount: fields.length,
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 250,
-        childAspectRatio: 3 / 1,
+        childAspectRatio: 2.5 / 1,
         crossAxisSpacing: 20,
         mainAxisSpacing: 0,
       ),
@@ -41,7 +41,7 @@ class FieldGridShared<T> extends StatelessWidget {
                 ),
               ),
               CText(
-                data[fields[index]].toString() ?? '',
+                data[fields[index]].toString(),
                 textLevel: EText.title2,
               )
             ],

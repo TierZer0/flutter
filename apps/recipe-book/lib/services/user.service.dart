@@ -66,7 +66,7 @@ class UserService {
     return user.categories;
   }
 
-  Future<QuerySnapshot<RecipeBookModel>> myRecipeBooks() async {
+  Future<QuerySnapshot<RecipeBookModel>> myRecipeBooks() {
     return recipeBooksRef.get();
   }
 

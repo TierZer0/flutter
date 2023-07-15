@@ -10,6 +10,7 @@ import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
 import 'package:recipe_book/views/recipe-book.view.dart';
 import 'package:recipe_book/views/recipe/recipe.view.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
 import 'package:recipe_book/styles/colors.scheme.dart';
@@ -20,6 +21,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  setPathUrlStrategy();
 
   runApp(
     MultiProvider(

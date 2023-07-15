@@ -41,7 +41,7 @@ class ReviewsTabState extends State<ReviewsTab> {
                           vertical: 0.0,
                           horizontal: 10.0,
                         ),
-                        tileColor: theme.colorScheme.surface,
+                        // tileColor: theme.colorScheme.surface,
                         title: CText(
                           review.review ?? '',
                           textLevel: EText.title2,

@@ -39,7 +39,7 @@ class RecipeTabState extends State<RecipeTab> {
   Widget _buildContent(BuildContext context) {
     switch (_currentView) {
       case ERecipeTabs.Details:
-        if (recipeBook == null) return SizedBox.shrink();
+        // if (recipeBook == null) return SizedBox.shrink();
 
         Map data = new Map.from(widget.recipe.toFirestore());
         data['recipeBook'] = recipeBook?.name ?? '';
@@ -68,8 +68,94 @@ class RecipeTabState extends State<RecipeTab> {
 
   @override
   Widget build(BuildContext context) {
-    var recipe = widget.recipe;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 660) {
+          return buildDesktop(context);
+        } else {
+          return buildMobile(context);
+        }
+      },
+    );
+  }
 
+  Widget buildDesktop(BuildContext context) {
+    var recipe = widget.recipe;
+    Map data = new Map.from(widget.recipe.toFirestore());
+    data['recipeBook'] = recipeBook?.name ?? '';
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 5,
+                  clipBehavior: Clip.antiAlias,
+                  child: Container(
+                    height: 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      recipe.image!,
+                      fit: BoxFit.fitWidth,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null &&
+                            loadingProgress?.cumulativeBytesLoaded ==
+                                loadingProgress?.expectedTotalBytes) {
+                          return child;
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 8.0,
+                  ),
+                  child: CText(
+                    recipe.description!,
+                    textLevel: EText.title2,
+                  ),
+                ),
+                Container(
+                  height: 400,
+                  child: FieldGridShared<RecipeModel>(
+                    fields: ['recipeBook', 'category', 'prepTime', 'cookTime'],
+                    data: data,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                TableShared<IngredientModel>(
+                  fields: ['Item', 'Quantity', 'Unit'],
+                  data: widget.recipe.ingredients!,
+                ),
+                TableShared<InstructionModel>(
+                  fields: ['Title', 'Description'],
+                  data: widget.recipe.instructions!,
+                  useCheckbox: true,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    var recipe = widget.recipe;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
       child: SingleChildScrollView(

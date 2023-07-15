@@ -50,7 +50,7 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
       body: Row(
         children: [
           NavigationRail(
-            labelType: NavigationRailLabelType.all,
+            labelType: NavigationRailLabelType.selected,
             onDestinationSelected: (int index) {
               setState(() {
                 _selectedIndex = index;
