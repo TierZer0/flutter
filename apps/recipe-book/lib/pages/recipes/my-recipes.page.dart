@@ -57,7 +57,7 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
       body: Row(
         children: [
           NavigationRail(
-            labelType: NavigationRailLabelType.all,
+            labelType: NavigationRailLabelType.selected,
             onDestinationSelected: (value) {
               setState(() {
                 _selectedIndex = value;

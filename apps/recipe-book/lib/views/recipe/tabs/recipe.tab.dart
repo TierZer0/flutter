@@ -90,6 +90,7 @@ class RecipeTabState extends State<RecipeTab> {
           Expanded(
             flex: 1,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Card(
                   elevation: 5,
@@ -111,6 +112,15 @@ class RecipeTabState extends State<RecipeTab> {
                         );
                       },
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 8.0,
+                  ),
+                  child: CText(
+                    recipe.description!,
+                    textLevel: EText.title2,
                   ),
                 ),
                 Container(

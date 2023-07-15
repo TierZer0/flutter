@@ -22,9 +22,11 @@ class DetailsStepState extends State<DetailsStep> {
   void initState() {
     super.initState();
     userService.categories.then((result) => setState(() => categories = result));
-    userService
-        .myRecipeBooks()
-        .then((result) => setState(() => recipeBooks = result.docs.map((e) => e.data()).toList()));
+    userService.myRecipeBooks().then((result) => setState(() => recipeBooks = result.docs.map((e) {
+          var recipe = e.data();
+          recipe.id = e.id;
+          return recipe;
+        }).toList()));
   }
 
   @override

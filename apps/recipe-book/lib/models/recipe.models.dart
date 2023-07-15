@@ -25,7 +25,7 @@ class RecipeBookModel {
     return RecipeBookModel(
       id: data?['id'],
       name: data?['name'],
-      description: data?['description'],
+      description: data?['description'] ?? '',
       recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
       createdBy: data?['createdBy'],
       likes: data?['likes'],

@@ -23,6 +23,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   bool canEdit = false;
   bool liked = false;
   RecipeModel? recipe = null;
+  List<RecipeBookModel> recipeBooks = [];
 
   // bool showAddReview = false;
   String fab = 'made';
@@ -45,6 +46,11 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             fab = result ? '' : 'made';
           }),
         );
+    userService.myRecipeBooks().then((result) => setState(() => recipeBooks = result.docs.map((e) {
+          var recipe = e.data();
+          recipe.id = e.id;
+          return recipe;
+        }).toList()));
 
     getRecipe();
   }
@@ -89,6 +95,97 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
       default:
         return null;
     }
+  }
+
+  Future<void> _addDialogBuilder(BuildContext context) {
+    FormGroup formGroup = FormGroup({
+      'recipeBook': FormControl<String>(validators: [Validators.required])
+    });
+    print(recipeBooks);
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var theme = Theme.of(context);
+        return ReactiveForm(
+          formGroup: formGroup,
+          child: AlertDialog(
+            backgroundColor: theme.colorScheme.surface,
+            title: CText(
+              "Add to Recipe Book",
+              textLevel: EText.title2,
+            ),
+            content: SizedBox(
+              // height: 250,
+              width: 300,
+              child: ReactiveDropdownField(
+                decoration: InputDecoration(
+                  labelText: 'Recipe Book',
+                  filled: true,
+                ),
+                formControlName: 'recipeBook',
+                dropdownColor: theme.colorScheme.surface,
+                selectedItemBuilder: (context) {
+                  return recipeBooks
+                      .map(
+                        (e) => CText(
+                          e.name!,
+                          textLevel: EText.body,
+                        ),
+                      )
+                      .toList();
+                },
+                items: recipeBooks
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e.id,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CText(
+                              e.name!,
+                              textLevel: EText.body,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: CText(
+                  "Cancel",
+                  textLevel: EText.button,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ReactiveFormConsumer(
+                builder: (context, formGroup, child) {
+                  return TextButton(
+                    child: CText(
+                      "Submit",
+                      textLevel: EText.button,
+                    ),
+                    onPressed: formGroup.valid
+                        ? () {
+                            AbstractControl<dynamic> _form = formGroup;
+                            userService.addRecipeToRecipeBook(
+                                widget.recipeId, _form.value['recipeBook']);
+                            Navigator.of(context).pop();
+                          }
+                        : null,
+                  );
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _reviewDialogBuilder(BuildContext context) {
@@ -214,20 +311,69 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   int _selectedIndex = 0;
 
   Widget buildDesktop(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: CText(
           recipe?.title ?? '',
           textLevel: EText.title,
         ),
+        actions: [
+          Wrap(
+            spacing: 10.0,
+            children: [
+              IconButton(
+                onPressed: () {
+                  userService.likeRecipe(widget.recipeId, !liked);
+                  setState(() {
+                    liked = !liked;
+                  });
+                },
+                icon: Icon(
+                  liked ? Icons.favorite : Icons.favorite_outline_outlined,
+                  fill: 1.0,
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+              canEdit
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      onPressed: () => _addDialogBuilder(context),
+                      icon: Icon(Icons.add_outlined),
+                    ),
+              canEdit
+                  ? IconButton(
+                      onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
+                      icon: Icon(
+                        Icons.edit_outlined,
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ],
+          ),
+        ],
       ),
+      floatingActionButton: buildFAB(),
       body: Row(
         children: [
           NavigationRail(
             labelType: NavigationRailLabelType.selected,
             selectedIndex: _selectedIndex,
             onDestinationSelected: (int index) {
+              var _fab = '';
+              switch (index) {
+                case 0:
+                  _fab = 'made';
+                  break;
+                case 1:
+                  _fab = 'review';
+                  break;
+                default:
+                  _fab = '';
+                  break;
+              }
               setState(() {
+                fab = _fab;
                 _selectedIndex = index;
               });
             },
@@ -267,7 +413,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
+        elevation: 0,
         toolbarHeight: 75,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -305,7 +451,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
               canEdit
                   ? SizedBox.shrink()
                   : IconButton(
-                      onPressed: () {},
+                      onPressed: () => _addDialogBuilder(context),
                       icon: Icon(Icons.add_outlined),
                     ),
               canEdit
@@ -322,6 +468,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         bottom: TabBar(
           indicatorColor: theme.colorScheme.primary,
           controller: _tabController,
+          dividerColor: Colors.transparent,
           tabs: [
             Tab(
               text: "Recipe",
@@ -329,9 +476,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             Tab(
               text: "Reviews",
             ),
-            // Tab(
-            //   text: 'Info',
-            // )
           ],
         ),
       ),
