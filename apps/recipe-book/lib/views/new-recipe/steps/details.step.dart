@@ -31,10 +31,198 @@ class DetailsStepState extends State<DetailsStep> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 1200) {
+        return buildDesktop(context);
+      } else {
+        return buildMobile(context);
+      }
+    });
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 15.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CText(
+            'Recipe Info',
+            textLevel: EText.title,
+          ),
+          SizedBox(height: 15.0),
+          Wrap(
+            spacing: 20.0,
+            runSpacing: 20.0,
+            children: [
+              sized(
+                CustomReactiveInput<String>(
+                  inputAction: TextInputAction.next,
+                  formName: 'details.name',
+                  label: 'Name',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    ValidationMessage.required: (_) => 'The name must not be empty',
+                  },
+                ),
+                scale: .4,
+              ),
+              sized(
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'details.description',
+                  label: 'Description',
+                  textColor: theme.colorScheme.onBackground,
+                ),
+                scale: .4,
+              ),
+              sized(
+                ReactiveDropdownField(
+                  formControlName: 'details.category',
+                  dropdownColor: theme.colorScheme.surface,
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: 'Category',
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.25,
+                      horizontal: 10.0,
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 18),
+                  borderRadius: BorderRadius.circular(10.0),
+                  elevation: 2,
+                  items: categories
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: CText(
+                            e,
+                            textLevel: EText.body,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              sized(
+                ReactiveDropdownField(
+                  formControlName: 'details.book',
+                  dropdownColor: theme.colorScheme.surface,
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: 'Recipe Book',
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.25,
+                      horizontal: 10.0,
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 18),
+                  borderRadius: BorderRadius.circular(10.0),
+                  elevation: 2,
+                  selectedItemBuilder: (context) {
+                    return recipeBooks
+                        .map(
+                          (e) => CText(
+                            e.name!,
+                            textLevel: EText.body,
+                          ),
+                        )
+                        .toList();
+                  },
+                  items: recipeBooks
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e.id,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CText(
+                                e.name!,
+                                textLevel: EText.body,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15.0),
+          CText(
+            'Recipe Prep Details',
+            textLevel: EText.title,
+          ),
+          SizedBox(height: 15.0),
+          Wrap(
+            spacing: 20.0,
+            runSpacing: 20.0,
+            children: [
+              sized(
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'details.prepTime',
+                  label: 'Prep Time',
+                  textColor: theme.colorScheme.onBackground,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              sized(
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'details.cookTime',
+                  label: 'Cook Time',
+                  textColor: theme.colorScheme.onBackground,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              sized(
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'details.servings',
+                  label: 'Servings',
+                  textColor: theme.colorScheme.onBackground,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+      // child: Wrap(
+      //   spacing: 20,
+      //   runSpacing: 20,
+      //   children: [
+      // sized(
+      //   CustomReactiveInput(
+      //     inputAction: TextInputAction.next,
+      //     formName: 'details.prepTime',
+      //     label: 'Prep Time',
+      //     textColor: theme.colorScheme.onBackground,
+      //     keyboardType: TextInputType.number,
+      //   ),
+      // )
+      //   ],
+      // ),
+    );
+  }
+
+  Widget sized(Widget item, {double scale = .25}) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * scale,
+      child: item,
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
     return SizedBox(
       height: height,
       child: Padding(

@@ -1,3 +1,7 @@
 {
-  "recommendations": []
+  "recommendations": [
+    "jsayol.firebase-explorer",
+    "haugerbr.project-tasks",
+    "actboy168.tasks"
+  ]
 }

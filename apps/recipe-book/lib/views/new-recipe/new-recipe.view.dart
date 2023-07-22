@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
@@ -36,6 +38,32 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
       getRecipe();
     }
     _tabController = TabController(length: 4, vsync: this);
+  }
+
+  File? _photo;
+  XFile? _photoWeb;
+  String? _name;
+  imgFromGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        if (pickedFile.name.indexOf('.jpg') != -1 || pickedFile.name.indexOf('.png') != -1) {
+          if (kIsWeb) {
+            _photoWeb = pickedFile;
+          } else {
+            _photo = File(pickedFile.path);
+          }
+          // widget.photo = _photo;
+          _name = pickedFile.name;
+        } else {
+          _photo = null;
+        }
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   getRecipe() {
@@ -82,7 +110,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
             {
               'title': FormControl<String>(validators: [Validators.required]),
               'order': FormControl<int>(),
-              'description': FormControl<String>(),
+              'description': FormControl<String>(value: ''),
               'steps': FormControl<List<InstructionModel>>(value: []),
             },
           ),
@@ -110,6 +138,183 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // _tabController.index = 2;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return ResponsiveWidget(
+        desktopScreen: buildDesktop(context),
+        mobileScreen: buildMobile(context),
+      );
+    });
+  }
+
+  int _currentStep = 0;
+  Widget buildDesktop(BuildContext context) {
+    return ReactiveFormBuilder(
+      form: buildForm,
+      builder: (context, formGroup, child) {
+        AbstractControl<dynamic> details = formGroup.control('details') as FormGroup;
+        AbstractControl<dynamic> ingredients = formGroup.control('ingredients') as FormGroup;
+        AbstractControl<dynamic> instructions = formGroup.control('instructions') as FormGroup;
+        AbstractControl<dynamic> settings = formGroup.control('settings') as FormGroup;
+        return Scaffold(
+          appBar: AppBar(
+            title: CText(
+              widget.id == null ? "Create A New Recipe" : "Edit Recipe",
+              textLevel: EText.title,
+            ),
+          ),
+          body: Stepper(
+            currentStep: _currentStep,
+            type: StepperType.vertical,
+            stepIconBuilder: (stepIndex, stepState) {},
+            onStepCancel: () {
+              if (_currentStep > 0) {
+                setState(() {
+                  _currentStep--;
+                });
+              }
+            },
+            onStepContinue: () {
+              switch (_currentStep) {
+                case 0:
+                  if (details.valid) {
+                    setState(() {
+                      completedSteps[0] = true;
+                      _currentStep++;
+                    });
+                  } else {
+                    details.markAllAsTouched();
+                    // snackbar
+                  }
+                  break;
+                case 1:
+                  if (ingredients.value['items'].length > 0) {
+                    setState(() {
+                      completedSteps[1] = true;
+                      _currentStep++;
+                    });
+                  } else {
+                    // snackbar
+                  }
+                  break;
+                case 2:
+                  if (instructions.value['steps'].length > 0) {
+                    setState(() {
+                      completedSteps[2] = true;
+                      _currentStep++;
+                    });
+                  } else {
+                    // snackbar
+                  }
+                  break;
+                case 3:
+                  if (_photo == null && _photoWeb == null) {
+                    //snackbar
+                    return;
+                  }
+                  recipe = RecipeModel(
+                    title: details.value['name'],
+                    category: details.value['category'] ?? '',
+                    recipeBook: details.value['book'] ?? '',
+                    description: details.value['description'] ?? '',
+                    ingredients: ingredients.value['items'],
+                    instructions: instructions.value['steps'],
+                    likes: 0,
+                    createdBy: authService.user!.uid,
+                    isPublic: settings.value['isPublic'],
+                    isShareable: settings.value['isShareable'],
+                    prepTime: details.value['prepTime'],
+                    cookTime: details.value['cookTime'],
+                    servings: details.value['servings'],
+                  );
+                  recipesService.upsertRecipe(recipe, _photo ?? _photoWeb!);
+                  context.read<AppModel>().recipeBook = RecipeBookModel(
+                    name: '',
+                    recipes: [],
+                    createdBy: authService.user?.uid,
+                    likes: 0,
+                  );
+                  context.go('/');
+                  break;
+              }
+            },
+            steps: <Step>[
+              Step(
+                title: CText(
+                  'Details',
+                  textLevel: EText.button,
+                ),
+                content: Align(
+                  alignment: Alignment.topLeft,
+                  child: CustomCard(
+                    card: ECard.elevated,
+                    child: DetailsStep(onTap: () => {}),
+                  ),
+                ),
+              ),
+              Step(
+                title: CText(
+                  'Ingredients',
+                  textLevel: EText.button,
+                ),
+                content: Align(
+                  alignment: Alignment.topLeft,
+                  child: CustomCard(
+                    card: ECard.elevated,
+                    child: IngredientsStep(
+                      formGroup: formGroup,
+                      tapBack: () => {},
+                      tapForward: () => {},
+                    ),
+                  ),
+                ),
+              ),
+              Step(
+                title: CText(
+                  'Instructions',
+                  textLevel: EText.button,
+                ),
+                content: Align(
+                  alignment: Alignment.topCenter,
+                  child: CustomCard(
+                    card: ECard.elevated,
+                    child: InstructionsStep(
+                      formGroup: formGroup,
+                      tapBack: () => {},
+                      tapForward: () => {},
+                    ),
+                  ),
+                ),
+              ),
+              Step(
+                title: CText(
+                  'Settings',
+                  textLevel: EText.button,
+                ),
+                content: Align(
+                  alignment: Alignment.topCenter,
+                  child: CustomCard(
+                    card: ECard.elevated,
+                    child: SaveStep(
+                      formGroup: formGroup,
+                      recipe: recipe,
+                      tapBack: () => {},
+                      tapForward: (photo, name) => {},
+                      selectImage: () => imgFromGallery(),
+                      photo: _photoWeb,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    final theme = Theme.of(context);
 
     return ReactiveFormBuilder(
       form: buildForm,
@@ -185,7 +390,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: theme.colorScheme.surface,
-            elevation: 10,
+            elevation: 0,
             title: CText(
               widget.id == null ? "Create A New Recipe" : "Edit Recipe",
               textLevel: EText.title,
@@ -197,6 +402,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                 child: TabBar(
                   indicatorColor: theme.colorScheme.primary,
                   controller: _tabController,
+                  dividerColor: Colors.transparent,
                   physics: NeverScrollableScrollPhysics(),
                   tabs: [
                     Tab(
@@ -258,6 +464,8 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                         tapForward: (photo, name) {
                           submit(photo!, name!);
                         },
+                        photo: _photo,
+                        selectImage: () => imgFromGallery(),
                       )
                     ],
                   ),

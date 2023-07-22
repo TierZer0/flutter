@@ -106,7 +106,7 @@ class _InstructionsStepState extends State<InstructionsStep> {
                           },
                   );
                 },
-              )
+              ),
             ],
           ),
         );
@@ -116,6 +116,94 @@ class _InstructionsStepState extends State<InstructionsStep> {
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 15.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CText(
+                  "Add Instruction",
+                  textLevel: EText.title,
+                ),
+                SizedBox(height: 20.0),
+                CustomReactiveInput(
+                  formName: 'instructions.title',
+                  inputAction: TextInputAction.next,
+                  label: 'Title',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    ValidationMessage.required: (_) => 'The Instruction title must not be empty',
+                  },
+                ),
+                SizedBox(height: 40.0),
+                CustomReactiveInput(
+                  formName: 'instructions.description',
+                  inputAction: TextInputAction.next,
+                  label: 'Description',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    ValidationMessage.required: (_) =>
+                        'The Instruction description must not be empty',
+                  },
+                ),
+                SizedBox(height: 40.0),
+                ReactiveFormConsumer(
+                  builder: (context, formGroup, child) {
+                    return FilledButton(
+                      child: CText(
+                        "Submit",
+                        textLevel: EText.button,
+                      ),
+                      onPressed: formGroup.control('instructions').invalid
+                          ? null
+                          : () {
+                              final value = formGroup.control('instructions').value;
+                              setState(() {
+                                _instructions.add(InstructionModel(
+                                  title: value['title'],
+                                  description: value['description'],
+                                  order: _instructions.length + 1,
+                                ));
+                                widget.formGroup
+                                    .control('instructions.steps')
+                                    .patchValue(_instructions);
+                              });
+                              widget.formGroup.control('instructions.title').reset();
+                              widget.formGroup.control('instructions.description').reset();
+                            },
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          SizedBox(width: 40.0),
+          Expanded(
+            flex: 2,
+            child: TableShared<InstructionModel>(fields: fields, data: _instructions),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Padding(
