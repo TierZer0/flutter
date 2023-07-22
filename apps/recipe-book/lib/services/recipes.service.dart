@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/auth.service.dart';
@@ -30,7 +32,7 @@ class RecipesService {
     return ref.getDownloadURL();
   }
 
-  upsertRecipe(RecipeModel recipe, File photo) async {
+  upsertRecipe(RecipeModel recipe, dynamic photo) async {
     final recipes = await recipesRef;
     var result = await uploadFile(photo);
     recipe.image = result;
@@ -131,7 +133,16 @@ class RecipesService {
     }
   }
 
-  Future<String> uploadFile(File file) async {
+  Future<String> uploadFile(dynamic file) async {
+    // check file type File or XFile
+    if (file is File) {
+      return _uploadFile(file);
+    } else {
+      return _uploadXFile(file);
+    }
+  }
+
+  Future<String> _uploadFile(File file) async {
     final fileName = basename(file.path);
     final destination = 'food/${authService.user?.uid}/$fileName';
 
@@ -139,7 +150,27 @@ class RecipesService {
       final ref = _storage.ref(destination).child('file/');
       await ref.putFile(file);
       return ref.getDownloadURL();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
+    return '';
+  }
+
+  Future<String> _uploadXFile(XFile file) async {
+    final fileName = basename(file.name);
+    final destination = 'food/${authService.user?.uid}/$fileName';
+
+    try {
+      final ref = _storage.ref(destination).child('file/');
+      Uint8List imageData = await XFile(file.path).readAsBytes();
+      await ref.putData(
+        imageData,
+        SettableMetadata(contentType: 'image/png'),
+      );
+      return ref.getDownloadURL();
+    } catch (e) {
+      print(e);
+    }
     return '';
   }
 }

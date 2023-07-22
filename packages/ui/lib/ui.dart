@@ -8,6 +8,9 @@ export './general/bottom-nav.custom.dart';
 export './general/action-chip.custom.dart';
 export './general/card.custom.dart';
 
+// LAYOUT
+export './layout/responsive-widget.custom.dart';
+
 // INPUTS
 export 'inputs/input.custom.dart';
 export 'inputs/reactive-input.custom.dart';

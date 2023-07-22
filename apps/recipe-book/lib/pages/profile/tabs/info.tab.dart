@@ -38,6 +38,7 @@ class _InfoTabState extends State<InfoTab> {
 
   Widget buildDesktop(BuildContext context) {
     Map data = new Map.from(widget.user.toFirestore());
+
     return Column(
       children: [
         Padding(

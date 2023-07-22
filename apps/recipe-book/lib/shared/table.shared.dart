@@ -33,12 +33,12 @@ class _TableSharedState<T> extends State<TableShared<T>> {
   @override
   void initState() {
     super.initState();
-    items = List<int>.generate(widget.data.length, (int index) => index);
-    selected = List<bool>.generate(widget.data.length, (index) => false);
   }
 
   @override
   Widget build(BuildContext context) {
+    items = List<int>.generate(widget.data.length, (int index) => index);
+    selected = List<bool>.generate(widget.data.length, (index) => false);
     final theme = Theme.of(context);
     return Card(
       clipBehavior: Clip.antiAlias,

@@ -12,6 +12,8 @@ class SaveStep extends StatefulWidget {
   final RecipeModel recipe;
   VoidCallback tapBack;
   Function tapForward;
+  VoidCallback selectImage;
+  dynamic photo;
 
   SaveStep({
     super.key,
@@ -19,6 +21,8 @@ class SaveStep extends StatefulWidget {
     required this.tapBack,
     required this.tapForward,
     required this.formGroup,
+    required this.selectImage,
+    required this.photo,
   });
 
   @override
@@ -42,7 +46,7 @@ class SaveStepState extends State<SaveStep> {
       if (pickedFile != null) {
         if (pickedFile.name.indexOf('.jpg') != -1 || pickedFile.name.indexOf('.png') != -1) {
           _photo = File(pickedFile.path);
-          // widget.recipe.image = pickedFile.name;
+          // widget.photo = _photo;
           _name = pickedFile.name;
         } else {
           _photo = null;
@@ -55,10 +59,110 @@ class SaveStepState extends State<SaveStep> {
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 15.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CText(
+                  "Recipe Settings",
+                  textLevel: EText.title,
+                ),
+                SwitchListTile(
+                  title: CText(
+                    "Public - Viewable by anyone",
+                    textLevel: EText.button,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                  value: widget.formGroup.control('settings.isPublic').value,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.formGroup.control('settings.isPublic').patchValue(value);
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: CText(
+                    "Shareable - Can be saved to other recipe books",
+                    textLevel: EText.button,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                  value: widget.formGroup.control('settings.isShareable').value,
+                  onChanged: (value) {
+                    setState(() {
+                      widget.formGroup.control('settings.isShareable').patchValue(value);
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 20.0),
+          Expanded(
+            flex: 2,
+            child: DottedBorder(
+              dashPattern: [6, 6],
+              borderType: BorderType.RRect,
+              color: theme.colorScheme.onSurfaceVariant,
+              strokeWidth: 1.5,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    widget.selectImage();
+                    // imgFromGallery();
+                  },
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          height: 200,
+                          child: widget.photo?.path != null
+                              ? kIsWeb
+                                  ? Image.network(widget.photo!.path)
+                                  : Image.file(widget.photo!)
+                              : SizedBox.shrink(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CText(
+                          "Add a photo",
+                          textLevel: EText.body,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
     return SizedBox(
       height: height,
       child: Padding(
@@ -73,42 +177,38 @@ class SaveStepState extends State<SaveStep> {
                   formGroup: widget.formGroup,
                   child: Wrap(
                     spacing: 20.0,
-                    runSpacing: 20.0,
+                    runSpacing: 0.0,
                     children: [
                       CText(
                         "Recipe Settings",
                         textLevel: EText.title,
                         weight: FontWeight.bold,
                       ),
-                      SizedBox(
-                        width: width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CText(
-                              "Public - Viewable by anyone",
-                              textLevel: EText.body,
-                            ),
-                            ReactiveSwitch(
-                              formControlName: 'settings.isPublic',
-                            ),
-                          ],
+                      SwitchListTile(
+                        title: CText(
+                          "Public - Viewable by anyone",
+                          textLevel: EText.button,
                         ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                        value: widget.formGroup.control('settings.isPublic').value,
+                        onChanged: (value) {
+                          setState(() {
+                            widget.formGroup.control('settings.isPublic').patchValue(value);
+                          });
+                        },
                       ),
-                      SizedBox(
-                        width: width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CText(
-                              "Shareable - Can be saved to other recipe books",
-                              textLevel: EText.body,
-                            ),
-                            ReactiveSwitch(
-                              formControlName: 'settings.isShareable',
-                            ),
-                          ],
+                      SwitchListTile(
+                        title: CText(
+                          "Shareable - Can be saved to other recipe books",
+                          textLevel: EText.button,
                         ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                        value: widget.formGroup.control('settings.isShareable').value,
+                        onChanged: (value) {
+                          setState(() {
+                            widget.formGroup.control('settings.isShareable').patchValue(value);
+                          });
+                        },
                       ),
                       SizedBox(
                         width: width,
