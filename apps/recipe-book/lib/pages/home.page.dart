@@ -318,16 +318,16 @@ class HomePageState extends State<HomePage> {
                         itemCount: _recipes.length,
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 300,
-                          childAspectRatio: 3 / 2,
+                          childAspectRatio: 3.5 / 3,
                           crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
+                          mainAxisSpacing: 10,
                         ),
                         itemBuilder: (context, index) {
                           final RecipeModel recipe = _recipes[index];
                           final String recipeId = recipes[index].id;
                           return RecipeCard(
                             recipe: recipe,
-                            cardType: ECard.elevated,
+                            cardType: ECard.none,
                             onTap: () => context.push('/recipe/${recipeId}'),
                             onLongPress: () =>
                                 _previewDialog(context, recipe, recipeId, isMobile: false),
@@ -425,16 +425,16 @@ class HomePageState extends State<HomePage> {
                 itemCount: _recipes.length,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300,
-                  childAspectRatio: 3 / 2,
+                  childAspectRatio: 3 / 3,
                   crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+                  mainAxisSpacing: 0,
                 ),
                 itemBuilder: (context, index) {
                   final RecipeModel recipe = _recipes[index];
                   final String recipeId = recipes[index].id;
                   return RecipeCard(
                     recipe: recipe,
-                    cardType: ECard.elevated,
+                    cardType: ECard.none,
                     onTap: () => context.push('/recipe/${recipeId}'),
                     onLongPress: () => _previewDialog(context, recipe, recipeId),
                     useImage: true,

@@ -37,18 +37,18 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    profileService.hasLiked(widget.recipeId).then(
-          (result) => setState(() {
-            liked = result;
-          }),
-        );
+    // profileService.hasLiked(widget.recipeId).then(
+    //       (result) => setState(() {
+    //         liked = result;
+    //       }),
+    //     );
 
-    profileService.hasMade(widget.recipeId).then(
-          (result) => setState(() {
-            hasMade = result;
-            fab = result ? '' : 'made';
-          }),
-        );
+    // profileService.hasMade(widget.recipeId).then(
+    //       (result) => setState(() {
+    //         hasMade = result;
+    //         fab = result ? '' : 'made';
+    //       }),
+    //     );
     recipeBookService
         .getRecipeBooks()
         .then((result) => setState(() => recipeBooks = result.docs.map((e) {

@@ -27,10 +27,10 @@ class ReviewsTabState extends State<ReviewsTab> {
               var data = snapshot.data!.data();
 
               List<ReviewModel> reviews = [];
-              (data['reviews'] ?? []).forEach(
+              (data.reviews ?? []).forEach(
                 (e) => reviews.add(ReviewModel(
-                  review: e['review'],
-                  stars: e['stars'],
+                  review: e.review,
+                  stars: e.stars,
                 )),
               );
               return ListView(

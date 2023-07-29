@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ECard { elevated, outlined, filled }
+enum ECard { elevated, outlined, filled, none }
 
 class CustomCard extends StatelessWidget {
   final ECard card;
@@ -35,6 +35,13 @@ class CustomCard extends StatelessWidget {
         return Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.surfaceVariant,
+          clipBehavior: Clip.hardEdge,
+          child: child,
+        );
+      case ECard.none:
+        return Card(
+          elevation: 0,
+          color: Colors.transparent,
           clipBehavior: Clip.hardEdge,
           child: child,
         );
