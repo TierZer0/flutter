@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
-import 'package:ui/general/text.custom.dart';
 import 'package:ui/ui.dart';
+
+import '../../../services/user/authentication.service.dart';
 
 class BooksTab extends StatefulWidget {
   BooksTab({super.key});
@@ -86,7 +86,7 @@ class _BooksTabState extends State<BooksTab> {
                       backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.error),
                     ),
                     onPressed: () => {
-                      userService.deleteRecipeBook(form.control('id').value),
+                      recipeBookService.deleteRecipeBook(form.control('id').value),
                       Navigator.of(context).pop(),
                       form.reset(),
                       reload(),
@@ -104,12 +104,12 @@ class _BooksTabState extends State<BooksTab> {
               ),
               onPressed: () async {
                 if (form.valid) {
-                  await userService.createRecipeBook(
+                  await recipeBookService.createRecipeBook(
                     RecipeBookModel(
                       id: form.control('id').value,
                       name: form.control('name').value,
                       recipes: [],
-                      createdBy: authService.user!.uid,
+                      createdBy: authenticationService.userUid,
                       likes: 0,
                     ),
                   );
@@ -134,8 +134,8 @@ class _BooksTabState extends State<BooksTab> {
       context: context,
       builder: (context) {
         return FutureBuilder(
-          future: recipesService.getRecipesInBookFuture(
-            recipeIds: _selectedIndex != null ? _books[_selectedIndex!].recipes : [],
+          future: recipesService.recipesInBookFuture(
+            recipeIds: _books[_selectedIndex!].recipes!,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -236,7 +236,7 @@ class _BooksTabState extends State<BooksTab> {
         Expanded(
           flex: 1,
           child: FutureBuilder(
-            future: userService.myRecipeBooks(),
+            future: recipeBookService.getRecipeBooks(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var items = snapshot.data!.docs;
@@ -292,8 +292,8 @@ class _BooksTabState extends State<BooksTab> {
         Expanded(
           flex: 2,
           child: FutureBuilder(
-            future: recipesService.getRecipesInBookFuture(
-              recipeIds: _selectedIndex != null ? _books[_selectedIndex!].recipes : [],
+            future: recipesService.recipesInBookFuture(
+              recipeIds: _books[_selectedIndex!].recipes!,
             ),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -348,7 +348,7 @@ class _BooksTabState extends State<BooksTab> {
   Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
     return FutureBuilder(
-      future: userService.myRecipeBooks(),
+      future: recipeBookService.getRecipeBooks(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var items = snapshot.data!.docs;

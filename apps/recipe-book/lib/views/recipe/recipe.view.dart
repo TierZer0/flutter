@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/user/authentication.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/views/recipe/tabs/recipe.tab.dart';
 import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
-import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
+
 import 'package:ui/ui.dart';
 
 class RecipePage extends StatefulWidget {
@@ -24,6 +26,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   bool liked = false;
   RecipeModel? recipe = null;
   List<RecipeBookModel> recipeBooks = [];
+  String userUid = authenticationService.userUid;
 
   // bool showAddReview = false;
   String fab = 'made';
@@ -34,23 +37,25 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    userService.hasLiked(widget.recipeId).then(
+    profileService.hasLiked(widget.recipeId).then(
           (result) => setState(() {
             liked = result;
           }),
         );
 
-    userService.hasMade(widget.recipeId).then(
+    profileService.hasMade(widget.recipeId).then(
           (result) => setState(() {
             hasMade = result;
             fab = result ? '' : 'made';
           }),
         );
-    userService.myRecipeBooks().then((result) => setState(() => recipeBooks = result.docs.map((e) {
-          var recipe = e.data();
-          recipe.id = e.id;
-          return recipe;
-        }).toList()));
+    recipeBookService
+        .getRecipeBooks()
+        .then((result) => setState(() => recipeBooks = result.docs.map((e) {
+              var recipe = e.data();
+              recipe.id = e.id;
+              return recipe;
+            }).toList()));
 
     getRecipe();
   }
@@ -58,10 +63,10 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   getRecipe() {
     bool _canEdit = false;
     recipesService.getRecipe(widget.recipeId).then((result) {
-      if (result.createdBy == authService.user?.uid) {
+      if (result.createdBy == userUid) {
         _canEdit = true;
       } else {
-        recipesService.incrementView(widget.recipeId);
+        recipesService.incrementViews(widget.recipeId);
       }
       setState(() {
         recipe = result;
@@ -85,7 +90,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         return hasMade
             ? null
             : FloatingActionButton.extended(
-                onPressed: () => userService.madeRecipe(widget.recipeId),
+                onPressed: () => profileService.markRecipeAsMade(widget.recipeId),
                 icon: Icon(Icons.check),
                 label: CText(
                   'Made Recipe',
@@ -173,7 +178,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     onPressed: formGroup.valid
                         ? () {
                             AbstractControl<dynamic> _form = formGroup;
-                            userService.addRecipeToRecipeBook(
+                            recipeBookService.addRecipeToRecipeBook(
                                 widget.recipeId, _form.value['recipeBook']);
                             Navigator.of(context).pop();
                           }
@@ -264,7 +269,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                 ReviewModel review = ReviewModel(
                   review: _form.value['review'],
                   stars: _form.value['stars'],
-                  createdBy: authService.user!.uid,
+                  createdBy: userUid,
                 );
                 recipesService.addReview(review, widget.recipeId);
                 Navigator.of(context).pop();
@@ -324,7 +329,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             children: [
               IconButton(
                 onPressed: () {
-                  userService.likeRecipe(widget.recipeId, !liked);
+                  profileService.likeRecipe(widget.recipeId, !liked);
                   setState(() {
                     liked = !liked;
                   });
@@ -437,7 +442,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             children: [
               IconButton(
                 onPressed: () {
-                  userService.likeRecipe(widget.recipeId, !liked);
+                  profileService.likeRecipe(widget.recipeId, !liked);
                   setState(() {
                     liked = !liked;
                   });

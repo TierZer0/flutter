@@ -5,9 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
-import 'package:recipe_book/services/auth.service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:recipe_book/services/logging.service.dart';
 import 'package:ui/ui.dart';
+
+import '../services/user/authentication.service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -26,6 +28,49 @@ class LoginPageState extends State<LoginPage> {
     'email': FormControl(validators: [Validators.required, Validators.email]),
     'password': FormControl(validators: [Validators.required, Validators.minLength(8)]),
   });
+
+  get email => form.control('email').value;
+  get password => form.control('password').value;
+
+  void _handleEmailLogin(BuildContext context) async {
+    authenticationService.emailSignIn(email, password).then(
+      (value) {
+        if (value.success) {
+          loggingService.triggerSnackbar(
+            context,
+            ISnackbar(type: ELogging.success, message: value.message!),
+          );
+          context.read<AppModel>().uid = value.payload!.uid;
+          context.go('/');
+        } else {
+          loggingService.triggerSnackbar(
+            context,
+            ISnackbar(type: ELogging.error, message: value.message!),
+          );
+        }
+      },
+    );
+  }
+
+  void _handleGoogleSSO(BuildContext context) {
+    authenticationService.googleSSO().then(
+      (value) {
+        if (value.success) {
+          loggingService.triggerSnackbar(
+            context,
+            ISnackbar(type: ELogging.success, message: value.message!),
+          );
+          context.read<AppModel>().uid = value.payload!.uid;
+          context.go('/');
+        } else {
+          loggingService.triggerSnackbar(
+            context,
+            ISnackbar(type: ELogging.error, message: value.message!),
+          );
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,25 +163,7 @@ class LoginPageState extends State<LoginPage> {
                     ReactiveFormConsumer(
                       builder: (context, formGroup, child) {
                         return ElevatedButton(
-                          onPressed: form.invalid
-                              ? null
-                              : () async {
-                                  await authService
-                                      .emailSignIn(form.control('email').value,
-                                          form.control('password').value)
-                                      .then(
-                                    (value) {
-                                      if (value.runtimeType == String) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text(value)),
-                                        );
-                                      } else {
-                                        context.read<AppModel>().uid = value.uid;
-                                        context.go('/');
-                                      }
-                                    },
-                                  );
-                                },
+                          onPressed: form.invalid ? null : () => _handleEmailLogin(context),
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                             child: CText(
@@ -156,18 +183,7 @@ class LoginPageState extends State<LoginPage> {
                         SizedBox(
                           width: 200,
                           child: OutlinedButton(
-                            onPressed: () async {
-                              await authService.googleSSO().then((value) {
-                                if (value.runtimeType == String) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(value)),
-                                  );
-                                } else {
-                                  context.read<AppModel>().uid = value.uid;
-                                  context.go('/');
-                                }
-                              });
-                            },
+                            onPressed: () => _handleGoogleSSO(context),
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
                               child: Center(

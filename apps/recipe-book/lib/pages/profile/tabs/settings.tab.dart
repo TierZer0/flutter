@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/authentication.service.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/ui.dart';
+
+import '../../../services/logging.service.dart';
 
 class SettingsTab extends StatefulWidget {
   SettingsTab({super.key});
@@ -17,6 +19,19 @@ class SettingsTabState extends State<SettingsTab> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void _handleLogout(BuildContext context) {
+    authenticationService.logout().then((value) {
+      context.read<AppModel>().uid = '';
+      context.read<AppModel>().theme = false;
+      context.read<AppModel>().view = 'Home';
+      context.go('/login');
+      loggingService.triggerSnackbar(
+        context,
+        ISnackbar(type: ELogging.success, message: value.message!),
+      );
+    });
   }
 
   @override
@@ -62,7 +77,7 @@ class SettingsTabState extends State<SettingsTab> {
                       contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                       value: context.read<AppModel>().theme,
                       onChanged: (value) {
-                        userService.setUserTheme(value);
+                        profileService.setUserTheme(value);
                         setState(() {
                           context.read<AppModel>().theme = value;
                         });
@@ -98,19 +113,7 @@ class SettingsTabState extends State<SettingsTab> {
                       height: 20.0,
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        authService.logout().then((value) {
-                          context.read<AppModel>().uid = '';
-                          context.read<AppModel>().theme = false;
-                          context.read<AppModel>().view = 'Home';
-                          context.go('/login');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Successfully Logged out'),
-                            ),
-                          );
-                        });
-                      },
+                      onPressed: () => _handleLogout(context),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(theme.colorScheme.error),
                       ),
@@ -166,7 +169,7 @@ class SettingsTabState extends State<SettingsTab> {
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             value: context.read<AppModel>().theme,
             onChanged: (value) {
-              userService.setUserTheme(value);
+              profileService.setUserTheme(value);
               setState(() {
                 context.read<AppModel>().theme = value;
               });
@@ -184,19 +187,7 @@ class SettingsTabState extends State<SettingsTab> {
             height: 20.0,
           ),
           ElevatedButton(
-            onPressed: () {
-              authService.logout().then((value) {
-                context.read<AppModel>().uid = '';
-                context.read<AppModel>().theme = false;
-                context.read<AppModel>().view = 'Home';
-                context.go('/login');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Successfully Logged out'),
-                  ),
-                );
-              });
-            },
+            onPressed: () => _handleLogout(context),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(theme.colorScheme.error),
             ),

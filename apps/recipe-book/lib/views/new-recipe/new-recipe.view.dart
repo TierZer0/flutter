@@ -8,13 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/user/authentication.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/views/new-recipe/steps/details.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/ingredients.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/save.step.dart';
-import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 class NewPage extends StatefulWidget {
@@ -29,6 +29,8 @@ class NewPage extends StatefulWidget {
 class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   late TabController _tabController;
   bool loading = false;
+  String userUid = authenticationService.userUid;
+
   @override
   void initState() {
     super.initState();
@@ -68,7 +70,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
 
   getRecipe() {
     recipesService.getRecipe(widget.id!).then((recipe) {
-      userService.getRecipeBook(recipe.recipeBook!).then((book) {
+      recipeBookService.getRecipeBook(recipe.recipeBook!).then((book) {
         _formGroup.patchValue({
           'details': {
             'name': recipe.title,
@@ -131,7 +133,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
     instructions: [],
     ingredients: [],
     likes: 0,
-    createdBy: authService.user!.uid,
+    createdBy: authenticationService.userUid,
   );
 
   @override
@@ -220,18 +222,18 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     ingredients: ingredients.value['items'],
                     instructions: instructions.value['steps'],
                     likes: 0,
-                    createdBy: authService.user!.uid,
+                    createdBy: userUid,
                     isPublic: settings.value['isPublic'],
                     isShareable: settings.value['isShareable'],
                     prepTime: details.value['prepTime'],
                     cookTime: details.value['cookTime'],
                     servings: details.value['servings'],
                   );
-                  recipesService.upsertRecipe(recipe, _photo ?? _photoWeb!);
+                  recipesService.createRecipe(recipe, _photo ?? _photoWeb!);
                   context.read<AppModel>().recipeBook = RecipeBookModel(
                     name: '',
                     recipes: [],
-                    createdBy: authService.user?.uid,
+                    createdBy: userUid,
                     likes: 0,
                   );
                   context.go('/');
@@ -366,18 +368,18 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
             ingredients: ingredients.value['items'],
             instructions: instructions.value['steps'],
             likes: 0,
-            createdBy: authService.user!.uid,
+            createdBy: userUid,
             isPublic: settings.value['isPublic'],
             isShareable: settings.value['isShareable'],
             prepTime: details.value['prepTime'],
             cookTime: details.value['cookTime'],
             servings: details.value['servings'],
           );
-          recipesService.upsertRecipe(recipe, photo);
+          recipesService.createRecipe(recipe, photo);
           context.read<AppModel>().recipeBook = RecipeBookModel(
             name: '',
             recipes: [],
-            createdBy: authService.user?.uid,
+            createdBy: userUid,
             likes: 0,
           );
           context.go('/');

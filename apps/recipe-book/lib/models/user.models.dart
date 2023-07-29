@@ -6,7 +6,7 @@ class LikesModel {
 
   LikesModel({
     this.recipeId,
-    this.hasMade,
+    this.hasMade = false,
   });
 
   factory LikesModel.fromFirestore(

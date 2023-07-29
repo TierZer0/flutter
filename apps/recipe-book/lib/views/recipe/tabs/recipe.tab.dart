@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
 
@@ -29,7 +29,7 @@ class RecipeTabState extends State<RecipeTab> {
   }
 
   getRecipeBook() async {
-    await userService.getRecipeBook(widget.recipe.recipeBook!).then((result) {
+    await recipeBookService.getRecipeBook(widget.recipe.recipeBook!).then((result) {
       setState(() {
         recipeBook = result;
       });

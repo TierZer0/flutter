@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/recipes.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 class ReviewsTab extends StatefulWidget {
@@ -21,7 +21,7 @@ class ReviewsTabState extends State<ReviewsTab> {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: StreamBuilder(
-          stream: recipesService.getRecipeReviews(widget.id),
+          stream: recipesService.recipeReviews(widget.id),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data!.data();
