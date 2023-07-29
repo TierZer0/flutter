@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_book/pages/profile/tabs/books.tab.dart';
 import 'package:recipe_book/pages/profile/tabs/categories.tab.dart';
 import 'package:recipe_book/pages/profile/tabs/info.tab.dart';
 import 'package:recipe_book/pages/profile/tabs/settings.tab.dart';
-import 'package:recipe_book/services/auth.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../models/user.models.dart';
+import '../../services/user/authentication.service.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class ProfileView extends StatefulWidget {
 class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  User user = authenticationService.user;
 
   @override
   void initState() {
@@ -40,7 +42,7 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
     return Scaffold(
       appBar: AppBar(
         title: CText(
-          authService.user?.displayName ?? authService.user?.email ?? '',
+          user.displayName ?? user.email ?? '',
           textLevel: EText.title,
           weight: FontWeight.bold,
         ),
@@ -90,7 +92,7 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
             child: CustomCard(
               card: ECard.filled,
               child: StreamBuilder(
-                stream: userService.getUserStream,
+                stream: profileService.userStream,
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (snapshot.hasData) {
                     final UserModel user = snapshot.data!.data() as UserModel;
@@ -121,11 +123,10 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
   }
 
   Widget buildMobile(BuildContext context) {
-    var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: CText(
-          authService.user?.displayName ?? '',
+          user.displayName ?? user.email ?? '',
           textLevel: EText.title,
           scaleFactor: 1.0,
           weight: FontWeight.bold,
@@ -155,7 +156,7 @@ class ProfileViewState extends State<ProfileView> with TickerProviderStateMixin 
         ),
       ),
       body: StreamBuilder(
-        stream: userService.getUserStream,
+        stream: profileService.userStream,
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasData) {
             final UserModel user = snapshot.data!.data() as UserModel;

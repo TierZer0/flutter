@@ -3,17 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
 
 import 'package:recipe_book/app_model.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 
 import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
 import '../models/recipe.models.dart';
-import '../views/recipe/recipe.view.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -236,9 +235,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    userService.getUserTheme.then((theme) {
-      context.read<AppModel>().theme = theme;
-    }).catchError((e) => print(e));
+    profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
 
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > 660) {
@@ -305,7 +302,7 @@ class HomePageState extends State<HomePage> {
               SizedBox(height: 10.0),
               Expanded(
                 child: StreamBuilder(
-                  stream: recipesService.getAllRecipes(
+                  stream: recipesService.getRecipesStream(
                     filters: filters,
                     sort: formGroup.control('sort').value,
                   ),
@@ -413,7 +410,7 @@ class HomePageState extends State<HomePage> {
           vertical: 0.0,
         ),
         child: StreamBuilder(
-          stream: recipesService.getAllRecipes(
+          stream: recipesService.getRecipesStream(
             filters: filters,
             sort: formGroup.control('sort').value,
           ),

@@ -1,15 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/models/user.models.dart';
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
-import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
 class CategoriesTab extends StatefulWidget {
@@ -93,7 +90,7 @@ class CategoriesTabState extends State<CategoriesTab> {
                       backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.error),
                     ),
                     onPressed: () => {
-                      userService.deleteCategory(
+                      profileService.deleteCategory(
                         formGroup.control('name').value,
                       ),
                       Navigator.of(context).pop(),
@@ -113,7 +110,7 @@ class CategoriesTabState extends State<CategoriesTab> {
               ),
               onPressed: () async {
                 if (formGroup.valid) {
-                  await userService.createCategory(
+                  await profileService.upsertCategory(
                     category: formGroup.control('name').value,
                     oldCategory: formGroup.control('prevName').value,
                   );
@@ -139,7 +136,7 @@ class CategoriesTabState extends State<CategoriesTab> {
       showDragHandle: true,
       builder: (context) {
         return FutureBuilder(
-          future: recipesService.getMyRecipesFuture(filters: {
+          future: recipesService.myRecipesFuture(filters: {
             'category': category,
           }),
           builder: (context, snapshot) {
@@ -272,7 +269,7 @@ class CategoriesTabState extends State<CategoriesTab> {
           flex: 2,
           child: _selectedCategory != null
               ? FutureBuilder(
-                  future: recipesService.getMyRecipesFuture(filters: {
+                  future: recipesService.myRecipesFuture(filters: {
                     'category': widget.user.categories![_selectedCategory!],
                   }),
                   builder: (context, snapshot) {

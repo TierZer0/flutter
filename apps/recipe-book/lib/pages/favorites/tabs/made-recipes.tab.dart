@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
@@ -36,7 +36,7 @@ class _MadeFavoritesTabState extends State<MadeFavoritesTab> {
 
   Widget content() {
     return FutureBuilder(
-      future: userService.likes(true),
+      future: profileService.myLikes(true),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var recipes = snapshot.data!.docs;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/recipe-book-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
 
@@ -36,7 +36,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
 
   Widget content() {
     return StreamBuilder(
-      stream: userService.userBooksStream,
+      stream: recipeBookService.recipeBooksStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var recipeBooks = snapshot.data!.docs;

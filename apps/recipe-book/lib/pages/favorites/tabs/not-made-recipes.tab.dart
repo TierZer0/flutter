@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
 import '../../../models/recipe.models.dart';
-import '../../../services/user.service.dart';
 import '../../../shared/recipe-card.shared.dart';
 
 class NotMadeFavoritesTab extends StatefulWidget {
@@ -36,7 +36,7 @@ class _NotMadeFavoritesTabState extends State<NotMadeFavoritesTab> {
 
   Widget content() {
     return FutureBuilder(
-      future: userService.likes(false),
+      future: profileService.myLikes(false),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var recipes = snapshot.data!.docs;

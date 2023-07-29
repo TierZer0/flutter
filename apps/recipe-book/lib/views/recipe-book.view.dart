@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/services/recipes.service.dart';
-import 'package:recipe_book/services/user.service.dart';
+import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/detailed-recipe-card.shared.dart';
-import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/ui.dart';
+
+import '../services/user/recipes.service.dart';
 
 class RecipeBookPage extends StatefulWidget {
   final String recipeBookId;
@@ -37,7 +37,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
   }
 
   getRecipeBook() {
-    userService.getRecipeBook(widget.recipeBookId).then((result) {
+    recipeBookService.getRecipeBook(widget.recipeBookId).then((result) {
       setState(() {
         recipeBook = result;
       });
@@ -62,7 +62,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
               textLevel: EText.title2,
             ),
             content: FutureBuilder(
-              future: recipesService.getMyRecipesFuture(),
+              future: recipesService.myRecipesFuture(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var data = snapshot.data!.docs;
@@ -103,8 +103,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                 onPressed: () {
                   setState(() {
                     recipeBook.recipes!.add(formGroup.control('recipe').value);
-                    // userService.updateRecipeBook(widget.recipeBookId, recipeBook);
-                    userService.addRecipeToRecipeBook(
+                    recipeBookService.addRecipeToRecipeBook(
                         formGroup.control('recipe').value, widget.recipeBookId);
                   });
 
@@ -151,7 +150,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
         ],
       ),
       body: StreamBuilder(
-        stream: recipesService.getRecipesInBook(recipeBook.recipes ?? []),
+        stream: recipesService.recipesInBookStream(recipeIds: recipeBook.recipes!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var recipes = snapshot.data!.docs;
@@ -218,7 +217,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                         onPressed: () => {
                           setState(() {
                             recipeBook.recipes!.remove(recipeId);
-                            userService.updateRecipeBook(widget.recipeBookId, recipeBook);
+                            recipeBookService.updateRecipeBook(widget.recipeBookId, recipeBook);
                           })
                         },
                         icon: Icon(

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/models/user.models.dart';
-import 'package:recipe_book/services/user.service.dart';
-import 'package:skeleton_loader/skeleton_loader.dart';
 import 'package:ui/ui.dart';
 
 import '../../../shared/items-grid.shared.dart';
