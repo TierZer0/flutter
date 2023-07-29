@@ -73,7 +73,7 @@ class _RecipesService {
   }
 
   Stream<DocumentSnapshot<dynamic>> recipeReviews(id) {
-    return recipesRef.doc(id).select('reviews').snapshots();
+    return recipesRef.doc(id).snapshots();
   }
 
   Future<void> addReview(id, review) {

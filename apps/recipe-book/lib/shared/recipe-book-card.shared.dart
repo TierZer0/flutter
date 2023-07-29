@@ -42,10 +42,9 @@ class RecipeBookCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Text(
+              CText(
                 '${recipeBook.recipes!.length.toString()} Recipes',
-                textScaleFactor: 1,
-                textAlign: TextAlign.center,
+                textLevel: EText.caption,
               ),
             ],
           ),

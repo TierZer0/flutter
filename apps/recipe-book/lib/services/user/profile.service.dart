@@ -35,10 +35,12 @@ class _ProfileService {
     return snapshot.data()!.categories;
   }
 
-  Future<bool> hasLiked(String recipeId) {
-    return userCollectionRef
-        .get()
-        .then((value) => value.data()!.likes.any((element) => element.recipeId == recipeId));
+  hasLiked(String recipeId) async {
+    final user = await (await userCollectionRef.get()).data()!;
+    return user.likes.any((element) => element.recipeId == recipeId);
+    // return userCollectionRef
+    //     .get()
+    //     .then((value) => value.data()!.likes.any((element) => element.recipeId == recipeId));
   }
 
   Future<bool> hasMade(String recipeId) {
@@ -49,8 +51,9 @@ class _ProfileService {
   Future<QuerySnapshot<RecipeModel>> myLikes(bool hasMade) async {
     final snapshot = await userCollectionRef.get();
     final likes = snapshot.data()!.likes;
-    final recipeIds = likes.where((element) => element.hasMade == hasMade).map((e) => e.recipeId);
-    return recipesService.recipesRef.where('id', whereIn: recipeIds).get();
+    final recipeIds =
+        likes.where((element) => element.hasMade == hasMade).map((e) => e.recipeId).toList();
+    return recipesService.recipesRef.where(FieldPath.documentId, whereIn: recipeIds).get();
   }
 
   Future<FirestoreResult<UserModel>> upsertCategory({

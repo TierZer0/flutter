@@ -50,7 +50,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
             itemCount: _recipeBooks.length,
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              childAspectRatio: 1.25 / 2,
+              childAspectRatio: 2 / 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),
@@ -59,7 +59,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
               final String recipeBookId = recipeBooks[index].id;
               return RecipeBookCard(
                 recipeBook: recipeBook,
-                cardType: ECard.elevated,
+                cardType: ECard.none,
                 onTap: () => context.push('/recipeBook/${recipeBookId}'),
               );
             },

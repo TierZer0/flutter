@@ -18,7 +18,7 @@ class BooksTab extends StatefulWidget {
 }
 
 class _BooksTabState extends State<BooksTab> {
-  late List<RecipeBookModel> _books;
+  late List<RecipeBookModel> _books = [];
 
   final form = FormGroup({
     'name': FormControl<String>(value: '', validators: [Validators.required]),
