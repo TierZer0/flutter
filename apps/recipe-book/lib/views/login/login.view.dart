@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipe_book/services/logging.service.dart';
 import 'package:ui/ui.dart';
 
-import '../services/user/authentication.service.dart';
+import '../../services/user/authentication.service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -162,15 +162,24 @@ class LoginPageState extends State<LoginPage> {
                     ),
                     ReactiveFormConsumer(
                       builder: (context, formGroup, child) {
-                        return ElevatedButton(
-                          onPressed: form.invalid ? null : () => _handleEmailLogin(context),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                            child: CText(
-                              "Login",
-                              textLevel: EText.button,
+                        return Wrap(
+                          spacing: 25,
+                          children: [
+                            ElevatedButton(
+                              onPressed: form.invalid ? null : () => _handleEmailLogin(context),
+                              child: CText(
+                                "Login",
+                                textLevel: EText.button,
+                              ),
                             ),
-                          ),
+                            TextButton(
+                              onPressed: () => context.replace('/login/createAccount'),
+                              child: CText(
+                                "Create Account",
+                                textLevel: EText.button,
+                              ),
+                            )
+                          ],
                         );
                       },
                     ),
