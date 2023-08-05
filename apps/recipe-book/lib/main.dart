@@ -51,7 +51,7 @@ class AppState extends State<App> {
       AppPreferences appPreferences = AppPreferences();
       return appPreferences.getUserUIDPref().then((value) {
         context.read<AppModel>().uid = value;
-        if (state.location == '/login/createAccount') {
+        if (state.location.contains('/login/createAccount')) {
           return state.location;
         }
         if (value == '') {
@@ -69,9 +69,11 @@ class AppState extends State<App> {
         },
         routes: [
           GoRoute(
-            path: 'createAccount',
+            path: 'createAccount/:isSSO',
             builder: (context, state) {
-              return CreateAccount();
+              return CreateAccount(
+                isSSO: state.params['isSSO'] == 'true',
+              );
             },
           )
         ],
@@ -127,7 +129,8 @@ class AppState extends State<App> {
           ),
         );
 
-        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
+        var mode =
+            context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
