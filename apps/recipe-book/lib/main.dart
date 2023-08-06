@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
-import 'package:recipe_book/views/login.view.dart';
+import 'package:recipe_book/views/login/create-account.view.dart';
+import 'package:recipe_book/views/login/login.view.dart';
 import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
 import 'package:recipe_book/views/recipe-book.view.dart';
 import 'package:recipe_book/views/recipe/recipe.view.dart';
@@ -50,6 +51,9 @@ class AppState extends State<App> {
       AppPreferences appPreferences = AppPreferences();
       return appPreferences.getUserUIDPref().then((value) {
         context.read<AppModel>().uid = value;
+        if (state.location.contains('/login/createAccount')) {
+          return state.location;
+        }
         if (value == '') {
           return '/login';
         } else {
@@ -63,6 +67,16 @@ class AppState extends State<App> {
         builder: (context, state) {
           return LoginPage();
         },
+        routes: [
+          GoRoute(
+            path: 'createAccount/:isSSO',
+            builder: (context, state) {
+              return CreateAccount(
+                isSSO: state.params['isSSO'] == 'true',
+              );
+            },
+          )
+        ],
       ),
       GoRoute(
         path: '/newRecipe',
@@ -115,7 +129,8 @@ class AppState extends State<App> {
           ),
         );
 
-        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
+        var mode =
+            context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
