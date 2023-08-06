@@ -77,7 +77,7 @@ class _CreateAccountState extends State<CreateAccount> {
     final controller = PageController(
       viewportFraction: 1,
       keepPage: true,
-      initialPage: 5,
+      initialPage: 0,
     );
 
     controller.addListener(() {
@@ -104,7 +104,7 @@ class _CreateAccountState extends State<CreateAccount> {
       } else if (controller.page == 4) {
         return formGroup.control('RecipeBooks.items').value.length >= 3;
       } else {
-        return false;
+        return true;
       }
     }
 

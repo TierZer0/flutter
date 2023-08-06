@@ -41,17 +41,25 @@ class _AuthenticationService<T> {
     }
   }
 
-  Future<AuthenticationResult<T>> createEmailAccount(
+  Future<AuthenticationResult<User>> createEmailAccount(
       String email, String password) async {
     // implement with new user flow process
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return AuthenticationResult<T>(
-      null,
-      newUser: true,
-      success: false,
-      message: 'Not Implemented',
-    );
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return AuthenticationResult<User>(
+        userCredential.user as User,
+        success: true,
+        newUser: true,
+        message: 'Account Creation Sucessful',
+      );
+    } on FirebaseAuthException catch (e) {
+      return AuthenticationResult<User>(
+        null,
+        success: false,
+        message: e.message,
+      );
+    }
   }
 
   Future<AuthenticationResult<T>> googleSSO() async {

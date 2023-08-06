@@ -129,7 +129,7 @@ class RecipeBooksStep extends StatelessWidget {
                         textLevel: EText.body,
                       ),
                       subtitle: CText(
-                        value.description!,
+                        value.description ?? '',
                         textLevel: EText.subtitle,
                       ),
                       trailing: IconButton(
