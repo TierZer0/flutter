@@ -37,13 +37,6 @@ class UserLoginStep extends StatelessWidget {
             label: 'Password',
             textColor: theme.colorScheme.onBackground,
           ),
-          CustomReactiveInput(
-            inputAction: TextInputAction.next,
-            obscureText: true,
-            formName: '${formGroupName}.ConfirmPassword',
-            label: 'Confirm Password',
-            textColor: theme.colorScheme.onBackground,
-          ),
         ],
       ),
     );

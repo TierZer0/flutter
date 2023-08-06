@@ -33,15 +33,10 @@ class _CreateAccountState extends State<CreateAccount> {
         Validators.required,
         Validators.minLength(8),
       ]),
-      'ConfirmPassword': FormControl<String>(validators: [
-        Validators.required,
-        Validators.minLength(8),
-      ]),
     }),
     'UserSettings': FormGroup({
       'Name': FormControl<String>(validators: [Validators.required]),
-      'DefaultTheme':
-          FormControl<bool>(value: false, validators: [Validators.required]),
+      'DefaultTheme': FormControl<bool>(value: false, validators: [Validators.required]),
       // TO DO GET MORE USER SETTINGS
     }),
     'Categories': FormGroup({
@@ -86,10 +81,8 @@ class _CreateAccountState extends State<CreateAccount> {
 
     _handlePageChange(bool forward) {
       forward
-          ? controller.nextPage(
-              duration: Duration(milliseconds: 250), curve: Curves.linear)
-          : controller.previousPage(
-              duration: Duration(milliseconds: 250), curve: Curves.linear);
+          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
+          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
     }
 
     _determinePageValid() {
@@ -125,12 +118,10 @@ class _CreateAccountState extends State<CreateAccount> {
                         UserLoginStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup:
-                              formGroup.control('Categories') as FormGroup,
+                          formGroup: formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup:
-                              formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep(),
                       ]
@@ -138,12 +129,10 @@ class _CreateAccountState extends State<CreateAccount> {
                         WelcomeStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup:
-                              formGroup.control('Categories') as FormGroup,
+                          formGroup: formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup:
-                              formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep()
                       ],
@@ -185,9 +174,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           flex: 1,
                           child: IconButton(
                             icon: Icon(Icons.arrow_forward_ios),
-                            onPressed: _determinePageValid()
-                                ? () => _handlePageChange(true)
-                                : null,
+                            onPressed: _determinePageValid() ? () => _handlePageChange(true) : null,
                           ),
                         ),
                       ],

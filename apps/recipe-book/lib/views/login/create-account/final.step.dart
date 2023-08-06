@@ -9,6 +9,7 @@ import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/page-view.shared.dart';
 
 import '../../../app_model.dart';
+import '../../../services/logging.service.dart';
 import '../../../services/user/profile.service.dart';
 
 class FinalStep extends StatelessWidget {
@@ -16,16 +17,12 @@ class FinalStep extends StatelessWidget {
 
   _handleCreateAccount(FormGroup _formGroup, BuildContext context) async {
     final FormGroup userLogin = _formGroup.control('UserLogin') as FormGroup;
-    final FormGroup userSettings =
-        _formGroup.control('UserSettings') as FormGroup;
+    final FormGroup userSettings = _formGroup.control('UserSettings') as FormGroup;
     final FormGroup categories = _formGroup.control('Categories') as FormGroup;
-    final FormGroup recipeBooks =
-        _formGroup.control('RecipeBooks') as FormGroup;
+    final FormGroup recipeBooks = _formGroup.control('RecipeBooks') as FormGroup;
 
-    AuthenticationResult<User> result =
-        await authenticationService.createEmailAccount(
-            userLogin.control('Email').value,
-            userLogin.control('Password').value);
+    AuthenticationResult<User> result = await authenticationService.createEmailAccount(
+        userLogin.control('Email').value, userLogin.control('Password').value);
 
     if (result.success) {
       UserModel user = new UserModel(
@@ -39,7 +36,12 @@ class FinalStep extends StatelessWidget {
       });
       context.read<AppModel>().uid = result.payload!.uid;
       context.go('/');
-    } else {}
+    } else {
+      loggingService.triggerSnackbar(
+        context,
+        ISnackbar(type: ELogging.error, message: result.message!),
+      );
+    }
   }
 
   @override
