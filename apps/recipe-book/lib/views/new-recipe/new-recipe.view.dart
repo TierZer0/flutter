@@ -15,6 +15,7 @@ import 'package:recipe_book/views/new-recipe/steps/ingredients.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/save.step.dart';
 import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ui/ui.dart';
 
 class NewPage extends StatefulWidget {
@@ -26,8 +27,7 @@ class NewPage extends StatefulWidget {
   NewPageState createState() => NewPageState();
 }
 
-class NewPageState extends State<NewPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+class NewPageState extends State<NewPage> {
   bool loading = false;
   String userUid = authenticationService.userUid;
 
@@ -39,7 +39,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
       loading = true;
       getRecipe();
     }
-    _tabController = TabController(length: 4, vsync: this);
   }
 
   File? _photo;
@@ -70,13 +69,28 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
 
   getRecipe() {
     recipesService.getRecipe(widget.id!).then((recipe) {
+      print(recipe.recipeBook);
       recipeBookService.getRecipeBook(recipe.recipeBook!).then((book) {
         _formGroup.patchValue({
           'details': {
             'name': recipe.title,
             'description': recipe.description,
             'category': recipe.category,
-          }
+            'book': recipe.recipeBook!,
+            'cookTime': recipe.cookTime,
+            'prepTime': recipe.prepTime,
+            'servings': recipe.servings,
+          },
+          'ingredients': {
+            'items': recipe.ingredients,
+          },
+          'instructions': {
+            'steps': recipe.instructions,
+          },
+          'settings': {
+            'isPublic': recipe.isPublic ?? false,
+            'isShareable': recipe.isShareable ?? false,
+          },
         });
         setState(() {
           context.read<AppModel>().recipeBook = book;
@@ -135,6 +149,12 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
     likes: 0,
     createdBy: authenticationService.userUid,
   );
+
+  _handleDelete(BuildContext context) {
+    recipesService.deleteRecipe(widget.id!, recipe).then((value) {
+      context.pop();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +270,7 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                   alignment: Alignment.topLeft,
                   child: CustomCard(
                     card: ECard.elevated,
-                    child: DetailsStep(onTap: () => {}),
+                    child: DetailsStep(),
                   ),
                 ),
               ),
@@ -265,8 +285,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     card: ECard.elevated,
                     child: IngredientsStep(
                       formGroup: formGroup,
-                      tapBack: () => {},
-                      tapForward: () => {},
                     ),
                   ),
                 ),
@@ -282,8 +300,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     card: ECard.elevated,
                     child: InstructionsStep(
                       formGroup: formGroup,
-                      tapBack: () => {},
-                      tapForward: () => {},
                     ),
                   ),
                 ),
@@ -300,8 +316,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
                     child: SaveStep(
                       formGroup: formGroup,
                       recipe: recipe,
-                      tapBack: () => {},
-                      tapForward: (photo, name) => {},
                       selectImage: () => imgFromGallery(),
                       photo: _photoWeb,
                     ),
@@ -318,6 +332,31 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
   Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
 
+    final controller = PageController(
+      viewportFraction: 1,
+      keepPage: true,
+      initialPage: 0,
+    );
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    _handlePageChange(bool forward) {
+      forward
+          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
+          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
+    }
+
+    buildPageTitle(String label) {
+      return Padding(
+        padding: const EdgeInsets.only(
+          left: 25.0,
+        ),
+        child: CText(label, textLevel: EText.title),
+      );
+    }
+
     return ReactiveFormBuilder(
       form: buildForm,
       builder: (context, formGroup, child) {
@@ -327,36 +366,18 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
         AbstractControl<dynamic> settings = formGroup.control('settings') as FormGroup;
         _formGroup = formGroup;
 
-        onTap(curr, goTo) {
-          final steps = ['details', 'ingredients', 'instructions'];
-
-          return () {
-            if (curr == 2) {}
-
-            var update = false;
-            switch (curr) {
-              case 0:
-                if (details.valid) {
-                  update = true;
-                }
-                break;
-              case 1:
-                if (ingredients.value['items'].length > 0) {
-                  update = true;
-                }
-                break;
-              case 2:
-                if (instructions.value['steps'].length > 0) {
-                  update = true;
-                }
-                break;
-            }
-            setState(() {
-              completedSteps[curr] = update;
-            });
-
-            return _tabController.animateTo(goTo);
-          };
+        _determinePageValid() {
+          if (controller.page == 0) {
+            return details.valid;
+          } else if (controller.page == 1) {
+            return ingredients.value['items'].length > 0;
+          } else if (controller.page == 2) {
+            return instructions.value['steps'].length > 0;
+          } else if (controller.page == 3) {
+            return _photo != null || _photoWeb != null;
+          } else {
+            return false;
+          }
         }
 
         submit(File photo, String imageName) {
@@ -375,7 +396,11 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
             cookTime: details.value['cookTime'],
             servings: details.value['servings'],
           );
-          recipesService.createRecipe(recipe, photo);
+          if (widget.id != null) {
+            recipesService.updateRecipe(widget.id!, recipe);
+          } else {
+            recipesService.createRecipe(recipe, photo);
+          }
           context.read<AppModel>().recipeBook = RecipeBookModel(
             name: '',
             recipes: [],
@@ -385,10 +410,6 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
           context.go('/');
         }
 
-        if (context.read<AppModel>().recipeBook.name != '' &&
-            details.value['book'] != context.read<AppModel>().recipeBook.name) {
-          details.patchValue({'book': context.read<AppModel>().recipeBook.name});
-        }
         return Scaffold(
           appBar: AppBar(
             backgroundColor: theme.colorScheme.surface,
@@ -398,80 +419,119 @@ class NewPageState extends State<NewPage> with TickerProviderStateMixin {
               textLevel: EText.title,
               weight: FontWeight.bold,
             ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(85.0),
-              child: IgnorePointer(
-                child: TabBar(
-                  indicatorColor: theme.colorScheme.primary,
-                  controller: _tabController,
-                  dividerColor: Colors.transparent,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  onPressed: () => _handleDelete(context),
+                  icon: Icon(
+                    Icons.delete_outline_outlined,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                flex: 7,
+                child: PageView(
                   physics: NeverScrollableScrollPhysics(),
-                  tabs: [
-                    Tab(
-                      text: '1: Details',
-                      icon: completedSteps[0]
-                          ? Icon(Icons.check_outlined)
-                          : Icon(Icons.edit_outlined),
+                  controller: controller,
+                  children: [
+                    Wrap(
+                      children: [
+                        buildPageTitle('Recipe Details'),
+                        DetailsStep(),
+                      ],
                     ),
-                    Tab(
-                      text: '2: Ingredients',
-                      icon: completedSteps[1]
-                          ? Icon(Icons.check_outlined)
-                          : Icon(Icons.edit_outlined),
+                    Wrap(
+                      children: [
+                        buildPageTitle('Recipe Ingredients'),
+                        IngredientsStep(
+                          formGroup: formGroup,
+                        ),
+                      ],
                     ),
-                    Tab(
-                      text: '3: Instructions',
-                      icon: completedSteps[2]
-                          ? Icon(Icons.check_outlined)
-                          : Icon(Icons.edit_outlined),
+                    Wrap(
+                      children: [
+                        buildPageTitle('Recipe Instructions'),
+                        InstructionsStep(
+                          formGroup: formGroup,
+                        ),
+                      ],
                     ),
-                    Tab(
-                      text: '4: Save',
-                      icon: completedSteps[0] && completedSteps[1] && completedSteps[2]
-                          ? Icon(Icons.check_outlined)
-                          : Icon(Icons.edit_outlined),
-                    )
+                    Wrap(
+                      children: [
+                        buildPageTitle('Recipe Settings & Save Recipe'),
+                        SaveStep(
+                          formGroup: formGroup,
+                          recipe: recipe,
+                          selectImage: () => imgFromGallery(),
+                          photo: _photoWeb,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-            ),
-          ),
-          body: loading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Container(
-                  color: theme.scaffoldBackgroundColor,
-                  child: TabBarView(
-                    controller: _tabController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      DetailsStep(
-                        onTap: onTap(0, 1),
-                      ),
-                      IngredientsStep(
-                        formGroup: formGroup,
-                        tapBack: onTap(1, 0),
-                        tapForward: onTap(1, 2),
-                      ),
-                      InstructionsStep(
-                        formGroup: formGroup,
-                        tapBack: onTap(2, 1),
-                        tapForward: onTap(2, 3),
-                      ),
-                      SaveStep(
-                        formGroup: formGroup,
-                        recipe: recipe,
-                        tapBack: onTap(3, 2),
-                        tapForward: (photo, name) {
-                          submit(photo!, name!);
-                        },
-                        photo: _photo,
-                        selectImage: () => imgFromGallery(),
-                      )
-                    ],
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                  ),
+                  child: ReactiveFormConsumer(
+                    builder: (context, formGroup, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () => _handlePageChange(false),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 7,
+                            child: Center(
+                              child: SmoothPageIndicator(
+                                controller: controller,
+                                count: 4,
+                                effect: ExpandingDotsEffect(
+                                  activeDotColor: theme.colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          controller.page != 3
+                              ? Expanded(
+                                  flex: 2,
+                                  child: IconButton(
+                                    icon: Icon(Icons.arrow_forward_ios),
+                                    onPressed: _determinePageValid()
+                                        ? () => _handlePageChange(true)
+                                        : null,
+                                  ),
+                                )
+                              : Expanded(
+                                  flex: 2,
+                                  child: IconButton(
+                                    onPressed: _determinePageValid()
+                                        ? () => submit(_photo!, _name!)
+                                        : null,
+                                    icon: Icon(Icons.check),
+                                  ),
+                                )
+                        ],
+                      );
+                    },
                   ),
                 ),
+              )
+            ],
+          ),
         );
       },
     );

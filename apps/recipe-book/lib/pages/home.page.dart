@@ -327,7 +327,7 @@ class HomePageState extends State<HomePage> {
                           final String recipeId = recipes[index].id;
                           return RecipeCard(
                             recipe: recipe,
-                            cardType: ECard.none,
+                            cardType: ECard.elevated,
                             onTap: () => context.push('/recipe/${recipeId}'),
                             onLongPress: () =>
                                 _previewDialog(context, recipe, recipeId, isMobile: false),
@@ -425,7 +425,7 @@ class HomePageState extends State<HomePage> {
                 itemCount: _recipes.length,
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300,
-                  childAspectRatio: 3 / 3,
+                  childAspectRatio: 2.85 / 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 0,
                 ),
@@ -434,7 +434,7 @@ class HomePageState extends State<HomePage> {
                   final String recipeId = recipes[index].id;
                   return RecipeCard(
                     recipe: recipe,
-                    cardType: ECard.none,
+                    cardType: ECard.elevated,
                     onTap: () => context.push('/recipe/${recipeId}'),
                     onLongPress: () => _previewDialog(context, recipe, recipeId),
                     useImage: true,

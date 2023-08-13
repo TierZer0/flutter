@@ -6,9 +6,7 @@ import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:ui/ui.dart';
 
 class DetailsStep extends StatefulWidget {
-  VoidCallback onTap;
-
-  DetailsStep({super.key, required this.onTap});
+  DetailsStep({super.key});
 
   @override
   DetailsStepState createState() => DetailsStepState();
@@ -351,21 +349,6 @@ class DetailsStepState extends State<DetailsStep> {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ReactiveFormConsumer(
-                builder: (context, formGroup, child) => ElevatedButton(
-                  onPressed: formGroup.control('details').invalid ? null : widget.onTap,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                    child: CText(
-                      "Next Step",
-                      textLevel: EText.body,
-                    ),
-                  ),
-                ),
-              ),
-            )
           ],
         ),
       ),

@@ -63,6 +63,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   getRecipe() {
     bool _canEdit = false;
     recipesService.getRecipe(widget.recipeId).then((result) {
+      print(result.recipeBook);
       if (result.createdBy == userUid) {
         _canEdit = true;
       } else {

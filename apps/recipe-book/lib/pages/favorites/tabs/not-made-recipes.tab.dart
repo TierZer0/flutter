@@ -54,7 +54,7 @@ class _NotMadeFavoritesTabState extends State<NotMadeFavoritesTab> {
               final String recipeId = recipes[index].id;
               return RecipeCard(
                 recipe: recipe,
-                cardType: ECard.none,
+                cardType: ECard.elevated,
                 onTap: () => context.push('/recipe/${recipeId}'),
                 useImage: true,
               );

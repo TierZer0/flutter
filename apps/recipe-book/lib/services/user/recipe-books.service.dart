@@ -40,6 +40,14 @@ class _RecipeBookService {
       },
     );
   }
+
+  Future<void> removeRecipeFromRecipeBook(String id, String recipeBookId) {
+    return db.userRecipeBookCollection.doc(recipeBookId).update(
+      {
+        'recipes': FieldValue.arrayRemove([id])
+      },
+    );
+  }
 }
 
 final _RecipeBookService recipeBookService = _RecipeBookService();

@@ -54,7 +54,7 @@ class _MadeFavoritesTabState extends State<MadeFavoritesTab> {
               final String recipeId = recipes[index].id;
               return RecipeCard(
                 recipe: recipe,
-                cardType: ECard.none,
+                cardType: ECard.elevated,
                 onTap: () => context.push('/recipe/${recipeId}'),
                 // onLongPress: () =>
                 //     _previewDialog(context, recipe, recipeId, isMobile: false),

@@ -59,7 +59,7 @@ class _MyRecipesTabState extends State<MyRecipesTab> {
               final String recipeId = recipes[index].id;
               return RecipeCard(
                 recipe: recipe,
-                cardType: ECard.none,
+                cardType: ECard.elevated,
                 onTap: () => context.push('/recipe/${recipeId}'),
                 useImage: true,
               );

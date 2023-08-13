@@ -111,6 +111,7 @@ class _CreateAccountState extends State<CreateAccount> {
             Expanded(
               flex: 5,
               child: PageView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: controller,
                 children: !widget.isSSO
                     ? [
@@ -147,8 +148,6 @@ class _CreateAccountState extends State<CreateAccount> {
                 child: ReactiveFormConsumer(
                   builder: (context, formGroup, child) {
                     return Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Expanded(

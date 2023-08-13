@@ -10,16 +10,12 @@ import 'dart:io';
 class SaveStep extends StatefulWidget {
   FormGroup formGroup;
   final RecipeModel recipe;
-  VoidCallback tapBack;
-  Function tapForward;
   VoidCallback selectImage;
   dynamic photo;
 
   SaveStep({
     super.key,
     required this.recipe,
-    required this.tapBack,
-    required this.tapForward,
     required this.formGroup,
     required this.selectImage,
     required this.photo,
@@ -36,26 +32,6 @@ class SaveStepState extends State<SaveStep> {
   }
 
   File? _photo;
-  String? _name;
-
-  imgFromGallery() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        if (pickedFile.name.indexOf('.jpg') != -1 || pickedFile.name.indexOf('.png') != -1) {
-          _photo = File(pickedFile.path);
-          // widget.photo = _photo;
-          _name = pickedFile.name;
-        } else {
-          _photo = null;
-        }
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +155,6 @@ class SaveStepState extends State<SaveStep> {
                     spacing: 20.0,
                     runSpacing: 0.0,
                     children: [
-                      CText(
-                        "Recipe Settings",
-                        textLevel: EText.title,
-                        weight: FontWeight.bold,
-                      ),
                       SwitchListTile(
                         title: CText(
                           "Public - Viewable by anyone",
@@ -221,9 +192,7 @@ class SaveStepState extends State<SaveStep> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {
-                                imgFromGallery();
-                              },
+                              onTap: () => widget.selectImage(),
                               child: Stack(
                                 children: [
                                   Align(
@@ -254,38 +223,6 @@ class SaveStepState extends State<SaveStep> {
                   ),
                 ),
               ),
-            ),
-            ReactiveFormConsumer(
-              builder: (context, form, child) {
-                return Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Wrap(
-                    spacing: 30.0,
-                    children: [
-                      ElevatedButton(
-                        onPressed: widget.tapBack,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CText(
-                            "Edit Recipe",
-                            textLevel: EText.button,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => widget.tapForward(_photo, _name),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CText(
-                            "Save Recipe",
-                            textLevel: EText.button,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
             ),
           ],
         ),

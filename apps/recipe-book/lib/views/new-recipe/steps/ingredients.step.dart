@@ -7,14 +7,10 @@ import 'package:ui/ui.dart';
 
 class IngredientsStep extends StatefulWidget {
   FormGroup formGroup;
-  VoidCallback tapForward;
-  VoidCallback tapBack;
 
   IngredientsStep({
     super.key,
     required this.formGroup,
-    required this.tapForward,
-    required this.tapBack,
   });
 
   @override
@@ -287,57 +283,28 @@ class IngredientsStepState extends State<IngredientsStep> {
 
   Widget buildMobile(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height * 0.75,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
             TableShared<IngredientModel>(fields: fields, data: _ingredients),
-            ReactiveFormConsumer(builder: (context, form, child) {
-              return Align(
-                alignment: Alignment.bottomCenter,
-                child: Wrap(
-                  spacing: 30,
-                  children: [
-                    ElevatedButton(
-                      onPressed: widget.tapBack,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                        child: CText(
-                          "Prior Step",
-                          textLevel: EText.button,
-                        ),
-                      ),
-                    ),
-                    FloatingActionButton(
-                      onPressed: () => _addIngredientDialogBuilder(context),
-                      child: Icon(
-                        Icons.playlist_add,
-                        size: 30,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: (form.control('ingredients') as FormGroup)
-                                  .control('items')
-                                  .value
-                                  .length ==
-                              0
-                          ? null
-                          : widget.tapForward,
-                      // onPressed: widget.tapForward,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                        child: CText(
-                          "Next Step",
-                          textLevel: EText.button,
-                        ),
-                      ),
-                    )
-                  ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton.extended(
+                onPressed: () => _addIngredientDialogBuilder(context),
+                elevation: 3,
+                label: CText(
+                  "Add Ingredient",
+                  textLevel: EText.button,
                 ),
-              );
-            })
+                icon: Icon(
+                  Icons.playlist_add,
+                  size: 30,
+                ),
+              ),
+            ),
           ],
         ),
       ),
