@@ -29,6 +29,7 @@ class RecipeTabState extends State<RecipeTab> {
   }
 
   getRecipeBook() async {
+    print(widget.recipe.recipeBook!);
     await recipeBookService.getRecipeBook(widget.recipe.recipeBook!).then((result) {
       setState(() {
         recipeBook = result;

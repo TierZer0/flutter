@@ -20,7 +20,8 @@ class _RecipesService {
     return recipesRef.doc(id).update(recipe.toFirestore());
   }
 
-  Future<void> deleteRecipe(String id) {
+  Future<void> deleteRecipe(String id, RecipeModel recipe) {
+    recipeBookService.removeRecipeFromRecipeBook(id, recipe.recipeBook!);
     return recipesRef.doc(id).delete();
   }
 

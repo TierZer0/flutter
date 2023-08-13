@@ -8,10 +8,7 @@ import 'package:ui/ui.dart';
 class InstructionsStep extends StatefulWidget {
   FormGroup formGroup;
 
-  VoidCallback tapForward;
-  VoidCallback tapBack;
-
-  InstructionsStep({required this.formGroup, required this.tapForward, required this.tapBack});
+  InstructionsStep({required this.formGroup});
 
   @override
   _InstructionsStepState createState() => _InstructionsStepState();
@@ -205,59 +202,28 @@ class _InstructionsStepState extends State<InstructionsStep> {
 
   Widget buildMobile(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height * 0.75,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
             TableShared<InstructionModel>(fields: fields, data: _instructions),
-            ReactiveFormConsumer(
-              builder: (context, form, child) {
-                return Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Wrap(
-                    spacing: 30,
-                    children: [
-                      ElevatedButton(
-                        onPressed: widget.tapBack,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CText(
-                            "Prior Step",
-                            textLevel: EText.button,
-                          ),
-                        ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () => _addInstructionDialogBuilder(context),
-                        child: Icon(
-                          Icons.playlist_add,
-                          size: 30,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: (form.control('instructions') as FormGroup)
-                                    .control('steps')
-                                    .value
-                                    .length ==
-                                0
-                            ? null
-                            : widget.tapForward,
-                        // onPressed: widget.tapForward,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                          child: CText(
-                            "Next Step",
-                            textLevel: EText.button,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton.extended(
+                onPressed: () => _addInstructionDialogBuilder(context),
+                elevation: 3,
+                icon: Icon(
+                  Icons.playlist_add,
+                  size: 30,
+                ),
+                label: CText(
+                  "Add Instruction",
+                  textLevel: EText.button,
+                ),
+              ),
+            )
           ],
         ),
       ),

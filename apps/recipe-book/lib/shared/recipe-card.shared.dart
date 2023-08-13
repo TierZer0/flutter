@@ -33,38 +33,50 @@ class RecipeCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CText(
-                recipe.title!,
-                textLevel: EText.title,
-                weight: FontWeight.bold,
-              ),
               useImage
-                  ? Container(
-                      height: 125,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            5.0,
+                  ? CustomCard(
+                      card: cardType,
+                      child: Container(
+                        height: 125,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              5.0,
+                            ),
                           ),
-                        ),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: new NetworkImage(
-                            recipe.image!,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: new NetworkImage(
+                              recipe.image!,
+                            ),
                           ),
                         ),
                       ),
                     )
                   : SizedBox.shrink(),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: CText(
+                  recipe.title!,
+                  textLevel: EText.title,
+                  weight: FontWeight.bold,
+                ),
+              ),
               recipe.category != '' || recipe.description != ''
-                  ? CText(
-                      recipe.category ?? recipe.description!,
-                      textLevel: EText.title2,
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: CText(
+                        recipe.category ?? recipe.description!,
+                        textLevel: EText.title2,
+                      ),
                     )
                   : SizedBox.shrink(),
-              CText(
-                recipe.likes.toString() + ' likes',
-                textLevel: EText.subtitle,
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: CText(
+                  recipe.likes.toString() + ' likes',
+                  textLevel: EText.subtitle,
+                ),
               ),
             ],
           ),
