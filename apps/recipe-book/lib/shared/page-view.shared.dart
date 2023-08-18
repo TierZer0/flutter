@@ -34,34 +34,23 @@ class PageViewShared extends StatelessWidget {
         ),
       );
     } else if (titleWidget == null && title == null) {
-      throw ErrorWidget(
-          "[PageViewShared] titleWidget and title cannot both be null");
+      throw ErrorWidget("[PageViewShared] titleWidget and title cannot both be null");
     }
-
     if (subtitleWidget == null && subtitle != null) {
       subtitleWidget = CText(
         subtitle!,
         textLevel: EText.title2,
       );
     } else if (subtitleWidget == null && subtitle == null) {
-      throw ErrorWidget(
-          "[PageViewShared] subtitleWidget and subtitle cannot both be null");
+      throw ErrorWidget("[PageViewShared] subtitleWidget and subtitle cannot both be null");
     }
-
-    // if (imageWidget == null && image != null) {
-    //   imageWidget = Image.asset(image!);
-    // } else if (imageWidget == null && image == null) {
-    //   throw ErrorWidget(
-    //       "[PageViewShared] imageWidget and image cannot both be null");
-    // }
     if (bodyWidget == null && body != null) {
       bodyWidget = CText(
         body!,
         textLevel: EText.body,
       );
     } else if (bodyWidget == null && body == null) {
-      throw ErrorWidget(
-          "[PageViewShared] bodyWidget and body cannot both be null");
+      throw ErrorWidget("[PageViewShared] bodyWidget and body cannot both be null");
     }
   }
 

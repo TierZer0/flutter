@@ -65,7 +65,128 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   Widget buildDesktop(BuildContext context) {
-    return Container();
+    final controller = PageController(
+      viewportFraction: 1,
+      keepPage: true,
+      initialPage: 0,
+    );
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    _handlePageChange(bool forward) {
+      forward
+          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
+          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
+    }
+
+    _determinePageValid() {
+      if (controller.page == 0) {
+        return true;
+      } else if (controller.page == 1) {
+        return formGroup.control('UserLogin').valid;
+      } else if (controller.page == 2) {
+        return formGroup.control('UserSettings').valid;
+      } else if (controller.page == 3) {
+        return formGroup.control('Categories.items').value.length >= 3;
+      } else if (controller.page == 4) {
+        return formGroup.control('RecipeBooks.items').value.length >= 3;
+      } else {
+        return true;
+      }
+    }
+
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: ReactiveForm(
+        formGroup: formGroup,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                ),
+                child: ReactiveFormConsumer(
+                  builder: (context, formGroup, child) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_up_outlined,
+                            size: 35,
+                          ),
+                          onPressed: () => _handlePageChange(false),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Center(
+                          child: SmoothPageIndicator(
+                            axisDirection: Axis.vertical,
+                            controller: controller,
+                            count: !widget.isSSO ? 6 : 5,
+                            effect: ExpandingDotsEffect(
+                              activeDotColor: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            size: 35,
+                          ),
+                          onPressed: () => _handlePageChange(true),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 11,
+              child: PageView(
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
+                controller: controller,
+                children: !widget.isSSO
+                    ? [
+                        WelcomeStep(),
+                        UserLoginStep(),
+                        UserSettingsStep(),
+                        CategoriesStep(
+                          formGroup: formGroup.control('Categories') as FormGroup,
+                        ),
+                        RecipeBooksStep(
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
+                        ),
+                        FinalStep(),
+                      ]
+                    : [
+                        WelcomeStep(),
+                        UserSettingsStep(),
+                        CategoriesStep(
+                          formGroup: formGroup.control('Categories') as FormGroup,
+                        ),
+                        RecipeBooksStep(
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
+                        ),
+                        FinalStep()
+                      ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildMobile(BuildContext context) {
@@ -101,7 +222,7 @@ class _CreateAccountState extends State<CreateAccount> {
       }
     }
 
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: ReactiveForm(
@@ -153,7 +274,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         Expanded(
                           flex: 1,
                           child: IconButton(
-                            icon: Icon(Icons.arrow_back_ios),
+                            icon: Icon(Icons.keyboard_arrow_left_outlined),
                             onPressed: () => _handlePageChange(false),
                           ),
                         ),
@@ -172,7 +293,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         Expanded(
                           flex: 1,
                           child: IconButton(
-                            icon: Icon(Icons.arrow_forward_ios),
+                            icon: Icon(Icons.keyboard_arrow_right_outlined),
                             onPressed: _determinePageValid() ? () => _handlePageChange(true) : null,
                           ),
                         ),
