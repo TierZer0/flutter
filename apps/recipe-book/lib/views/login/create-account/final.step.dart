@@ -7,6 +7,7 @@ import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/page-view.shared.dart';
+import 'package:recipe_book/assets.dart';
 
 import '../../../app_model.dart';
 import '../../../services/logging.service.dart';
@@ -17,12 +18,16 @@ class FinalStep extends StatelessWidget {
 
   _handleCreateAccount(FormGroup _formGroup, BuildContext context) async {
     final FormGroup userLogin = _formGroup.control('UserLogin') as FormGroup;
-    final FormGroup userSettings = _formGroup.control('UserSettings') as FormGroup;
+    final FormGroup userSettings =
+        _formGroup.control('UserSettings') as FormGroup;
     final FormGroup categories = _formGroup.control('Categories') as FormGroup;
-    final FormGroup recipeBooks = _formGroup.control('RecipeBooks') as FormGroup;
+    final FormGroup recipeBooks =
+        _formGroup.control('RecipeBooks') as FormGroup;
 
-    AuthenticationResult<User> result = await authenticationService.createEmailAccount(
-        userLogin.control('Email').value, userLogin.control('Password').value);
+    AuthenticationResult<User> result =
+        await authenticationService.createEmailAccount(
+            userLogin.control('Email').value,
+            userLogin.control('Password').value);
 
     if (result.success) {
       UserModel user = new UserModel(
@@ -54,7 +59,7 @@ class FinalStep extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/recipebook-logo.png"),
+              image: AssetImage(ASSETS.RecipeBookLogo),
             ),
           ),
         ),

@@ -5,16 +5,15 @@ import 'package:recipe_book/views/login/create-account/categories.step.dart';
 import 'package:recipe_book/views/login/create-account/final.step.dart';
 import 'package:recipe_book/views/login/create-account/recipe-books.step.dart';
 import 'package:recipe_book/views/login/create-account/welcome.step.dart';
-// import 'package:introduction_screen/introduction_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ui/general/text.custom.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
-import 'package:ui/ui.dart';
 
 import 'create-account/user-login.step.dart';
 import 'create-account/user-settings.step.dart';
 
 class CreateAccount extends StatefulWidget {
-  bool isSSO = false;
+  final bool isSSO;
 
   CreateAccount({super.key, this.isSSO = false});
 
@@ -36,7 +35,8 @@ class _CreateAccountState extends State<CreateAccount> {
     }),
     'UserSettings': FormGroup({
       'Name': FormControl<String>(validators: [Validators.required]),
-      'DefaultTheme': FormControl<bool>(value: false, validators: [Validators.required]),
+      'DefaultTheme':
+          FormControl<bool>(value: false, validators: [Validators.required]),
       // TO DO GET MORE USER SETTINGS
     }),
     'Categories': FormGroup({
@@ -64,36 +64,58 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  int _currentStep = 3;
+
   Widget buildDesktop(BuildContext context) {
-    final controller = PageController(
-      viewportFraction: 1,
-      keepPage: true,
-      initialPage: 0,
-    );
-
-    controller.addListener(() {
-      setState(() {});
-    });
-
-    _handlePageChange(bool forward) {
-      forward
-          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
-          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
-    }
-
-    _determinePageValid() {
-      if (controller.page == 0) {
-        return true;
-      } else if (controller.page == 1) {
-        return formGroup.control('UserLogin').valid;
-      } else if (controller.page == 2) {
-        return formGroup.control('UserSettings').valid;
-      } else if (controller.page == 3) {
-        return formGroup.control('Categories.items').value.length >= 3;
-      } else if (controller.page == 4) {
-        return formGroup.control('RecipeBooks.items').value.length >= 3;
-      } else {
-        return true;
+    _handleStepContinue() {
+      switch (_currentStep) {
+        case 0:
+          setState(() {
+            _currentStep++;
+          });
+          break;
+        case 1:
+          final _group = formGroup.control('UserLogin');
+          if (_group.valid) {
+            setState(() {
+              _currentStep++;
+            });
+          } else {
+            _group.markAllAsTouched();
+            //snackbar
+          }
+          break;
+        case 2:
+          final _group = formGroup.control('UserSettings');
+          if (_group.valid) {
+            setState(() {
+              _currentStep++;
+            });
+          } else {
+            _group.markAllAsTouched();
+            //snackbar
+          }
+          break;
+        case 3:
+          if (formGroup.control('Categories.items').value.length >= 3) {
+            setState(() {
+              _currentStep++;
+            });
+          } else {
+            //snackbar
+          }
+          break;
+        case 4:
+          if (formGroup.control('RecipeBooks.items').value.length >= 3) {
+            setState(() {
+              _currentStep++;
+            });
+          } else {
+            //snackbar
+          }
+          break;
+        case 5:
+          break;
       }
     }
 
@@ -102,88 +124,81 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       body: ReactiveForm(
         formGroup: formGroup,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                child: ReactiveFormConsumer(
-                  builder: (context, formGroup, child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.keyboard_arrow_up_outlined,
-                            size: 35,
-                          ),
-                          onPressed: () => _handlePageChange(false),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Center(
-                          child: SmoothPageIndicator(
-                            axisDirection: Axis.vertical,
-                            controller: controller,
-                            count: !widget.isSSO ? 6 : 5,
-                            effect: ExpandingDotsEffect(
-                              activeDotColor: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            size: 35,
-                          ),
-                          onPressed: () => _handlePageChange(true),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 11,
-              child: PageView(
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                controller: controller,
-                children: !widget.isSSO
-                    ? [
-                        WelcomeStep(),
-                        UserLoginStep(),
-                        UserSettingsStep(),
-                        CategoriesStep(
-                          formGroup: formGroup.control('Categories') as FormGroup,
-                        ),
-                        RecipeBooksStep(
-                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
-                        ),
-                        FinalStep(),
-                      ]
-                    : [
-                        WelcomeStep(),
-                        UserSettingsStep(),
-                        CategoriesStep(
-                          formGroup: formGroup.control('Categories') as FormGroup,
-                        ),
-                        RecipeBooksStep(
-                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
-                        ),
-                        FinalStep()
-                      ],
-              ),
-            ),
-          ],
+        child: Stepper(
+          currentStep: _currentStep,
+          type: StepperType.vertical,
+          onStepCancel: () {
+            if (_currentStep > 0) {
+              setState(() {
+                _currentStep--;
+              });
+            }
+          },
+          onStepContinue: () => _handleStepContinue(),
+          steps: !widget.isSSO
+              ? <Step>[
+                  Step(
+                    title: CText(
+                      'Welcome',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      alignment: Alignment.topLeft,
+                      child: WelcomeStep(),
+                    ),
+                  ),
+                  Step(
+                    title: CText(
+                      'Create Login',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      child: UserLoginStep(),
+                    ),
+                  ),
+                  Step(
+                    title: CText(
+                      'Add User Settings',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      child: UserSettingsStep(),
+                    ),
+                  ),
+                  Step(
+                    title: CText(
+                      'Create Categories',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      child: CategoriesStep(
+                        formGroup: formGroup.control('Categories') as FormGroup,
+                      ),
+                    ),
+                  ),
+                  Step(
+                    title: CText(
+                      'Create Recipe Books',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      child: RecipeBooksStep(
+                        formGroup:
+                            formGroup.control('RecipeBooks') as FormGroup,
+                      ),
+                    ),
+                  ),
+                  Step(
+                    title: CText(
+                      'Create Account',
+                      textLevel: EText.button,
+                    ),
+                    content: Align(
+                      child: FinalStep(),
+                    ),
+                  ),
+                ]
+              : [],
         ),
       ),
     );
@@ -202,10 +217,13 @@ class _CreateAccountState extends State<CreateAccount> {
 
     _handlePageChange(bool forward) {
       forward
-          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
-          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
+          ? controller.nextPage(
+              duration: Duration(milliseconds: 250), curve: Curves.linear)
+          : controller.previousPage(
+              duration: Duration(milliseconds: 250), curve: Curves.linear);
     }
 
+    // TODO: Does not work for isSSO true
     _determinePageValid() {
       if (controller.page == 0) {
         return true;
@@ -240,10 +258,12 @@ class _CreateAccountState extends State<CreateAccount> {
                         UserLoginStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup: formGroup.control('Categories') as FormGroup,
+                          formGroup:
+                              formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup:
+                              formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep(),
                       ]
@@ -251,10 +271,12 @@ class _CreateAccountState extends State<CreateAccount> {
                         WelcomeStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup: formGroup.control('Categories') as FormGroup,
+                          formGroup:
+                              formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup:
+                              formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep()
                       ],
@@ -294,7 +316,9 @@ class _CreateAccountState extends State<CreateAccount> {
                           flex: 1,
                           child: IconButton(
                             icon: Icon(Icons.keyboard_arrow_right_outlined),
-                            onPressed: _determinePageValid() ? () => _handlePageChange(true) : null,
+                            onPressed: _determinePageValid()
+                                ? () => _handlePageChange(true)
+                                : null,
                           ),
                         ),
                       ],

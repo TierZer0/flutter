@@ -24,7 +24,7 @@ class AppModel extends ChangeNotifier {
   }
 
   //CURRENT THEME state
-  bool _theme = false;
+  bool _theme = true;
   bool get theme => _theme;
   set theme(bool value) {
     _theme = value;

@@ -4,6 +4,7 @@ import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/shared/page-view.shared.dart';
 import 'package:ui/general/text.custom.dart';
 import 'package:ui/inputs/reactive-input.custom.dart';
+import 'package:recipe_book/assets.dart';
 
 class RecipeBooksStep extends StatelessWidget {
   final FormGroup formGroup;
@@ -89,7 +90,7 @@ class RecipeBooksStep extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/recipebook-logo.png"),
+            image: AssetImage(ASSETS.RecipeBookLogo),
           ),
         ),
       ),
