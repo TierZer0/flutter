@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ui/general/text.custom.dart';
+import 'package:ui/layout/responsive-widget.custom.dart';
 
 class PageViewShared extends StatelessWidget {
   String? title;
@@ -13,6 +14,8 @@ class PageViewShared extends StatelessWidget {
   String? body;
   Widget? bodyWidget;
 
+  Widget spacingWidget;
+
   PageViewShared({
     super.key,
     this.title,
@@ -23,6 +26,7 @@ class PageViewShared extends StatelessWidget {
     this.imageWidget,
     this.body,
     this.bodyWidget,
+    this.spacingWidget = const SizedBox.shrink(),
   }) {
     if (titleWidget == null && title != null) {
       titleWidget = CText(
@@ -37,7 +41,6 @@ class PageViewShared extends StatelessWidget {
       throw ErrorWidget(
           "[PageViewShared] titleWidget and title cannot both be null");
     }
-
     if (subtitleWidget == null && subtitle != null) {
       subtitleWidget = CText(
         subtitle!,
@@ -47,13 +50,6 @@ class PageViewShared extends StatelessWidget {
       throw ErrorWidget(
           "[PageViewShared] subtitleWidget and subtitle cannot both be null");
     }
-
-    // if (imageWidget == null && image != null) {
-    //   imageWidget = Image.asset(image!);
-    // } else if (imageWidget == null && image == null) {
-    //   throw ErrorWidget(
-    //       "[PageViewShared] imageWidget and image cannot both be null");
-    // }
     if (bodyWidget == null && body != null) {
       bodyWidget = CText(
         body!,
@@ -67,21 +63,45 @@ class PageViewShared extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
+    return ResponsiveWidget(
+      desktopScreen: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
+          horizontal: 0.0,
         ),
-        child: Wrap(
-          runAlignment: WrapAlignment.center,
-          alignment: WrapAlignment.center,
-          runSpacing: 15.0,
-          children: [
-            imageWidget ?? SizedBox.shrink(),
-            titleWidget!,
-            subtitleWidget!,
-            bodyWidget!,
-          ],
+        child: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              imageWidget ?? SizedBox.shrink(),
+              spacingWidget,
+              titleWidget!,
+              subtitleWidget!,
+              spacingWidget,
+              bodyWidget!,
+            ],
+          ),
+        ),
+      ),
+      mobileScreen: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30.0,
+          ),
+          child: Wrap(
+            runAlignment: WrapAlignment.center,
+            alignment: WrapAlignment.center,
+            runSpacing: 15.0,
+            children: [
+              imageWidget ?? SizedBox.shrink(),
+              spacingWidget,
+              titleWidget!,
+              subtitleWidget!,
+              spacingWidget,
+              bodyWidget!,
+            ],
+          ),
         ),
       ),
     );

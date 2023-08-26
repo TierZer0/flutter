@@ -57,6 +57,8 @@ class LoggingService {
         break;
     }
 
+    final width = MediaQuery.of(context).size.width;
+
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         action: snackbar.actionLabel != null
@@ -88,7 +90,7 @@ class LoggingService {
           ],
         ),
         duration: Duration(milliseconds: snackbar.type == ELogging.error ? 2500 : 1500),
-        width: MediaQuery.of(context).size.width * .9,
+        width: width > 1200 ? width * .35 : width * .9,
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(

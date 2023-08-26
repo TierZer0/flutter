@@ -26,8 +26,7 @@ class LoginPageState extends State<LoginPage> {
 
   final form = FormGroup({
     'email': FormControl(validators: [Validators.required, Validators.email]),
-    'password':
-        FormControl(validators: [Validators.required, Validators.minLength(8)]),
+    'password': FormControl(validators: [Validators.required, Validators.minLength(8)]),
   });
 
   get email => form.control('email').value;
@@ -62,9 +61,7 @@ class LoginPageState extends State<LoginPage> {
             ISnackbar(type: ELogging.success, message: value.message!),
           );
           context.read<AppModel>().uid = value.payload!.uid;
-          value.newUser
-              ? context.go('login/createAccount/${true}')
-              : context.go('/');
+          value.newUser ? context.go('login/createAccount/${true}') : context.go('/');
         } else {
           loggingService.triggerSnackbar(
             context,
@@ -82,7 +79,7 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        elevation: 10,
+        elevation: 0,
         toolbarHeight: 150.0,
         title: Column(
           children: [
@@ -159,8 +156,7 @@ class LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       textColor: theme.colorScheme.onBackground,
                       validationMessages: {
-                        'minLength': (p1) =>
-                            'Password must be atleast 8 characters',
+                        'minLength': (p1) => 'Password must be atleast 8 characters',
                         'required': (p1) => 'Password is required'
                       },
                     ),
@@ -170,17 +166,14 @@ class LoginPageState extends State<LoginPage> {
                           spacing: 25,
                           children: [
                             ElevatedButton(
-                              onPressed: form.invalid
-                                  ? null
-                                  : () => _handleEmailLogin(context),
+                              onPressed: form.invalid ? null : () => _handleEmailLogin(context),
                               child: CText(
                                 "Login",
                                 textLevel: EText.button,
                               ),
                             ),
                             TextButton(
-                              onPressed: () =>
-                                  context.replace('/login/createAccount/false'),
+                              onPressed: () => context.replace('/login/createAccount/false'),
                               child: CText(
                                 "Create Account",
                                 textLevel: EText.button,
@@ -201,12 +194,10 @@ class LoginPageState extends State<LoginPage> {
                           child: OutlinedButton(
                             onPressed: () => _handleGoogleSSO(context),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10.0),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
                               child: Center(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     FaIcon(
                                       FontAwesomeIcons.google,
