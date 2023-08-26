@@ -22,59 +22,68 @@ class _CategoriesStepState extends State<CategoriesStep> {
     return showDialog(
       context: context,
       builder: (context) {
-        final width = MediaQuery.of(context).size.width;
-        final theme = Theme.of(context);
-        return AlertDialog(
-          title: CText(
-            'Add Category',
-            textLevel: EText.title2,
-          ),
-          content: SizedBox(
-            width: width,
-            child: ReactiveForm(
-              formGroup: widget.formGroup,
-              child: Wrap(
-                children: [
-                  CustomReactiveInput(
-                    formName: 'Category',
-                    label: 'Category',
-                    textColor: theme.colorScheme.onBackground,
-                    inputAction: TextInputAction.done,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final width;
+            if (constraints.maxWidth >= 1200) {
+              width = MediaQuery.of(context).size.width * .3;
+            } else {
+              width = MediaQuery.of(context).size.width;
+            }
+
+            final theme = Theme.of(context);
+            return AlertDialog(
+              title: CText(
+                'Add Category',
+                textLevel: EText.title2,
+              ),
+              content: SizedBox(
+                width: width,
+                child: ReactiveForm(
+                  formGroup: widget.formGroup,
+                  child: Wrap(
+                    children: [
+                      CustomReactiveInput(
+                        formName: 'Category',
+                        label: 'Category',
+                        textColor: theme.colorScheme.onBackground,
+                        inputAction: TextInputAction.done,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: CText(
-                'Cancel',
-                textLevel: EText.button,
-              ),
-            ),
-            FilledButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    theme.colorScheme.secondary),
-              ),
-              onPressed: () {
-                widget.formGroup
-                    .control('items')
-                    .value
-                    .add(widget.formGroup.control('Category').value);
-                widget.formGroup.control('Category').reset();
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-              child: CText(
-                'Add',
-                textLevel: EText.button,
-              ),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: CText(
+                    'Cancel',
+                    textLevel: EText.button,
+                  ),
+                ),
+                FilledButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.secondary),
+                  ),
+                  onPressed: () {
+                    widget.formGroup
+                        .control('items')
+                        .value
+                        .add(widget.formGroup.control('Category').value);
+                    widget.formGroup.control('Category').reset();
+                    setState(() {});
+                    Navigator.of(context).pop();
+                  },
+                  child: CText(
+                    'Add',
+                    textLevel: EText.button,
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -96,11 +105,12 @@ class _CategoriesStepState extends State<CategoriesStep> {
           ASSETS.RecipeBookLogo,
           height: 75,
         ),
-        bodyWidget: Wrap(
-          runSpacing: 20,
-          children: [
-            Center(
-              child: ElevatedButton(
+        bodyWidget: SizedBox(
+          width: MediaQuery.of(context).size.width * .3,
+          child: Wrap(
+            runSpacing: 20,
+            children: [
+              ElevatedButton(
                 onPressed: () => _categoryDialogBuilder(context: context),
                 style: ButtonStyle(
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
@@ -115,43 +125,33 @@ class _CategoriesStepState extends State<CategoriesStep> {
                   textLevel: EText.button,
                 ),
               ),
-            ),
-            ReactiveFormConsumer(
-              builder: (context, _formGroup, child) {
-                return SizedBox(
-                  height: 200,
-                  child: ListView.builder(
-                    itemCount: _formGroup
-                        .control('${formGroupName}.items')
-                        .value
-                        .length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: CText(
-                          _formGroup
-                              .control('${formGroupName}.items')
-                              .value[index],
-                          textLevel: EText.body,
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            _formGroup
-                                .control('${formGroupName}.items')
-                                .value
-                                .removeAt(index);
-                            _formGroup
-                                .control('${formGroupName}.items')
-                                .markAsDirty();
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            )
-          ],
+              ReactiveFormConsumer(
+                builder: (context, _formGroup, child) {
+                  return SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                      itemCount: _formGroup.control('${formGroupName}.items').value.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: CText(
+                            _formGroup.control('${formGroupName}.items').value[index],
+                            textLevel: EText.body,
+                          ),
+                          trailing: IconButton(
+                            onPressed: () {
+                              _formGroup.control('${formGroupName}.items').value.removeAt(index);
+                              _formGroup.control('${formGroupName}.items').markAsDirty();
+                            },
+                            icon: Icon(Icons.delete),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
         ),
       ),
       mobileScreen: PageViewShared(
@@ -192,27 +192,17 @@ class _CategoriesStepState extends State<CategoriesStep> {
                 return SizedBox(
                   height: 200,
                   child: ListView.builder(
-                    itemCount: _formGroup
-                        .control('${formGroupName}.items')
-                        .value
-                        .length,
+                    itemCount: _formGroup.control('${formGroupName}.items').value.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: CText(
-                          _formGroup
-                              .control('${formGroupName}.items')
-                              .value[index],
+                          _formGroup.control('${formGroupName}.items').value[index],
                           textLevel: EText.body,
                         ),
                         trailing: IconButton(
                           onPressed: () {
-                            _formGroup
-                                .control('${formGroupName}.items')
-                                .value
-                                .removeAt(index);
-                            _formGroup
-                                .control('${formGroupName}.items')
-                                .markAsDirty();
+                            _formGroup.control('${formGroupName}.items').value.removeAt(index);
+                            _formGroup.control('${formGroupName}.items').markAsDirty();
                           },
                           icon: Icon(Icons.delete),
                         ),

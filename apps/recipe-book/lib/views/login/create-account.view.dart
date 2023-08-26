@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/recipe.models.dart';
+import 'package:recipe_book/services/logging.service.dart';
 import 'package:recipe_book/views/login/create-account/categories.step.dart';
 import 'package:recipe_book/views/login/create-account/final.step.dart';
 import 'package:recipe_book/views/login/create-account/recipe-books.step.dart';
@@ -35,8 +36,7 @@ class _CreateAccountState extends State<CreateAccount> {
     }),
     'UserSettings': FormGroup({
       'Name': FormControl<String>(validators: [Validators.required]),
-      'DefaultTheme':
-          FormControl<bool>(value: false, validators: [Validators.required]),
+      'DefaultTheme': FormControl<bool>(value: false, validators: [Validators.required]),
       // TO DO GET MORE USER SETTINGS
     }),
     'Categories': FormGroup({
@@ -64,9 +64,16 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  int _currentStep = 3;
+  int _currentStep = 0;
 
   Widget buildDesktop(BuildContext context) {
+    _triggerErrorSnackbar() {
+      loggingService.triggerSnackbar(
+        context,
+        ISnackbar(type: ELogging.error, message: "Fill out all fields"),
+      );
+    }
+
     _handleStepContinue() {
       switch (_currentStep) {
         case 0:
@@ -82,7 +89,7 @@ class _CreateAccountState extends State<CreateAccount> {
             });
           } else {
             _group.markAllAsTouched();
-            //snackbar
+            _triggerErrorSnackbar();
           }
           break;
         case 2:
@@ -93,7 +100,7 @@ class _CreateAccountState extends State<CreateAccount> {
             });
           } else {
             _group.markAllAsTouched();
-            //snackbar
+            _triggerErrorSnackbar();
           }
           break;
         case 3:
@@ -102,7 +109,7 @@ class _CreateAccountState extends State<CreateAccount> {
               _currentStep++;
             });
           } else {
-            //snackbar
+            _triggerErrorSnackbar();
           }
           break;
         case 4:
@@ -111,7 +118,7 @@ class _CreateAccountState extends State<CreateAccount> {
               _currentStep++;
             });
           } else {
-            //snackbar
+            _triggerErrorSnackbar();
           }
           break;
         case 5:
@@ -119,9 +126,13 @@ class _CreateAccountState extends State<CreateAccount> {
       }
     }
 
-    final theme = Theme.of(context);
-
     return Scaffold(
+      appBar: AppBar(
+        title: CText(
+          'Create Account',
+          textLevel: EText.title2,
+        ),
+      ),
       body: ReactiveForm(
         formGroup: formGroup,
         child: Stepper(
@@ -183,8 +194,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     ),
                     content: Align(
                       child: RecipeBooksStep(
-                        formGroup:
-                            formGroup.control('RecipeBooks') as FormGroup,
+                        formGroup: formGroup.control('RecipeBooks') as FormGroup,
                       ),
                     ),
                   ),
@@ -217,10 +227,8 @@ class _CreateAccountState extends State<CreateAccount> {
 
     _handlePageChange(bool forward) {
       forward
-          ? controller.nextPage(
-              duration: Duration(milliseconds: 250), curve: Curves.linear)
-          : controller.previousPage(
-              duration: Duration(milliseconds: 250), curve: Curves.linear);
+          ? controller.nextPage(duration: Duration(milliseconds: 250), curve: Curves.linear)
+          : controller.previousPage(duration: Duration(milliseconds: 250), curve: Curves.linear);
     }
 
     // TODO: Does not work for isSSO true
@@ -258,12 +266,10 @@ class _CreateAccountState extends State<CreateAccount> {
                         UserLoginStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup:
-                              formGroup.control('Categories') as FormGroup,
+                          formGroup: formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup:
-                              formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep(),
                       ]
@@ -271,12 +277,10 @@ class _CreateAccountState extends State<CreateAccount> {
                         WelcomeStep(),
                         UserSettingsStep(),
                         CategoriesStep(
-                          formGroup:
-                              formGroup.control('Categories') as FormGroup,
+                          formGroup: formGroup.control('Categories') as FormGroup,
                         ),
                         RecipeBooksStep(
-                          formGroup:
-                              formGroup.control('RecipeBooks') as FormGroup,
+                          formGroup: formGroup.control('RecipeBooks') as FormGroup,
                         ),
                         FinalStep()
                       ],
@@ -316,9 +320,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           flex: 1,
                           child: IconButton(
                             icon: Icon(Icons.keyboard_arrow_right_outlined),
-                            onPressed: _determinePageValid()
-                                ? () => _handlePageChange(true)
-                                : null,
+                            onPressed: _determinePageValid() ? () => _handlePageChange(true) : null,
                           ),
                         ),
                       ],

@@ -8,6 +8,7 @@ import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/page-view.shared.dart';
 import 'package:recipe_book/assets.dart';
+import 'package:ui/layout/responsive-widget.custom.dart';
 
 import '../../../app_model.dart';
 import '../../../services/logging.service.dart';
@@ -18,16 +19,12 @@ class FinalStep extends StatelessWidget {
 
   _handleCreateAccount(FormGroup _formGroup, BuildContext context) async {
     final FormGroup userLogin = _formGroup.control('UserLogin') as FormGroup;
-    final FormGroup userSettings =
-        _formGroup.control('UserSettings') as FormGroup;
+    final FormGroup userSettings = _formGroup.control('UserSettings') as FormGroup;
     final FormGroup categories = _formGroup.control('Categories') as FormGroup;
-    final FormGroup recipeBooks =
-        _formGroup.control('RecipeBooks') as FormGroup;
+    final FormGroup recipeBooks = _formGroup.control('RecipeBooks') as FormGroup;
 
-    AuthenticationResult<User> result =
-        await authenticationService.createEmailAccount(
-            userLogin.control('Email').value,
-            userLogin.control('Password').value);
+    AuthenticationResult<User> result = await authenticationService.createEmailAccount(
+        userLogin.control('Email').value, userLogin.control('Password').value);
 
     if (result.success) {
       UserModel user = new UserModel(
@@ -51,7 +48,34 @@ class FinalStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageViewShared(
+    return ResponsiveWidget(
+      desktopScreen: PageViewShared(
+        title: 'Ready to start Creating and Sharing Recipes',
+        subtitle: 'Finalize the process by clicking the button below',
+        imageWidget: Image.asset(
+          ASSETS.RecipeBookLogo,
+          height: 75,
+        ),
+        spacingWidget: SizedBox(
+          height: 30.0,
+        ),
+        bodyWidget: ReactiveFormConsumer(
+          builder: (context, _formGroup, child) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width * .3,
+              child: Wrap(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => _handleCreateAccount(_formGroup, context),
+                    child: Text('Get Started'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+      mobileScreen: PageViewShared(
         title: 'Ready to start Creating and Sharing Recipes',
         subtitle: 'Finalize the process by clicking the button below',
         imageWidget: Container(
@@ -76,6 +100,8 @@ class FinalStep extends StatelessWidget {
               ],
             );
           },
-        ));
+        ),
+      ),
+    );
   }
 }
