@@ -12,7 +12,7 @@ import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
-import '../models/recipe.models.dart';
+import '../models/models.dart';
 import '../shared/recipe-preview.shared.dart';
 
 class HomePage extends StatefulWidget {

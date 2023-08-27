@@ -8,7 +8,7 @@ import 'package:recipe_book/pages/profile/tabs/settings.tab.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/ui.dart';
 
-import '../../models/user.models.dart';
+import '../../models/models.dart';
 import '../../services/user/authentication.service.dart';
 
 class ProfileView extends StatefulWidget {

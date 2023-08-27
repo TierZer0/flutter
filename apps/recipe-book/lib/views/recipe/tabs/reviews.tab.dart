@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:ui/ui.dart';
+
+import '../../../models/models.dart';
 
 class ReviewsTab extends StatefulWidget {
   final String? id;

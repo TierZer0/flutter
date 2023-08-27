@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/page-view.shared.dart';
@@ -11,6 +10,7 @@ import 'package:recipe_book/assets.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
 
 import '../../../app_model.dart';
+import '../../../models/models.dart';
 import '../../../services/logging.service.dart';
 import '../../../services/user/profile.service.dart';
 

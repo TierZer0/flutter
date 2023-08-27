@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
 
+import '../../../models/models.dart';
 import '../../../shared/items-grid.shared.dart';
 
 class RecipeTab extends StatefulWidget {

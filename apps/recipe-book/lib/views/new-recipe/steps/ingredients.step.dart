@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/resources.service.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
+
+import '../../../models/models.dart';
 
 class IngredientsStep extends StatefulWidget {
   FormGroup formGroup;

@@ -2,12 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/models/user.models.dart';
 import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/ui.dart';
+
+import '../../../models/models.dart';
 
 class CategoriesTab extends StatefulWidget {
   UserModel user;
@@ -87,8 +87,7 @@ class CategoriesTabState extends State<CategoriesTab> {
             index != null
                 ? FilledButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          theme.colorScheme.error),
+                      backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.error),
                     ),
                     onPressed: () => {
                       profileService.deleteCategory(
@@ -107,8 +106,7 @@ class CategoriesTabState extends State<CategoriesTab> {
                 : SizedBox.shrink(),
             FilledButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    theme.colorScheme.secondary),
+                backgroundColor: MaterialStateProperty.all<Color>(theme.colorScheme.secondary),
               ),
               onPressed: () async {
                 if (formGroup.valid) {
@@ -144,8 +142,7 @@ class CategoriesTabState extends State<CategoriesTab> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final recipes = snapshot.data!.docs;
-              final _recipes =
-                  snapshot.data!.docs.map((e) => e.data()).toList();
+              final _recipes = snapshot.data!.docs.map((e) => e.data()).toList();
               if (_recipes.length == 0) {
                 return Center(
                   child: CText(
@@ -278,8 +275,7 @@ class CategoriesTabState extends State<CategoriesTab> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final recipes = snapshot.data!.docs;
-                      final _recipes =
-                          snapshot.data!.docs.map((e) => e.data()).toList();
+                      final _recipes = snapshot.data!.docs.map((e) => e.data()).toList();
                       if (_recipes.length == 0) {
                         return Center(
                           child: CText(

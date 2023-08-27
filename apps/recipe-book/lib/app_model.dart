@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
+
+import 'models/models.dart';
 
 class AppModel extends ChangeNotifier {
   AppPreferences appPreferences = AppPreferences();

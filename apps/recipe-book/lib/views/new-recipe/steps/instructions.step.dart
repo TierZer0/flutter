@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
+
+import '../../../models/models.dart';
 
 class InstructionsStep extends StatefulWidget {
   FormGroup formGroup;

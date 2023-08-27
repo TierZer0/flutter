@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:ui/general/text.custom.dart';
 
-import '../models/recipe.models.dart';
+import '../models/models.dart';
 import 'items-grid.shared.dart';
 
 class RecipePreviewShared extends StatelessWidget {
