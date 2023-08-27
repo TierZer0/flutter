@@ -14,6 +14,8 @@ class MainView extends StatefulWidget {
 }
 
 class MainViewState extends State<MainView> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -167,52 +169,77 @@ class MainViewState extends State<MainView> {
   Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomInset: true,
-      bottomNavigationBar: NavigationBar(
-        elevation: 0,
-        onDestinationSelected: (int index) {
+      drawer: NavigationDrawer(
+        onDestinationSelected: (value) {
           setState(() {
-            currentPageIndex = index;
+            currentPageIndex = value;
           });
+          Navigator.pop(context);
         },
         selectedIndex: currentPageIndex,
-        destinations: <Widget>[
-          NavigationDestination(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 16, 16, 10),
+            child: CText(
+              'Pages',
+              textLevel: EText.title,
+            ),
+          ),
+          Divider(),
+          NavigationDrawerDestination(
             icon: Icon(
               Icons.groups_2_outlined,
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'Community',
+            label: CText('Community', textLevel: EText.title),
           ),
-          NavigationDestination(
+          NavigationDrawerDestination(
             icon: Icon(
               Icons.book_outlined,
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'My Recipes',
+            label: CText('My Recipes', textLevel: EText.title),
           ),
-          NavigationDestination(
+          NavigationDrawerDestination(
             icon: Icon(
               Icons.favorite_outline,
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'Favorites',
+            label: CText('Favorites', textLevel: EText.title),
           ),
-          NavigationDestination(
+          NavigationDrawerDestination(
             icon: Icon(
               Icons.person_outline_outlined,
               size: 35.0,
               color: theme.colorScheme.onSurface,
             ),
-            label: 'Profile',
+            label: CText('Profile', textLevel: EText.title),
           ),
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+        elevation: 0,
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () => {
+                scaffoldKey.currentState!.openDrawer(),
+              },
+              icon: Icon(
+                Icons.menu_rounded,
+                size: 35.0,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: views[currentPageIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/newRecipe'),
         child: const Icon(

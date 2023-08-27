@@ -159,9 +159,6 @@ class NewPageState extends State<NewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    // _tabController.index = 2;
-
     return LayoutBuilder(builder: (context, constraints) {
       return ResponsiveWidget(
         desktopScreen: buildDesktop(context),
@@ -421,15 +418,17 @@ class NewPageState extends State<NewPage> {
               weight: FontWeight.bold,
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: IconButton(
-                  onPressed: () => _handleDelete(context),
-                  icon: Icon(
-                    Icons.delete_outline_outlined,
-                  ),
-                ),
-              ),
+              widget.id != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: IconButton(
+                        onPressed: () => _handleDelete(context),
+                        icon: Icon(
+                          Icons.delete_outline_outlined,
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
             ],
           ),
           body: Column(
