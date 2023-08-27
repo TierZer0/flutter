@@ -13,6 +13,7 @@ import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
 import '../models/recipe.models.dart';
+import '../shared/recipe-preview.shared.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -205,17 +206,13 @@ class HomePageState extends State<HomePage> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        var theme = Theme.of(context);
         return AlertDialog(
           title: CText(
             recipe.title!,
             textLevel: EText.title2,
           ),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
-            // child: RecipePage(
-            //   recipeId: recipeId,
-            // ),
+          content: RecipePreviewShared(
+            recipe: recipe,
           ),
           actions: [
             TextButton(
