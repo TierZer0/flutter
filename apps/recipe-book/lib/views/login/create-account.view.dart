@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/logging.service.dart';
 import 'package:recipe_book/views/login/create-account/categories.step.dart';
 import 'package:recipe_book/views/login/create-account/final.step.dart';
@@ -10,6 +9,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ui/general/text.custom.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
 
+import '../../models/models.dart';
 import 'create-account/user-login.step.dart';
 import 'create-account/user-settings.step.dart';
 

@@ -3,7 +3,7 @@ import 'package:recipe_book/services/storage.service.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 
-import '../../models/recipe.models.dart';
+import '../../models/models.dart';
 import '../db.service.dart';
 
 class _RecipesService {

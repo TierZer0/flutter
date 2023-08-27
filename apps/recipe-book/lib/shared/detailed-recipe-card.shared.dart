@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/general/card.custom.dart';
+
+import '../models/models.dart';
 
 class DetailedRecipeCard extends StatelessWidget {
   final ECard cardType;

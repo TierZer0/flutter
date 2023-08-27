@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/views/new-recipe/steps/details.step.dart';
@@ -17,6 +16,8 @@ import 'package:recipe_book/views/new-recipe/steps/save.step.dart';
 import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ui/ui.dart';
+
+import '../../models/models.dart';
 
 class NewPage extends StatefulWidget {
   final String? id;

@@ -4,7 +4,7 @@ import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
-import '../../../models/recipe.models.dart';
+import '../../../models/models.dart';
 import '../../../shared/recipe-card.shared.dart';
 
 class MadeFavoritesTab extends StatefulWidget {

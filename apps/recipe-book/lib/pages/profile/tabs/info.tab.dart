@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/models/recipe.models.dart';
-import 'package:recipe_book/models/user.models.dart';
 import 'package:ui/ui.dart';
 
+import '../../../models/models.dart';
 import '../../../shared/items-grid.shared.dart';
 
 class InfoTab extends StatefulWidget {

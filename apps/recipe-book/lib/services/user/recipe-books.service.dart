@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../models/recipe.models.dart';
+import '../../models/models.dart';
 import '../db.service.dart';
 
 class _RecipeBookService {

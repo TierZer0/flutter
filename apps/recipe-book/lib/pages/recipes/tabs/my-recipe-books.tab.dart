@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_book/models/recipe.models.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/recipe-book-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
+
+import '../../../models/models.dart';
 
 class MyRecipeBooksTab extends StatefulWidget {
   final search;
