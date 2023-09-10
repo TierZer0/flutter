@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/recipe-book-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
+import 'package:ui/ui.dart';
 
 import '../../../models/models.dart';
 
@@ -47,24 +48,38 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
                     widget.search.toLowerCase(),
                   ))
               .toList();
-          return GridView.builder(
+
+          return ListView.builder(
             itemCount: _recipeBooks.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              childAspectRatio: 2 / 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
             itemBuilder: (context, index) {
               final RecipeBookModel recipeBook = _recipeBooks[index];
               final String recipeBookId = recipeBooks[index].id;
-              return RecipeBookCard(
-                recipeBook: recipeBook,
-                cardType: ECard.none,
-                onTap: () => context.push('/recipeBook/${recipeBookId}'),
+              return Accordion(
+                title: recipeBook.name!,
+                content: SizedBox(height: 20),
+                expandedSizes: [80, 350],
               );
             },
           );
+          // return GridView.builder(
+          //   itemCount: _recipeBooks.length,
+          //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          //     maxCrossAxisExtent: 200,
+          //     childAspectRatio: 2 / 2,
+          //     crossAxisSpacing: 10,
+          //     mainAxisSpacing: 10,
+          //   ),
+          //   itemBuilder: (context, index) {
+          // final RecipeBookModel recipeBook = _recipeBooks[index];
+          // final String recipeBookId = recipeBooks[index].id;
+          //     return RecipeBookCard(
+          //       recipeBook: recipeBook,
+          //       cardType: ECard.none,
+          //       onTap: () => context.push('/recipeBook/${recipeBookId}'),
+          //     );
+
+          //   },
+          // );
         }
         return Center(
           child: CircularProgressIndicator(),
