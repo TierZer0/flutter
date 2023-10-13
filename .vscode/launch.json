@@ -21,7 +21,7 @@
       "name": "Recipe Book - Android",
       "request": "launch",
       "type": "dart",
-      "deviceId": "29191FDH2000Z4",
+      "deviceId": "37280DLJG00223",
       "flutterMode": "debug",
       "program": "apps/recipe-book/lib/main.dart"
     },

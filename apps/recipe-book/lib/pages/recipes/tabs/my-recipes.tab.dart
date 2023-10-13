@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
+import 'package:ui/general/text.custom.dart';
 
 import '../../../models/models.dart';
 
@@ -27,7 +30,7 @@ class _MyRecipesTabState extends State<MyRecipesTab> {
       } else {
         return Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 10.0,
+            horizontal: 0.0,
           ),
           child: content(),
         );
@@ -43,28 +46,33 @@ class _MyRecipesTabState extends State<MyRecipesTab> {
           var recipes = snapshot.data!.docs;
           List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
           _recipes = _recipes
-              .where((element) => (element.title! as String).toLowerCase().contains(
-                    widget.search.toLowerCase(),
+              .where((element) => (element.title as String).toLowerCase().contains(
+                    context.read<AppModel>().search.toLowerCase(),
                   ))
               .toList();
-          return GridView.builder(
-            itemCount: _recipes.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300,
-              childAspectRatio: 3 / 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 0,
-            ),
-            itemBuilder: (context, index) {
-              final RecipeModel recipe = _recipes[index];
-              final String recipeId = recipes[index].id;
-              return RecipeCard(
-                recipe: recipe,
-                cardType: ECard.elevated,
-                onTap: () => context.push('/recipe/${recipeId}'),
-                useImage: true,
-              );
-            },
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _recipes.length,
+                  itemBuilder: (context, index) {
+                    final RecipeModel recipe = _recipes[index];
+                    final String recipeId = recipes[index].id;
+                    return ListTile(
+                      leading: CircleAvatar(
+                        maxRadius: 40,
+                        foregroundImage: NetworkImage(recipe.image!),
+                      ),
+                      title: CText(recipe.title!),
+                      subtitle: CText(recipe.description!),
+                      onTap: () => context.push('/recipe/${recipeId}'),
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         }
         return Center(

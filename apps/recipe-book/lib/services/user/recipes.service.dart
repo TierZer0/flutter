@@ -49,12 +49,12 @@ class _RecipesService {
 
   Stream<QuerySnapshot<RecipeModel>> recipesInBookStream({List<dynamic> recipeIds = const []}) {
     if (recipeIds.isEmpty) return Stream.empty();
-    return recipesRef.where('id', whereIn: recipeIds).snapshots();
+    return recipesRef.where(FieldPath.documentId, whereIn: recipeIds).snapshots();
   }
 
   Future<QuerySnapshot<RecipeModel>> recipesInBookFuture({List<dynamic> recipeIds = const []}) {
     if (recipeIds.isEmpty) return Future.error(Exception('No recipes in book'));
-    return recipesRef.where('id', whereIn: recipeIds).get();
+    return recipesRef.where(FieldPath.documentId, whereIn: recipeIds).get();
   }
 
   Stream<QuerySnapshot<RecipeModel>> myRecipesStream({filters}) {

@@ -24,7 +24,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //CURRENT THEME state
+  // CURRENT THEME state
   bool _theme = false;
   bool get theme => _theme;
   set theme(bool value) {
@@ -33,7 +33,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //CURRENT RECIPE BOOK state
+  // CURRENT RECIPE BOOK state
   RecipeBookModel _recipeBook = RecipeBookModel(
     name: '',
     recipes: [],
@@ -44,5 +44,13 @@ class AppModel extends ChangeNotifier {
   set recipeBook(RecipeBookModel book) {
     _recipeBook = book;
     //notifyListeners();
+  }
+
+  // CURRENT SEARCH state
+  String _search = '';
+  String get search => _search;
+  set search(String value) {
+    _search = value;
+    notifyListeners();
   }
 }

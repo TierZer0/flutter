@@ -62,7 +62,7 @@ class _MadeFavoritesTabState extends State<MadeFavoritesTab> {
               );
             },
           );
-        } else if (snapshot.error == null) {
+        } else if (snapshot.error == null || snapshot.data == null) {
           return Center(
             child: CText(
               'No recipes found.',

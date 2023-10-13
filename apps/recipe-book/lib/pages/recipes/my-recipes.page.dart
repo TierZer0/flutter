@@ -12,6 +12,8 @@ class RecipesView extends StatefulWidget {
   State<RecipesView> createState() => RecipesViewState();
 }
 
+enum EMyRecipeViews { Recipes, Books }
+
 class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin {
   late TabController _tabController;
   String _search = '';
@@ -41,6 +43,20 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
         return buildMobile(context);
       }
     });
+  }
+
+  EMyRecipeViews _currentView = EMyRecipeViews.Recipes;
+  buildView() {
+    switch (_currentView) {
+      case EMyRecipeViews.Recipes:
+        return MyRecipesTab(
+          search: _search,
+        );
+      case EMyRecipeViews.Books:
+        return MyRecipeBooksTab(
+          search: _search,
+        );
+    }
   }
 
   var _selectedIndex = 0;
@@ -106,56 +122,54 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
     return Scaffold(
       appBar: AppBar(
         notificationPredicate: (ScrollNotification notification) {
-          return notification.depth == 1;
+          return notification.depth >= 0;
         },
-        title: Wrap(
-          runSpacing: 10.0,
-          children: [
-            CText(
-              'My Recipes',
-              textLevel: EText.title,
-              weight: FontWeight.bold,
-            ),
-            SearchBar(
-              elevation: MaterialStateProperty.all(1.0),
-              leading: Icon(Icons.search),
-              hintText: "Search Recipes",
-              controller: _searchController,
-              focusNode: _focusNode,
-              onChanged: (value) {
-                setState(() {
-                  _search = value;
-                });
-              },
-            )
-          ],
+        title: CText(
+          'My Recipes',
+          textLevel: EText.title,
+          weight: FontWeight.bold,
         ),
-        toolbarHeight: 110.0,
         elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          dividerColor: Colors.transparent,
-          tabs: [
-            Tab(
-              text: 'Recipes',
-            ),
-            Tab(
-              text: 'Recipe Books',
-            ),
-          ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 12.0,
+                ),
+                child: SegmentedButton<EMyRecipeViews>(
+                  segments: const <ButtonSegment<EMyRecipeViews>>[
+                    ButtonSegment<EMyRecipeViews>(
+                      value: EMyRecipeViews.Recipes,
+                      label: CText(
+                        'Recipes',
+                        textLevel: EText.button,
+                      ),
+                    ),
+                    ButtonSegment<EMyRecipeViews>(
+                      value: EMyRecipeViews.Books,
+                      label: CText(
+                        'Recipe Books',
+                        textLevel: EText.button,
+                      ),
+                    )
+                  ],
+                  selected: <EMyRecipeViews>{_currentView},
+                  onSelectionChanged: (Set<EMyRecipeViews> newSelection) {
+                    setState(() {
+                      _currentView = newSelection.first;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          MyRecipesTab(
-            search: _search,
-          ),
-          MyRecipeBooksTab(
-            search: _search,
-          ),
-        ],
-      ),
+      body: buildView(),
     );
   }
 }

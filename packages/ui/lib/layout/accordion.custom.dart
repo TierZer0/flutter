@@ -48,7 +48,7 @@ class _AccordionState extends State<Accordion> {
       height: isExpanded ? widget.expandedSizes[1] : widget.expandedSizes[0],
       duration: const Duration(milliseconds: 250),
       child: CustomCard(
-        card: isExpanded ? ECard.elevated : ECard.outlined,
+        card: isExpanded ? ECard.elevated : ECard.filled,
         child: InkWell(
           onTap: _handleExpand,
           child: Padding(

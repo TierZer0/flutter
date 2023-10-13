@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/pages/favorites/favorites.page.dart';
 import 'package:recipe_book/pages/home.page.dart';
 import 'package:recipe_book/pages/profile/profile.page.dart';
@@ -7,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
+import 'package:ui/inputs/reactive-input.custom.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -39,6 +43,56 @@ class MainViewState extends State<MainView> {
         } else {
           return buildMobile(context);
         }
+      },
+    );
+  }
+
+  buildSearchSheet(BuildContext context) {
+    FormControl searchControl = FormControl<String>(value: context.read<AppModel>().search);
+    final theme = Theme.of(context);
+
+    return showModalBottomSheet(
+      showDragHandle: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: ReactiveForm(
+            formGroup: FormGroup({
+              'search': searchControl,
+            }),
+            child: Container(
+              height: 250,
+              padding: EdgeInsets.all(20.0),
+              child: Wrap(
+                runSpacing: 20,
+                children: [
+                  CText(
+                    'Search Recipes',
+                    textLevel: EText.title,
+                  ),
+                  CustomReactiveInput(
+                    inputAction: TextInputAction.done,
+                    formName: 'search',
+                    label: 'Search',
+                    textColor: theme.colorScheme.onSurface,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: FilledButton(
+                      onPressed: () {
+                        context.read<AppModel>().search = searchControl.value;
+                        context.pop();
+                      },
+                      child: CText('Search'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }
@@ -224,18 +278,31 @@ class MainViewState extends State<MainView> {
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
-        child: Row(
-          children: [
-            IconButton(
-              onPressed: () => {
-                scaffoldKey.currentState!.openDrawer(),
-              },
-              icon: Icon(
-                Icons.menu_rounded,
-                size: 35.0,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 5.0,
+          ),
+          child: Wrap(
+            spacing: 10.0,
+            children: [
+              IconButton(
+                onPressed: () => {
+                  scaffoldKey.currentState!.openDrawer(),
+                },
+                icon: Icon(
+                  Icons.menu_rounded,
+                  size: 35.0,
+                ),
               ),
-            ),
-          ],
+              IconButton(
+                onPressed: () => buildSearchSheet(context),
+                icon: Icon(
+                  Icons.search,
+                  size: 30.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: views[currentPageIndex],
