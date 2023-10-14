@@ -1,17 +1,17 @@
-name: RecipeBook_Web_CI
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - apps/recipe-book/**
-      - packages/**
+# name: RecipeBook_Web_CI
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - apps/recipe-book/**
+#       - packages/**
   # pull_request:
   #   branches: 
   #     - main
   #   paths:
   #     - apps/recipe-book/**
-jobs:
+# jobs:
 #   build_web:
 #     name: Build Flutter (web)
 #     runs-on: ubuntu-latest
