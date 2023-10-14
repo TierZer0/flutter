@@ -31,8 +31,8 @@ class _BooksTabState extends State<BooksTab> {
   }
 
   Future<void> _recipeBookDialogBuilder(
-      {required BuildContext context, required RecipeBookModel book, int? index = null}) {
-    if (index != null) {
+      {required BuildContext context, RecipeBookModel? book, int? index = null}) {
+    if (index != null && book != null) {
       form.control('name').value = book.name;
       form.control('description').value = book.description;
       form.control('id').value = book.id;
@@ -370,7 +370,6 @@ class _BooksTabState extends State<BooksTab> {
                     trailing: Icon(Icons.add),
                     onTap: () => _recipeBookDialogBuilder(
                       context: context,
-                      book: _books[index],
                     ),
                   ),
                 );

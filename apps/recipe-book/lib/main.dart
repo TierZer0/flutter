@@ -129,8 +129,7 @@ class AppState extends State<App> {
           ),
         );
 
-        var mode =
-            context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
+        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
