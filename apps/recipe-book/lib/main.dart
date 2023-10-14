@@ -14,8 +14,6 @@ import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
-import 'package:recipe_book/styles/colors.scheme.dart';
-
 void main() async {
   Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
@@ -123,7 +121,7 @@ class AppState extends State<App> {
         SystemChrome.setSystemUIOverlayStyle(
           SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            systemNavigationBarColor: lightColorScheme.primary,
+            systemNavigationBarColor: Color(0xFF006D43),
             statusBarIconBrightness: Brightness.dark,
             systemNavigationBarIconBrightness: Brightness.light,
           ),
@@ -134,13 +132,15 @@ class AppState extends State<App> {
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
           theme: ThemeData(
+            brightness: Brightness.light,
             useMaterial3: true,
-            colorScheme: lightColorScheme,
+            colorSchemeSeed: Color(0xFF006D43),
             fontFamily: 'Lato',
           ),
           darkTheme: ThemeData(
+            brightness: Brightness.dark,
             useMaterial3: true,
-            colorScheme: darkColorScheme,
+            colorSchemeSeed: Color(0xFF006D43),
             fontFamily: 'Lato',
           ),
           themeMode: mode,
