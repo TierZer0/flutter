@@ -33,5 +33,21 @@
       "flutterMode": "debug",
       "program": "apps/niche/lib/main.dart"
     },
+    {
+      "name": "Weather Zero - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "program": "apps/weather_zero/lib/main.dart"
+    },
+    {
+      "name": "Weather Zero - Android",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "37280DLJG00223",
+      "flutterMode": "debug",
+      "program": "apps/weather_zero/lib/main.dart"
+    },
   ]
 }
