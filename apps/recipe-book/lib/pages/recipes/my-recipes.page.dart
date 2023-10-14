@@ -63,6 +63,9 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
   Widget buildDesktop(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (notification) {
+          return notification.depth != 0;
+        },
         backgroundColor: Colors.transparent,
         title: CText(
           'My Recipes',

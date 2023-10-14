@@ -237,18 +237,18 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        return buildDesktop(context);
-      } else {
-        return buildMobile(context);
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   Widget buildDesktop(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (notification) {
+          return notification.depth != 0;
+        },
         backgroundColor: Colors.transparent,
         title: CText(
           'Welcome, What would you like to cook today?',
@@ -317,8 +317,8 @@ class HomePageState extends State<HomePage> {
                       return GridView.builder(
                         itemCount: _recipes.length,
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 300,
-                          childAspectRatio: 3.5 / 3,
+                          maxCrossAxisExtent: 450,
+                          childAspectRatio: 4 / 1.5,
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 10,
                         ),

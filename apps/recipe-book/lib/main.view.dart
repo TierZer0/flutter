@@ -101,6 +101,9 @@ class MainViewState extends State<MainView> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (notification) {
+          return notification.depth != 0;
+        },
         title: CText(
           'Recipe Book',
           textLevel: EText.title2,

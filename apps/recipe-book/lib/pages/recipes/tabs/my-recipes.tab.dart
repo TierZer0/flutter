@@ -6,6 +6,7 @@ import 'package:recipe_book/services/user/recipes.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
+import 'package:ui/layout/responsive-widget.custom.dart';
 
 import '../../../models/models.dart';
 
@@ -21,24 +22,13 @@ class MyRecipesTab extends StatefulWidget {
 class _MyRecipesTabState extends State<MyRecipesTab> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          child: content(),
-        );
-      } else {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 0.0,
-          ),
-          child: content(),
-        );
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
-  Widget content() {
+  Widget buildDesktop(BuildContext context) {
     return StreamBuilder(
       stream: recipesService.myRecipesStream(),
       builder: (context, snapshot) {
@@ -50,7 +40,46 @@ class _MyRecipesTabState extends State<MyRecipesTab> {
                     context.read<AppModel>().search.toLowerCase(),
                   ))
               .toList();
+          return GridView.builder(
+            itemCount: _recipes.length,
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 450,
+              childAspectRatio: 4 / 1.5,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 10,
+            ),
+            itemBuilder: (context, index) {
+              final RecipeModel recipe = _recipes[index];
+              final String recipeId = recipes[index].id;
+              return RecipeCard(
+                recipe: recipe,
+                cardType: ECard.elevated,
+                onTap: () => context.push('/recipe/${recipeId}'),
+                // onLongPress: () => _previewDialog(context, recipe, recipeId, isMobile: false),
+                useImage: true,
+              );
+            },
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
 
+  Widget buildMobile(BuildContext context) {
+    return StreamBuilder(
+      stream: recipesService.myRecipesStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var recipes = snapshot.data!.docs;
+          List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
+          _recipes = _recipes
+              .where((element) => (element.title as String).toLowerCase().contains(
+                    context.read<AppModel>().search.toLowerCase(),
+                  ))
+              .toList();
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

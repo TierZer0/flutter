@@ -8,6 +8,7 @@ class RecipeCard extends StatelessWidget {
   final ECard cardType;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final double? height;
 
   final RecipeModel recipe;
 
@@ -20,6 +21,7 @@ class RecipeCard extends StatelessWidget {
     required this.onTap,
     this.onLongPress = null,
     this.useImage = false,
+    this.height = null,
   });
 
   @override
@@ -31,6 +33,7 @@ class RecipeCard extends StatelessWidget {
         onLongPress: onLongPress,
         child: SizedBox(
           width: 300,
+          height: height,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             child: Row(

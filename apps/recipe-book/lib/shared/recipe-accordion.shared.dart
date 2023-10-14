@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/models.dart';
+import 'package:recipe_book/shared/items-grid.shared.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
@@ -63,67 +65,85 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
   }
 
   Widget buildExpanded() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: _handleExpand,
-          child: SizedBox(
-            height: widget.expandedSizes[0] - 10,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Wrap(
-                      spacing: 10.0,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CText(
-                              recipe.title!,
-                              textLevel: EText.title,
-                            ),
-                            CText(
-                              recipe.description!,
-                              textLevel: EText.title2,
-                            ),
-                          ],
-                        )
-                      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: _handleExpand,
+            child: SizedBox(
+              height: widget.expandedSizes[0] - 10,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 11,
+                      child: Wrap(
+                        spacing: 10.0,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CText(
+                                recipe.title!,
+                                textLevel: EText.title,
+                              ),
+                              CText(
+                                recipe.description!,
+                                textLevel: EText.title2,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  const Expanded(
-                    flex: 5,
-                    child: SizedBox(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Icon(
-                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      size: 30,
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        size: 30,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        CustomCard(
-          card: ECard.elevated,
-          child: Image.network(
-            recipe.image!,
-            width: MediaQuery.of(context).size.width * .5,
-            height: 200,
-            fit: BoxFit.cover,
+          CustomCard(
+            card: ECard.elevated,
+            child: Image.network(
+              recipe.image!,
+              width: MediaQuery.of(context).size.width * .9,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-      ],
+          SizedBox(
+            height: 150,
+            child: FieldGridShared(
+              fields: ['category', 'prepTime', 'cookTime'],
+              data: new Map.from(recipe.toFirestore()),
+            ),
+          ),
+          Expanded(child: SizedBox()),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: FilledButton(
+              onPressed: () => context.push('/recipe/${widget.id}'),
+              child: CText(
+                'View Recipe',
+                textLevel: EText.button,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -143,7 +163,7 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 11,
                       child: Wrap(
                         spacing: 10.0,
                         children: [
@@ -167,10 +187,6 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                           )
                         ],
                       ),
-                    ),
-                    const Expanded(
-                      flex: 5,
-                      child: SizedBox(),
                     ),
                     Expanded(
                       flex: 1,
