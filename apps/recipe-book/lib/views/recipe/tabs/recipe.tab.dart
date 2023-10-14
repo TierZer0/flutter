@@ -19,23 +19,22 @@ enum ERecipeTabs { Details, Ingredients, Instructions }
 
 class RecipeTabState extends State<RecipeTab> {
   ERecipeTabs _currentView = ERecipeTabs.Details;
-  RecipeBookModel? recipeBook;
 
   @override
   void initState() {
     super.initState();
 
-    getRecipeBook();
+    // getRecipeBook();
   }
 
-  getRecipeBook() async {
-    print(widget.recipe.recipeBook!);
-    await recipeBookService.getRecipeBook(widget.recipe.recipeBook!).then((result) {
-      setState(() {
-        recipeBook = result;
-      });
-    });
-  }
+  // getRecipeBook() async {
+  //   print(widget.recipe.recipeBook!);
+  //   await recipeBookService.getRecipeBook(widget.recipe.recipeBook!).then((result) {
+  //     setState(() {
+  //       recipeBook = result;
+  //     });
+  //   });
+  // }
 
   Widget _buildContent(BuildContext context) {
     switch (_currentView) {
@@ -43,11 +42,10 @@ class RecipeTabState extends State<RecipeTab> {
         // if (recipeBook == null) return SizedBox.shrink();
 
         Map data = new Map.from(widget.recipe.toFirestore());
-        data['recipeBook'] = recipeBook?.name ?? '';
         return Container(
           height: 400,
           child: FieldGridShared<RecipeModel>(
-            fields: ['recipeBook', 'category', 'prepTime', 'cookTime'],
+            fields: ['category', 'prepTime', 'cookTime'],
             data: data,
           ),
         );
@@ -83,7 +81,6 @@ class RecipeTabState extends State<RecipeTab> {
   Widget buildDesktop(BuildContext context) {
     var recipe = widget.recipe;
     Map data = new Map.from(widget.recipe.toFirestore());
-    data['recipeBook'] = recipeBook?.name ?? '';
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -127,7 +124,7 @@ class RecipeTabState extends State<RecipeTab> {
                 Container(
                   height: 400,
                   child: FieldGridShared<RecipeModel>(
-                    fields: ['recipeBook', 'category', 'prepTime', 'cookTime'],
+                    fields: ['category', 'prepTime', 'cookTime'],
                     data: data,
                   ),
                 ),

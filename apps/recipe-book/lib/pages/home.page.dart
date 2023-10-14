@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import 'package:recipe_book/services/user/recipes.service.dart';
 
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
+import 'package:recipe_book/shared/recipe-accordion.shared.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 
 import 'package:ui/ui.dart';
@@ -234,18 +237,18 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        return buildDesktop(context);
-      } else {
-        return buildMobile(context);
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   Widget buildDesktop(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        notificationPredicate: (notification) {
+          return notification.depth != 0;
+        },
         backgroundColor: Colors.transparent,
         title: CText(
           'Welcome, What would you like to cook today?',
@@ -314,8 +317,8 @@ class HomePageState extends State<HomePage> {
                       return GridView.builder(
                         itemCount: _recipes.length,
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 300,
-                          childAspectRatio: 3.5 / 3,
+                          maxCrossAxisExtent: 450,
+                          childAspectRatio: 4 / 1.5,
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 10,
                         ),
@@ -383,27 +386,10 @@ class HomePageState extends State<HomePage> {
             ),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(75),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            child: SearchBar(
-              // controller: searchController,
-              elevation: MaterialStatePropertyAll(1.0),
-              leading: Icon(Icons.search),
-              hintText: "Search Recipes",
-              onChanged: (value) {
-                setState(() {
-                  _search = value;
-                });
-              },
-            ),
-          ),
-        ),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 15.0,
+          horizontal: 0.0,
           vertical: 0.0,
         ),
         child: StreamBuilder(
@@ -416,27 +402,34 @@ class HomePageState extends State<HomePage> {
               var recipes = snapshot.data.docs;
               List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
               _recipes = _recipes
-                  .where((element) => element.title!.toLowerCase().contains(_search.toLowerCase()))
+                  .where((element) => element.title!
+                      .toLowerCase()
+                      .contains(context.read<AppModel>().search.toLowerCase()))
                   .toList();
-              return GridView.builder(
-                itemCount: _recipes.length,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
-                  childAspectRatio: 2.85 / 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 0,
+              if (_recipes.length == 0 && context.read<AppModel>().search != '') {
+                return Center(
+                  child: CText(
+                    'No recipes found',
+                    textLevel: EText.title,
+                  ),
+                );
+              }
+              return SingleChildScrollView(
+                child: Column(
+                  children: List.generate(
+                    _recipes.length,
+                    (index) {
+                      return RecipeAccordion(
+                        recipe: _recipes[index],
+                        id: recipes[index].id,
+                        expandedSizes: [
+                          80,
+                          600,
+                        ],
+                      );
+                    },
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  final RecipeModel recipe = _recipes[index];
-                  final String recipeId = recipes[index].id;
-                  return RecipeCard(
-                    recipe: recipe,
-                    cardType: ECard.elevated,
-                    onTap: () => context.push('/recipe/${recipeId}'),
-                    onLongPress: () => _previewDialog(context, recipe, recipeId),
-                    useImage: true,
-                  );
-                },
               );
             }
             return Center(child: CircularProgressIndicator());
