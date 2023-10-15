@@ -159,12 +159,10 @@ class NewPageState extends State<NewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return ResponsiveWidget(
-        desktopScreen: buildDesktop(context),
-        mobileScreen: buildMobile(context),
-      );
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   int _currentStep = 0;

@@ -218,15 +218,10 @@ class _BooksTabState extends State<BooksTab> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        _largeScreen = true;
-        return buildDesktop(context);
-      } else {
-        _largeScreen = false;
-        return buildMobile(context);
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   Widget buildDesktop(BuildContext context) {

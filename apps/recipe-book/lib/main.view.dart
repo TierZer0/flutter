@@ -11,6 +11,7 @@ import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 import 'package:ui/inputs/reactive-input.custom.dart';
+import 'package:ui/layout/responsive-widget.custom.dart';
 
 class MainView extends StatefulWidget {
   @override
@@ -36,14 +37,9 @@ class MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth > 660) {
-          return buildDesktop(context);
-        } else {
-          return buildMobile(context);
-        }
-      },
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
     );
   }
 

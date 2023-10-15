@@ -36,13 +36,10 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
         _search = '';
       });
     });
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        return buildDesktop(context);
-      } else {
-        return buildMobile(context);
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   EMyRecipeViews _currentView = EMyRecipeViews.Recipes;

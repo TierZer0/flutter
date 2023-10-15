@@ -206,19 +206,15 @@ class CategoriesTabState extends State<CategoriesTab> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        _largeScreen = true;
-        return buildDesktop(context);
-      } else {
-        _largeScreen = false;
-        return buildMobile(context);
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: buildDesktop(context),
+      mobileScreen: buildMobile(context),
+    );
   }
 
   Widget buildDesktop(BuildContext context) {
     final theme = Theme.of(context);
+    _largeScreen = true;
     return Row(
       children: [
         Expanded(
@@ -322,6 +318,7 @@ class CategoriesTabState extends State<CategoriesTab> {
 
   Widget buildMobile(BuildContext context) {
     final theme = Theme.of(context);
+    _largeScreen = false;
     return ListView.builder(
       padding: EdgeInsets.all(10.0),
       itemCount: widget.user.categories!.length + 1,
