@@ -104,123 +104,238 @@ class LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Padding(
-          padding: constraints.maxWidth > 600
-              ? EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.3,
-                  vertical: 50.0,
-                )
-              : EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 15.0,
-                ),
-          child: CustomCard(
-            card: ECard.elevated,
-            child: ReactiveForm(
-              formGroup: form,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Wrap(
-                  spacing: 20.0,
-                  runSpacing: 20.0,
+      body: ResponsiveWidget(
+        desktopScreen: buildDesktop(context),
+        mobileScreen: buildMobile(context),
+      ),
+    );
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    var theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * 0.3,
+        vertical: 50.0,
+      ),
+      child: CustomCard(
+        card: ECard.elevated,
+        child: ReactiveForm(
+          formGroup: form,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Wrap(
+              spacing: 20.0,
+              runSpacing: 20.0,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    CText(
+                      "Welcome",
+                      textLevel: EText.title,
+                      weight: FontWeight.w600,
+                    ),
+                    CText(
+                      "Login to your account",
+                      textLevel: EText.title2,
+                    ),
+                  ],
+                ),
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'email',
+                  label: 'Email',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    'required': (p0) => 'Email is required',
+                    'email': (p0) => 'Email must be Email format'
+                  },
+                ),
+                CustomReactiveInput(
+                  inputAction: TextInputAction.done,
+                  formName: 'password',
+                  label: 'Password',
+                  obscureText: true,
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    'minLength': (p1) => 'Password must be atleast 8 characters',
+                    'required': (p1) => 'Password is required'
+                  },
+                ),
+                ReactiveFormConsumer(
+                  builder: (context, formGroup, child) {
+                    return Wrap(
+                      spacing: 25,
                       children: [
-                        CText(
-                          "Welcome",
-                          textLevel: EText.title,
-                          weight: FontWeight.w600,
+                        ElevatedButton(
+                          onPressed: form.invalid ? null : () => _handleEmailLogin(context),
+                          child: CText(
+                            "Login",
+                            textLevel: EText.button,
+                          ),
                         ),
-                        CText(
-                          "Login to your account",
-                          textLevel: EText.title2,
-                        ),
-                      ],
-                    ),
-                    CustomReactiveInput(
-                      inputAction: TextInputAction.next,
-                      formName: 'email',
-                      label: 'Email',
-                      textColor: theme.colorScheme.onBackground,
-                      validationMessages: {
-                        'required': (p0) => 'Email is required',
-                        'email': (p0) => 'Email must be Email format'
-                      },
-                    ),
-                    CustomReactiveInput(
-                      inputAction: TextInputAction.done,
-                      formName: 'password',
-                      label: 'Password',
-                      obscureText: true,
-                      textColor: theme.colorScheme.onBackground,
-                      validationMessages: {
-                        'minLength': (p1) => 'Password must be atleast 8 characters',
-                        'required': (p1) => 'Password is required'
-                      },
-                    ),
-                    ReactiveFormConsumer(
-                      builder: (context, formGroup, child) {
-                        return Wrap(
-                          spacing: 25,
-                          children: [
-                            ElevatedButton(
-                              onPressed: form.invalid ? null : () => _handleEmailLogin(context),
-                              child: CText(
-                                "Login",
-                                textLevel: EText.button,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => context.replace('/login/createAccount/false'),
-                              child: CText(
-                                "Create Account",
-                                textLevel: EText.button,
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                    Divider(
-                      height: 25,
-                    ),
-                    Wrap(
-                      spacing: 20.0,
-                      children: [
-                        SizedBox(
-                          width: 200,
-                          child: OutlinedButton(
-                            onPressed: () => _handleGoogleSSO(context),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.google,
-                                    ),
-                                    CText(
-                                      "Google Signin",
-                                      textLevel: EText.button,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                        TextButton(
+                          onPressed: () => context.replace('/login/createAccount/false'),
+                          child: CText(
+                            "Create Account",
+                            textLevel: EText.button,
                           ),
                         )
                       ],
+                    );
+                  },
+                ),
+                Divider(
+                  height: 25,
+                ),
+                Wrap(
+                  spacing: 20.0,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: OutlinedButton(
+                        onPressed: () => _handleGoogleSSO(context),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.google,
+                                ),
+                                CText(
+                                  "Google Signin",
+                                  textLevel: EText.button,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     )
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           ),
-        );
-      }),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMobile(BuildContext context) {
+    var theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 15.0,
+      ),
+      child: CustomCard(
+        card: ECard.elevated,
+        child: ReactiveForm(
+          formGroup: form,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Wrap(
+              spacing: 20.0,
+              runSpacing: 20.0,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CText(
+                      "Welcome",
+                      textLevel: EText.title,
+                      weight: FontWeight.w600,
+                    ),
+                    CText(
+                      "Login to your account",
+                      textLevel: EText.title2,
+                    ),
+                  ],
+                ),
+                CustomReactiveInput(
+                  inputAction: TextInputAction.next,
+                  formName: 'email',
+                  label: 'Email',
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    'required': (p0) => 'Email is required',
+                    'email': (p0) => 'Email must be Email format'
+                  },
+                ),
+                CustomReactiveInput(
+                  inputAction: TextInputAction.done,
+                  formName: 'password',
+                  label: 'Password',
+                  obscureText: true,
+                  textColor: theme.colorScheme.onBackground,
+                  validationMessages: {
+                    'minLength': (p1) => 'Password must be atleast 8 characters',
+                    'required': (p1) => 'Password is required'
+                  },
+                ),
+                ReactiveFormConsumer(
+                  builder: (context, formGroup, child) {
+                    return Wrap(
+                      spacing: 25,
+                      children: [
+                        ElevatedButton(
+                          onPressed: form.invalid ? null : () => _handleEmailLogin(context),
+                          child: CText(
+                            "Login",
+                            textLevel: EText.button,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => context.replace('/login/createAccount/false'),
+                          child: CText(
+                            "Create Account",
+                            textLevel: EText.button,
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                ),
+                Divider(
+                  height: 25,
+                ),
+                Wrap(
+                  spacing: 20.0,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: OutlinedButton(
+                        onPressed: () => _handleGoogleSSO(context),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.google,
+                                ),
+                                CText(
+                                  "Google Signin",
+                                  textLevel: EText.button,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

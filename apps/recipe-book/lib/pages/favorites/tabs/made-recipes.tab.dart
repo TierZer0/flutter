@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
+import 'package:ui/layout/responsive-widget.custom.dart';
 
 import '../../../models/models.dart';
 import '../../../shared/recipe-card.shared.dart';
@@ -17,21 +18,10 @@ class MadeFavoritesTab extends StatefulWidget {
 class _MadeFavoritesTabState extends State<MadeFavoritesTab> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 660) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          child: content(),
-        );
-      } else {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10.0,
-          ),
-          child: content(),
-        );
-      }
-    });
+    return ResponsiveWidget(
+      desktopScreen: content(),
+      mobileScreen: content(),
+    );
   }
 
   Widget content() {
