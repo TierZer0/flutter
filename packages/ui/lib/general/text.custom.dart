@@ -28,6 +28,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: 1.5,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -36,6 +37,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: 1.2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -44,6 +46,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: .95,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -52,6 +55,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: 1.1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -60,6 +64,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: 1.1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -68,6 +73,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: 1.1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
             color: theme!.colorScheme.onError,
@@ -77,6 +83,7 @@ class CText extends StatelessWidget {
         return Text(
           text,
           textScaleFactor: .8,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),
@@ -85,11 +92,13 @@ class CText extends StatelessWidget {
         return Text(
           text,
           style: textStyle,
+          overflow: TextOverflow.ellipsis,
         );
       default:
         return Text(
           text,
           textScaleFactor: scaleFactor,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: weight,
           ),

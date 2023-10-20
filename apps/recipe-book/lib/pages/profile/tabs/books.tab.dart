@@ -253,7 +253,7 @@ class _BooksTabState extends State<BooksTab> {
                           trailing: Icon(Icons.add),
                           onTap: () => _recipeBookDialogBuilder(
                             context: context,
-                            book: _books[index],
+                            book: _books.isNotEmpty ? _books[index] : null,
                           ),
                         ),
                       );
@@ -284,58 +284,60 @@ class _BooksTabState extends State<BooksTab> {
             },
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: FutureBuilder(
-            future: recipesService.recipesInBookFuture(
-              recipeIds: _books[_selectedIndex!].recipes!,
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final recipes = snapshot.data!.docs;
-                final _recipes = recipes.map((e) => e.data()).toList();
-                if (_recipes.length == 0) {
-                  return Center(
-                    child: CText(
-                      'No Recipe Book Selected',
-                      textLevel: EText.title2,
-                    ),
-                  );
-                }
-                return GridView.builder(
-                  itemCount: _recipes.length,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 300,
-                    childAspectRatio: 3 / 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
+        _books.isNotEmpty && _selectedIndex != null
+            ? Expanded(
+                flex: 2,
+                child: FutureBuilder(
+                  future: recipesService.recipesInBookFuture(
+                    recipeIds: _books[_selectedIndex!].recipes!,
                   ),
-                  itemBuilder: (context, index) {
-                    final RecipeModel recipe = _recipes[index];
-                    final String recipeId = recipes[index].id;
-                    return RecipeCard(
-                      recipe: recipe,
-                      cardType: ECard.elevated,
-                      onTap: () => context.push('/recipe/${recipeId}'),
-                      useImage: true,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final recipes = snapshot.data!.docs;
+                      final _recipes = recipes.map((e) => e.data()).toList();
+                      if (_recipes.length == 0) {
+                        return Center(
+                          child: CText(
+                            'No Recipe Book Selected',
+                            textLevel: EText.title2,
+                          ),
+                        );
+                      }
+                      return GridView.builder(
+                        itemCount: _recipes.length,
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 300,
+                          childAspectRatio: 3 / 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                        ),
+                        itemBuilder: (context, index) {
+                          final RecipeModel recipe = _recipes[index];
+                          final String recipeId = recipes[index].id;
+                          return RecipeCard(
+                            recipe: recipe,
+                            cardType: ECard.elevated,
+                            onTap: () => context.push('/recipe/${recipeId}'),
+                            useImage: true,
+                          );
+                        },
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: CText(
+                          snapshot.error.toString(),
+                          textLevel: EText.title2,
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
                   },
-                );
-              }
-              if (snapshot.hasError) {
-                return Center(
-                  child: CText(
-                    snapshot.error.toString(),
-                    textLevel: EText.title2,
-                  ),
-                );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
-        ),
+                ),
+              )
+            : SizedBox.shrink(),
       ],
     );
   }

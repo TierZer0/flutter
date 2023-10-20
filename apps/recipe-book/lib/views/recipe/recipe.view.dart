@@ -27,7 +27,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   late TabController _tabController;
   bool canEdit = false;
   bool liked = false;
-  late RecipeModel? recipe;
+  RecipeModel? recipe;
   List<RecipeBookModel> recipeBooks = [];
   String userUid = authenticationService.userUid;
   late List<Widget> _recipeCards;
@@ -41,11 +41,11 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    // profileService.hasLiked(widget.recipeId).then(
-    //       (result) => setState(() {
-    //         liked = result;
-    //       }),
-    //     );
+    profileService.hasLiked(widget.recipeId).then(
+          (result) => setState(() {
+            liked = result;
+          }),
+        );
 
     // profileService.hasMade(widget.recipeId).then(
     //       (result) => setState(() {
@@ -301,7 +301,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: CText(
-          recipe?.title ?? '',
+          recipe != null ? recipe!.title! : '',
           textLevel: EText.title,
         ),
         actions: [
@@ -340,58 +340,62 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         ],
       ),
       floatingActionButton: buildFAB(),
-      body: Row(
-        children: [
-          NavigationRail(
-            labelType: NavigationRailLabelType.selected,
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              var _fab = '';
-              switch (index) {
-                case 0:
-                  _fab = 'made';
-                  break;
-                case 1:
-                  _fab = 'review';
-                  break;
-                default:
-                  _fab = '';
-                  break;
-              }
-              setState(() {
-                fab = _fab;
-                _selectedIndex = index;
-              });
-            },
-            destinations: <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.restaurant_outlined),
-                label: CText(
-                  'Recipe',
-                  textLevel: EText.title,
+      body: recipe != null
+          ? Row(
+              children: [
+                NavigationRail(
+                  labelType: NavigationRailLabelType.selected,
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: (int index) {
+                    var _fab = '';
+                    switch (index) {
+                      case 0:
+                        _fab = 'made';
+                        break;
+                      case 1:
+                        _fab = 'review';
+                        break;
+                      default:
+                        _fab = '';
+                        break;
+                    }
+                    setState(() {
+                      fab = _fab;
+                      _selectedIndex = index;
+                    });
+                  },
+                  destinations: <NavigationRailDestination>[
+                    NavigationRailDestination(
+                      icon: Icon(Icons.restaurant_outlined),
+                      label: CText(
+                        'Recipe',
+                        textLevel: EText.title,
+                      ),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.reviews_outlined),
+                      label: CText(
+                        'Reviews',
+                        textLevel: EText.title,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.reviews_outlined),
-                label: CText(
-                  'Reviews',
-                  textLevel: EText.title,
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: recipe != null
-                ? CustomCard(
-                    card: ECard.filled,
-                    child: [
-                      RecipeTab(recipe: recipe!),
-                      ReviewsTab(id: widget.recipeId),
-                    ][_selectedIndex])
-                : Center(child: CircularProgressIndicator()),
-          )
-        ],
-      ),
+                Expanded(
+                  child: recipe != null
+                      ? CustomCard(
+                          card: ECard.filled,
+                          child: [
+                            RecipeTab(recipe: recipe!),
+                            ReviewsTab(id: widget.recipeId),
+                          ][_selectedIndex])
+                      : Center(child: CircularProgressIndicator()),
+                )
+              ],
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 

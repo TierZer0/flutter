@@ -84,23 +84,22 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                   children: [
                     Expanded(
                       flex: 11,
-                      child: Wrap(
-                        spacing: 10.0,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CText(
-                                recipe.title!,
-                                textLevel: EText.title,
-                              ),
-                              CText(
-                                recipe.description!,
-                                textLevel: EText.title2,
-                              ),
-                            ],
-                          )
-                        ],
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * .6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CText(
+                              recipe.title!,
+                              textLevel: EText.title,
+                            ),
+                            CText(
+                              recipe.description!,
+                              textLevel: EText.title2,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Expanded(
@@ -172,18 +171,21 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                             backgroundColor: Colors.transparent,
                             backgroundImage: NetworkImage(recipe.image!),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CText(
-                                recipe.title!,
-                                textLevel: EText.title,
-                              ),
-                              CText(
-                                recipe.description!,
-                                textLevel: EText.title2,
-                              ),
-                            ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CText(
+                                  recipe.title!,
+                                  textLevel: EText.title,
+                                ),
+                                CText(
+                                  recipe.description!,
+                                  textLevel: EText.title2,
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
