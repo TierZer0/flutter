@@ -7,7 +7,7 @@ class UserModel {
   Timestamp? lastSeen;
   bool? darkTheme;
   List<LikesModel>? likes;
-  List<dynamic>? categories;
+  List<String>? categories;
 
   UserModel({
     this.name,
@@ -27,7 +27,7 @@ class UserModel {
       lastSeen: data?['lastSeen'],
       darkTheme: data?['darkTheme'] ?? false,
       likes: data?['likes'] is Iterable ? LikesModel().fromFirestoreList(data?['likes']) : null,
-      categories: data?['categories'] is Iterable ? data!['categories'] : null,
+      categories: data?['categories'] is Iterable ? List<String>.from(data!['categories']) : null,
     );
   }
 

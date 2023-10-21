@@ -54,41 +54,46 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
       duration: Duration(milliseconds: 350),
       child: CustomCard(
         card: isExpanded ? ECard.filled : ECard.outlined,
-        child: AnimatedSwitcher(
-          switchInCurve: Curves.easeInToLinear,
-          switchOutCurve: Curves.easeOut,
-          duration: Duration(milliseconds: 500),
-          child: isExpanded ? buildExpanded() : buildCollapsed(),
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: AnimatedSwitcher(
+            switchInCurve: Curves.easeInToLinear,
+            switchOutCurve: Curves.easeOut,
+            duration: Duration(milliseconds: 500),
+            child: isExpanded ? buildExpanded() : buildCollapsed(),
+          ),
         ),
       ),
     );
   }
 
   Widget buildExpanded() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: _handleExpand,
-            child: SizedBox(
-              height: widget.expandedSizes[0] - 10,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 11,
-                      child: Wrap(
-                        spacing: 10.0,
-                        children: [
-                          Column(
+    return SizedBox(
+      height: widget.expandedSizes[1],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: _handleExpand,
+              child: SizedBox(
+                height: widget.expandedSizes[0] - 10,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 11,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * .6,
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CText(
                                 recipe.title!,
@@ -99,50 +104,50 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                                 textLevel: EText.title2,
                               ),
                             ],
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                        size: 30,
+                      Expanded(
+                        flex: 1,
+                        child: Icon(
+                          isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          size: 30,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          CustomCard(
-            card: ECard.elevated,
-            child: Image.network(
-              recipe.image!,
-              width: MediaQuery.of(context).size.width * .9,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(
-            height: 150,
-            child: FieldGridShared(
-              fields: ['category', 'prepTime', 'cookTime'],
-              data: new Map.from(recipe.toFirestore()),
-            ),
-          ),
-          Expanded(child: SizedBox()),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: FilledButton(
-              onPressed: () => context.push('/recipe/${widget.id}'),
-              child: CText(
-                'View Recipe',
-                textLevel: EText.button,
+            CustomCard(
+              card: ECard.elevated,
+              child: Image.network(
+                recipe.image!,
+                width: MediaQuery.of(context).size.width * .9,
+                height: 200,
+                fit: BoxFit.cover,
               ),
             ),
-          )
-        ],
+            SizedBox(
+              height: 150,
+              child: FieldGridShared(
+                fields: ['category', 'prepTime', 'cookTime'],
+                data: new Map.from(recipe.toFirestore()),
+              ),
+            ),
+            Expanded(child: SizedBox()),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FilledButton(
+                onPressed: () => context.push('/recipe/${widget.id}'),
+                child: CText(
+                  'View Recipe',
+                  textLevel: EText.button,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -172,18 +177,21 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
                             backgroundColor: Colors.transparent,
                             backgroundImage: NetworkImage(recipe.image!),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CText(
-                                recipe.title!,
-                                textLevel: EText.title,
-                              ),
-                              CText(
-                                recipe.description!,
-                                textLevel: EText.title2,
-                              ),
-                            ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CText(
+                                  recipe.title!,
+                                  textLevel: EText.title,
+                                ),
+                                CText(
+                                  recipe.description!,
+                                  textLevel: EText.title2,
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),

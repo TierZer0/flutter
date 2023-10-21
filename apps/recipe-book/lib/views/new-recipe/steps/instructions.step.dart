@@ -43,30 +43,33 @@ class _InstructionsStepState extends State<InstructionsStep> {
               "Add Instruction",
               textLevel: EText.subtitle,
             ),
-            content: Wrap(
-              spacing: 15.0,
-              runSpacing: 20.0,
-              children: [
-                CustomReactiveInput(
-                  formName: 'instructions.title',
-                  inputAction: TextInputAction.next,
-                  label: 'Title',
-                  textColor: theme.colorScheme.onBackground,
-                  validationMessages: {
-                    ValidationMessage.required: (_) => 'The Instruction title must not be empty',
-                  },
-                ),
-                CustomReactiveInput(
-                  formName: 'instructions.description',
-                  inputAction: TextInputAction.next,
-                  label: 'Description',
-                  textColor: theme.colorScheme.onBackground,
-                  validationMessages: {
-                    ValidationMessage.required: (_) =>
-                        'The Instruction description must not be empty',
-                  },
-                ),
-              ],
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Wrap(
+                spacing: 15.0,
+                runSpacing: 20.0,
+                children: [
+                  CustomReactiveInput(
+                    formName: 'instructions.title',
+                    inputAction: TextInputAction.next,
+                    label: 'Title',
+                    textColor: theme.colorScheme.onBackground,
+                    validationMessages: {
+                      ValidationMessage.required: (_) => 'The Instruction title must not be empty',
+                    },
+                  ),
+                  CustomReactiveInput(
+                    formName: 'instructions.description',
+                    inputAction: TextInputAction.next,
+                    label: 'Description',
+                    textColor: theme.colorScheme.onBackground,
+                    validationMessages: {
+                      ValidationMessage.required: (_) =>
+                          'The Instruction description must not be empty',
+                    },
+                  ),
+                ],
+              ),
             ),
             actions: [
               TextButton(

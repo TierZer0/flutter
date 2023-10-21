@@ -55,55 +55,58 @@ class IngredientsStepState extends State<IngredientsStep> {
               "Add Ingredient",
               textLevel: EText.subtitle,
             ),
-            content: Wrap(
-              spacing: 15.0,
-              runSpacing: 20.0,
-              children: [
-                CustomReactiveInput(
-                  formName: 'ingredients.item',
-                  inputAction: TextInputAction.next,
-                  label: 'Ingredient',
-                  textColor: theme.colorScheme.onBackground,
-                  validationMessages: {
-                    ValidationMessage.required: (_) => 'The Ingredient must not be empty',
-                  },
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .35,
-                  child: CustomReactiveInput(
-                    formName: 'ingredients.quantity',
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Wrap(
+                spacing: 15.0,
+                runSpacing: 20.0,
+                children: [
+                  CustomReactiveInput(
+                    formName: 'ingredients.item',
                     inputAction: TextInputAction.next,
-                    label: 'Quanity',
+                    label: 'Ingredient',
                     textColor: theme.colorScheme.onBackground,
                     validationMessages: {
-                      ValidationMessage.required: (_) => 'The Quantity must not be empty',
+                      ValidationMessage.required: (_) => 'The Ingredient must not be empty',
                     },
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .35,
-                  child: ReactiveDropdownField(
-                    decoration: InputDecoration(
-                      labelText: "Unit",
-                      filled: true,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .35,
+                    child: CustomReactiveInput(
+                      formName: 'ingredients.quantity',
+                      inputAction: TextInputAction.next,
+                      label: 'Quanity',
+                      textColor: theme.colorScheme.onBackground,
+                      validationMessages: {
+                        ValidationMessage.required: (_) => 'The Quantity must not be empty',
+                      },
                     ),
-                    formControlName: 'ingredients.unit',
-                    dropdownColor: theme.colorScheme.surface,
-                    elevation: 2,
-                    items: _units
-                        .map(
-                          (item) => DropdownMenuItem(
-                            value: item,
-                            child: CText(
-                              item,
-                              textLevel: EText.body,
-                            ),
-                          ),
-                        )
-                        .toList(),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .35,
+                    child: ReactiveDropdownField(
+                      decoration: InputDecoration(
+                        labelText: "Unit",
+                        filled: true,
+                      ),
+                      formControlName: 'ingredients.unit',
+                      dropdownColor: theme.colorScheme.surface,
+                      elevation: 2,
+                      items: _units
+                          .map(
+                            (item) => DropdownMenuItem(
+                              value: item,
+                              child: CText(
+                                item,
+                                textLevel: EText.body,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
             actions: [
               TextButton(

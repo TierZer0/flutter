@@ -24,35 +24,26 @@ class RecipePage extends StatefulWidget {
 }
 
 class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
-  late TabController _tabController;
   bool canEdit = false;
   bool liked = false;
-  late RecipeModel? recipe;
+  RecipeModel? _recipeModel;
   List<RecipeBookModel> recipeBooks = [];
   String userUid = authenticationService.userUid;
   late List<Widget> _recipeCards;
 
   // bool showAddReview = false;
   String fab = 'made';
-  bool hasMade = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
 
-    // profileService.hasLiked(widget.recipeId).then(
-    //       (result) => setState(() {
-    //         liked = result;
-    //       }),
-    //     );
+    profileService.hasLiked(widget.recipeId).then(
+          (result) => setState(() {
+            liked = result;
+          }),
+        );
 
-    // profileService.hasMade(widget.recipeId).then(
-    //       (result) => setState(() {
-    //         hasMade = result;
-    //         fab = result ? '' : 'made';
-    //       }),
-    //     );
     recipeBookService
         .getRecipeBooks()
         .then((result) => setState(() => recipeBooks = result.docs.map((e) {
@@ -60,24 +51,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
               recipe.id = e.id;
               return recipe;
             }).toList()));
-
-    getRecipe();
-  }
-
-  getRecipe() {
-    bool _canEdit = false;
-    recipesService.getRecipe(widget.recipeId).then((result) {
-      print(result.recipeBook);
-      if (result.createdBy == userUid) {
-        _canEdit = true;
-      } else {
-        recipesService.incrementViews(widget.recipeId);
-      }
-      setState(() {
-        recipe = result;
-        canEdit = _canEdit;
-      });
-    });
   }
 
   Widget? buildFAB() {
@@ -91,17 +64,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             textLevel: EText.button,
           ),
         );
-      case 'made':
-        return hasMade
-            ? null
-            : FloatingActionButton.extended(
-                onPressed: () => profileService.markRecipeAsMade(widget.recipeId),
-                icon: Icon(Icons.check),
-                label: CText(
-                  'Made Recipe',
-                  textLevel: EText.button,
-                ),
-              );
       default:
         return null;
     }
@@ -276,7 +238,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   stars: _form.value['stars'],
                   createdBy: userUid,
                 );
-                recipesService.addReview(review, widget.recipeId);
+                recipesService.addReview(widget.recipeId, review);
                 Navigator.of(context).pop();
               },
             ),
@@ -288,20 +250,37 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWidget(
-      desktopScreen: buildDesktop(context),
-      mobileScreen: buildMobile(context),
+    return FutureBuilder(
+      future: recipesService.getRecipe(widget.recipeId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          _recipeModel = snapshot.data;
+
+          if (_recipeModel!.createdBy == userUid) {
+            canEdit = true;
+          } else {
+            recipesService.incrementViews(widget.recipeId);
+          }
+          return ResponsiveWidget(
+            desktopScreen: buildDesktop(context, _recipeModel!),
+            mobileScreen: buildMobile(context, _recipeModel!),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
   int _selectedIndex = 0;
 
-  Widget buildDesktop(BuildContext context) {
+  Widget buildDesktop(BuildContext context, RecipeModel? recipe) {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: CText(
-          recipe?.title ?? '',
+          recipe != null ? recipe!.title! : '',
           textLevel: EText.title,
         ),
         actions: [
@@ -310,7 +289,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             children: [
               IconButton(
                 onPressed: () {
-                  profileService.likeRecipe(widget.recipeId, !liked);
+                  profileService.likeRecipe(widget.recipeId, liked);
                   setState(() {
                     liked = !liked;
                   });
@@ -340,62 +319,66 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
         ],
       ),
       floatingActionButton: buildFAB(),
-      body: Row(
-        children: [
-          NavigationRail(
-            labelType: NavigationRailLabelType.selected,
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              var _fab = '';
-              switch (index) {
-                case 0:
-                  _fab = 'made';
-                  break;
-                case 1:
-                  _fab = 'review';
-                  break;
-                default:
-                  _fab = '';
-                  break;
-              }
-              setState(() {
-                fab = _fab;
-                _selectedIndex = index;
-              });
-            },
-            destinations: <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.restaurant_outlined),
-                label: CText(
-                  'Recipe',
-                  textLevel: EText.title,
+      body: recipe != null
+          ? Row(
+              children: [
+                NavigationRail(
+                  labelType: NavigationRailLabelType.selected,
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: (int index) {
+                    var _fab = '';
+                    switch (index) {
+                      case 0:
+                        _fab = 'made';
+                        break;
+                      case 1:
+                        _fab = 'review';
+                        break;
+                      default:
+                        _fab = '';
+                        break;
+                    }
+                    setState(() {
+                      fab = _fab;
+                      _selectedIndex = index;
+                    });
+                  },
+                  destinations: <NavigationRailDestination>[
+                    NavigationRailDestination(
+                      icon: Icon(Icons.restaurant_outlined),
+                      label: CText(
+                        'Recipe',
+                        textLevel: EText.title,
+                      ),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.reviews_outlined),
+                      label: CText(
+                        'Reviews',
+                        textLevel: EText.title,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.reviews_outlined),
-                label: CText(
-                  'Reviews',
-                  textLevel: EText.title,
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: recipe != null
-                ? CustomCard(
-                    card: ECard.filled,
-                    child: [
-                      RecipeTab(recipe: recipe!),
-                      ReviewsTab(id: widget.recipeId),
-                    ][_selectedIndex])
-                : Center(child: CircularProgressIndicator()),
-          )
-        ],
-      ),
+                Expanded(
+                  child: recipe != null
+                      ? CustomCard(
+                          card: ECard.filled,
+                          child: [
+                            RecipeTab(recipe: recipe!),
+                            ReviewsTab(id: widget.recipeId),
+                          ][_selectedIndex])
+                      : Center(child: CircularProgressIndicator()),
+                )
+              ],
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 
-  Widget buildMobile(BuildContext context) {
+  Widget buildMobile(BuildContext context, RecipeModel recipe) {
     var theme = Theme.of(context);
     _recipeCards = [
       CustomCard(
@@ -453,35 +436,38 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                       stars: e.stars,
                     )),
                   );
-                  return ListView(
-                    children: reviews
-                        .map(
-                          (review) => ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0.0,
-                              horizontal: 10.0,
+                  return SizedBox(
+                    height: reviews.length * 75.0,
+                    child: ListView(
+                      children: reviews
+                          .map(
+                            (review) => ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0.0,
+                                horizontal: 10.0,
+                              ),
+                              // tileColor: theme.colorScheme.surface,
+                              title: CText(
+                                review.review ?? '',
+                                textLevel: EText.title2,
+                                theme: theme,
+                              ),
+                              subtitle: review.stars! > 0
+                                  ? Wrap(
+                                      spacing: 4,
+                                      children: List<Widget>.generate(
+                                        review.stars ?? 1,
+                                        (index) => Icon(
+                                          Icons.star_rate,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ).toList(),
+                                    )
+                                  : null,
                             ),
-                            // tileColor: theme.colorScheme.surface,
-                            title: CText(
-                              review.review ?? '',
-                              textLevel: EText.title2,
-                              theme: theme,
-                            ),
-                            subtitle: review.stars! > 0
-                                ? Wrap(
-                                    spacing: 4,
-                                    children: List<Widget>.generate(
-                                      review.stars ?? 1,
-                                      (index) => Icon(
-                                        Icons.star_rate,
-                                        color: theme.colorScheme.primary,
-                                      ),
-                                    ).toList(),
-                                  )
-                                : null,
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   );
                 }
                 return Center(
@@ -525,7 +511,10 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   ? SizedBox.shrink()
                   : IconButton(
                       onPressed: () => _addDialogBuilder(context),
-                      icon: Icon(Icons.add_outlined),
+                      icon: Icon(
+                        Icons.add_outlined,
+                        size: 30,
+                      ),
                     ),
               canEdit
                   ? IconButton(
@@ -535,6 +524,17 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                       ),
                     )
                   : SizedBox.shrink(),
+              IconButton(
+                onPressed: () {
+                  profileService.likeRecipe(widget.recipeId, liked);
+                  setState(() {
+                    liked = !liked;
+                  });
+                },
+                icon: Icon(
+                  liked ? Icons.favorite : Icons.favorite_outline_outlined,
+                ),
+              ),
               IconButton(
                 onPressed: () => _reviewDialogBuilder(context),
                 icon: Icon(Icons.message),
@@ -603,141 +603,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
           ],
         ),
       ),
-
-      // body: SizedBox(
-      //   height: MediaQuery.of(context).size.height,
-      //   child: Stack(
-      //     children: [
-      //       AspectRatio(
-      //         aspectRatio: 1.25,
-      // child: Image.network(
-      //   recipe!.image!,
-      //   fit: BoxFit.fitWidth,
-      //   loadingBuilder: (context, child, loadingProgress) {
-      //     if (loadingProgress == null &&
-      //         loadingProgress?.cumulativeBytesLoaded ==
-      //             loadingProgress?.expectedTotalBytes) {
-      //       return child;
-      //     }
-      //     return Center(
-      //       child: CircularProgressIndicator(),
-      //     );
-      //   },
-      // ),
-      //       ),
-      //       Positioned(
-      //         top: 300,
-      //         left: 0,
-      //         right: 0,
-      //         bottom: 0,
-      //         child: Container(
-      //           decoration: BoxDecoration(
-      //             color: theme.colorScheme.surface,
-      //             borderRadius: BorderRadius.only(
-      //               topLeft: Radius.circular(
-      //                 20.0,
-      //               ),
-      //               topRight: Radius.circular(
-      //                 20.0,
-      //               ),
-      //             ),
-      //             boxShadow: [
-      //               BoxShadow(
-      //                 color: theme.colorScheme.shadow.withOpacity(0.5),
-      //                 blurRadius: 4.0,
-      //                 spreadRadius: 1.0,
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     elevation: 0,
-    //     toolbarHeight: 75,
-    //     title: Column(
-    //       mainAxisAlignment: MainAxisAlignment.start,
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         CText(
-    //           recipe?.title ?? '',
-    //           textLevel: EText.title,
-    //         ),
-    //         recipe?.description != ''
-    //             ? CText(
-    //                 recipe?.description ?? '',
-    //                 textLevel: EText.subtitle,
-    //               )
-    //             : SizedBox.shrink()
-    //       ],
-    //     ),
-    //     actions: [
-    //       Wrap(
-    //         spacing: 10.0,
-    //         children: [
-    //           IconButton(
-    //             onPressed: () {
-    //               profileService.likeRecipe(widget.recipeId, !liked);
-    //               setState(() {
-    //                 liked = !liked;
-    //               });
-    //             },
-    //             icon: Icon(
-    //               liked ? Icons.favorite : Icons.favorite_outline_outlined,
-    //               fill: 1.0,
-    //               color: theme.colorScheme.secondary,
-    //             ),
-    //           ),
-    // canEdit
-    //     ? SizedBox.shrink()
-    //     : IconButton(
-    //         onPressed: () => _addDialogBuilder(context),
-    //         icon: Icon(Icons.add_outlined),
-    //       ),
-    // canEdit
-    //     ? IconButton(
-    //         onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
-    //         icon: Icon(
-    //           Icons.edit_outlined,
-    //         ),
-    //       )
-    //     : SizedBox.shrink(),
-    //         ],
-    //       ),
-    //     ],
-    //     bottom: TabBar(
-    //       indicatorColor: theme.colorScheme.primary,
-    //       controller: _tabController,
-    //       dividerColor: Colors.transparent,
-    //       tabs: [
-    //         Tab(
-    //           text: "Recipe",
-    //         ),
-    //         Tab(
-    //           text: "Reviews",
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    //   floatingActionButton: buildFAB(),
-    //   body: recipe != null
-    //       ? TabBarView(
-    //           controller: _tabController,
-    //           children: [
-    //             RecipeTab(
-    //               recipe: recipe!,
-    //             ),
-    //             ReviewsTab(id: widget.recipeId),
-    //             // SizedBox(),
-    //           ],
-    //         )
-    //       : Center(
-    //           child: CircularProgressIndicator(),
-    //         ),
-    // );
   }
 }
