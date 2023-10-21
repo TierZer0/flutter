@@ -77,9 +77,9 @@ class _RecipesService {
     return recipesRef.doc(id).snapshots();
   }
 
-  Future<void> addReview(id, review) {
+  Future<void> addReview(String id, ReviewModel review) {
     return recipesRef.doc(id).update({
-      'reviews': FieldValue.arrayUnion([review])
+      'reviews': FieldValue.arrayUnion([review.toMap()])
     });
   }
 

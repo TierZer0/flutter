@@ -93,13 +93,14 @@ class _ProfileService {
             (error) => FirestoreResult<UserModel>(null, success: false, message: error.toString()));
   }
 
-  Future<FirestoreResult<UserModel>> likeRecipe(String recipeId, bool liked) {
+  Future<dynamic> likeRecipe(String recipeId, bool liked) {
     if (liked)
       return userCollectionRef
           .update({
             'likes': FieldValue.arrayRemove([LikesModel(recipeId: recipeId).toFirestore()])
           })
-          .then((value) => FirestoreResult<UserModel>(null, success: true, message: 'Recipe Liked'))
+          .then(
+              (value) => FirestoreResult<UserModel>(null, success: true, message: 'Recipe UnLiked'))
           .catchError((error) =>
               FirestoreResult<UserModel>(null, success: false, message: error.toString()));
     else
