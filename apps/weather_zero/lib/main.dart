@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:weather_zero/main.view.dart';
+import 'package:weather_zero/states/app.state.dart';
 
 void main() async {
   setPathUrlStrategy();
@@ -14,6 +15,10 @@ void main() async {
     ),
   );
 }
+
+final appStateProvider = StateProvider<AppState>(
+  (ref) => AppState(),
+);
 
 class App extends HookConsumerWidget {
   App({super.key});
