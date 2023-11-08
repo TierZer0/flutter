@@ -26,6 +26,8 @@ dependencies:
   go_router: ^11.1.4
   flutter_dotenv: ^5.1.0
   dio: ^5.3.3
+  weather_animation: ^1.0.1
+  location: ^5.0.3
 
 dev_dependencies:
   flutter_test:
