@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:weather_zero/models/enums/condition_code.enum.dart';
 import 'package:weather_zero/models/enums/pressure_trend.enum.dart';
 import 'package:weather_zero/models/metatdata.model.dart';
 
@@ -8,7 +9,7 @@ class ICurrentWeather {
   final Metadata metadata;
   final DateTime asOf;
   final double? cloudCover;
-  final String conditionCode;
+  final ConditionCode conditionCode;
   final bool? daylight;
   final double humidity;
   final double precipitationIntensity;
@@ -51,7 +52,7 @@ class ICurrentWeather {
       metadata: Metadata.fromMap(result['metadata']),
       asOf: DateTime.parse(result['asOf']),
       cloudCover: result['cloudCover'],
-      conditionCode: result['conditionCode'],
+      conditionCode: ConditionCode.values.byName(result['conditionCode'].toLowerCase()),
       daylight: result['daylight'],
       humidity: result['humidity'],
       precipitationIntensity: result['precipitationIntensity'],

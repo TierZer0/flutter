@@ -4,10 +4,13 @@ import 'package:weather_zero/states/app.state.model.dart';
 class AppState extends StateNotifier<AppStateModel> {
   AppState() : super(AppStateModel.initial());
 
+  AppStateModel _prevState = AppStateModel.initial();
+
   void updateLocale({
     required double latitude,
     required double longitude,
   }) {
+    setPrevState();
     state = state.copyWith(
       locale: LocaleModel(
         latitude: latitude,
@@ -16,7 +19,15 @@ class AppState extends StateNotifier<AppStateModel> {
     );
   }
 
+  AppStateModel get currState => state;
+  AppStateModel get prevState => _prevState;
+
+  setPrevState() {
+    _prevState = currState;
+  }
+
   void setUnits(Units units) {
+    setPrevState();
     state = state.copyWith(units: units);
   }
 
