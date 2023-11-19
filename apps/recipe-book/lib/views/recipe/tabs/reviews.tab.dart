@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../../models/models.dart';

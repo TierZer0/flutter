@@ -13,7 +13,7 @@ import 'package:recipe_book/views/new-recipe/steps/details.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/ingredients.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/save.step.dart';
-import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ui/ui.dart';
 

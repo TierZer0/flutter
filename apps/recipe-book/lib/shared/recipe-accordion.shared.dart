@@ -51,9 +51,13 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
     return AnimatedContainer(
       width: double.maxFinite,
       height: isExpanded ? widget.expandedSizes[1] : widget.expandedSizes[0],
-      duration: Duration(milliseconds: 350),
+      duration: Duration(milliseconds: 450),
       child: CustomCard(
-        card: isExpanded ? ECard.filled : ECard.outlined,
+        margin: EdgeInsets.symmetric(
+          horizontal: 5.0,
+          vertical: isExpanded ? 5.0 : 0.0,
+        ),
+        card: isExpanded ? ECard.elevated : ECard.filled,
         child: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
           child: AnimatedSwitcher(

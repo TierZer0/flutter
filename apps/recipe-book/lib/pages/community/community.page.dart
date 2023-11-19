@@ -1,11 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recipe_book/main.dart';
+import 'package:recipe_book/pages/community/sections/category.section.dart';
+import 'package:recipe_book/pages/community/sections/popular.section.dart';
 
-import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/recipes/recipes.service.dart';
 
 import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
@@ -15,8 +20,8 @@ import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/ui.dart';
 import 'package:utils/functions/case.dart';
 
-import '../models/models.dart';
-import '../shared/recipe-preview.shared.dart';
+import '../../models/models.dart';
+import '../../shared/recipe-preview.shared.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -55,6 +60,18 @@ class HomePageState extends State<HomePage> {
   dynamic filters;
   String sort = '';
   String _search = '';
+
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    setState(() {});
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    // setState(() {});
+    _refreshController.loadComplete();
+  }
 
   Future<void> _filterDialog(BuildContext context, {bool isMobile = true}) {
     return showDialog(
@@ -348,93 +365,77 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget buildMobile(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80.0,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CText(
-              'Welcome, ',
-              textLevel: EText.title,
+    final colorScheme = Theme.of(context).colorScheme;
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullDown: true,
+      onLoading: _onLoading,
+      onRefresh: _onRefresh,
+      header: WaterDropMaterialHeader(
+        backgroundColor: seed,
+        color: colorScheme.onPrimary,
+      ),
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            leading: null,
+            automaticallyImplyLeading: false,
+            pinned: true,
+            title: CText(
+              'Welcome, \n What would you like to cook today?',
+              textLevel: EText.body,
               weight: FontWeight.bold,
             ),
-            CText(
-              'What would you like to cook today?',
-              textLevel: EText.subtitle,
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 5.0,
-            ),
-            child: IconButton(
-              onPressed: () => _filterDialog(context),
-              icon: Icon(Icons.filter_alt_outlined),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 5.0,
-            ),
-            child: IconButton(
-              onPressed: () => _sortDialog(context),
-              icon: Icon(Icons.sort_outlined),
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 0.0,
-          vertical: 0.0,
-        ),
-        child: StreamBuilder(
-          stream: recipesService.getRecipesStream(
-            filters: filters,
-            sort: formGroup.control('sort').value,
-          ),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData) {
-              var recipes = snapshot.data.docs;
-              List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
-              _recipes = _recipes
-                  .where((element) => element.title!
-                      .toLowerCase()
-                      .contains(context.read<AppModel>().search.toLowerCase()))
-                  .toList();
-              if (_recipes.length == 0 && context.read<AppModel>().search != '') {
-                return Center(
-                  child: CText(
-                    'No recipes found',
-                    textLevel: EText.title,
-                  ),
-                );
-              }
-              return SingleChildScrollView(
-                child: Column(
-                  children: List.generate(
-                    _recipes.length,
-                    (index) {
-                      return RecipeAccordion(
-                        recipe: _recipes[index],
-                        id: recipes[index].id,
-                        expandedSizes: [
-                          80,
-                          600,
-                        ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(80.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SearchAnchor.bar(
+                  isFullScreen: false,
+                  barElevation: MaterialStateProperty.all(2.0),
+                  viewElevation: 2.0,
+                  viewConstraints: BoxConstraints(maxHeight: 400.0),
+                  barHintText: 'Search Recipes',
+                  suggestionsBuilder: (context, controller) async {
+                    final recipes = (await recipesService.getRecipesFuture()).docs.where(
+                        (element) => element
+                            .data()
+                            .title!
+                            .toLowerCase()
+                            .contains(controller.text.toLowerCase()));
+                    final _recipes = recipes.map((e) => e.data()).toList();
+
+                    return _recipes.map((recipe) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          maxRadius: 40,
+                          foregroundImage: NetworkImage(recipe.image!),
+                        ),
+                        title: CText(recipe.title!),
+                        subtitle: CText(recipe.description!),
+                        onTap: () => context.push(
+                            '/recipe/${recipes.where((element) => element.data().title == recipe.title).first.id}'),
                       );
-                    },
-                  ),
+                    }).toList();
+                  },
                 ),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 150.0,
+              child: ByCategorySection(),
+            ),
+          ),
+          SliverToBoxAdapter(child: Gap(15)),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 400.0,
+              child: ByPopularitySection(),
+            ),
+          )
+        ],
       ),
     );
   }

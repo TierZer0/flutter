@@ -7,7 +7,7 @@ import 'package:recipe_book/shared/items-grid.shared.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:recipe_book/views/recipe/tabs/recipe.tab.dart';
 import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
-import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
 
 import 'package:ui/ui.dart';

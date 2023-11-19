@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
+import 'package:recipe_book/views/community/by_category.view.dart';
 import 'package:recipe_book/views/login/create-account.view.dart';
 import 'package:recipe_book/views/login/login.view.dart';
 import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
@@ -31,6 +32,8 @@ void main() async {
     ),
   );
 }
+
+const seed = Color(0xFF0b8457);
 
 class App extends StatefulWidget {
   @override
@@ -99,17 +102,34 @@ class AppState extends State<App> {
         },
       ),
       GoRoute(
-          path: '/recipeBook/:recipeBookId',
-          builder: (context, state) {
-            return RecipeBookPage(
-              recipeBookId: state.params['recipeBookId']!,
-            );
-          }),
+        path: '/recipeBook/:recipeBookId',
+        builder: (context, state) {
+          return RecipeBookPage(
+            recipeBookId: state.params['recipeBookId']!,
+          );
+        },
+      ),
       GoRoute(
         path: '/',
         builder: (context, state) {
           return MainView();
         },
+      ),
+      GoRoute(
+        path: '/community',
+        builder: (context, state) {
+          return MainView();
+        },
+        routes: [
+          GoRoute(
+            path: 'byCategory/:category',
+            builder: (context, state) {
+              return ByCategoryCommunityView(
+                category: state.params['category']!,
+              );
+            },
+          ),
+        ],
       ),
     ],
   );
@@ -118,30 +138,38 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
       builder: (context, value, child) {
+        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
+        var brightness = context.read<AppModel>().theme ? Brightness.dark : Brightness.light;
         SystemChrome.setSystemUIOverlayStyle(
           SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            systemNavigationBarColor: Color(0xFF006D43),
-            statusBarIconBrightness: Brightness.dark,
-            systemNavigationBarIconBrightness: Brightness.light,
+            systemNavigationBarColor: seed,
+            statusBarIconBrightness: brightness,
+            systemNavigationBarIconBrightness: brightness,
           ),
         );
-
-        var mode = context.read<AppModel>().theme ? ThemeMode.dark : ThemeMode.light;
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: _router,
           theme: ThemeData(
             brightness: Brightness.light,
             useMaterial3: true,
-            colorSchemeSeed: Color(0xFF006D43),
+            colorSchemeSeed: seed,
             fontFamily: 'Lato',
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.transparent,
+              // surfaceTintColor: Colors.transparent,
+            ),
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             useMaterial3: true,
-            colorSchemeSeed: Color(0xFF006D43),
+            colorSchemeSeed: seed,
             fontFamily: 'Lato',
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.transparent,
+              // surfaceTintColor: Colors.transparent,
+            ),
           ),
           themeMode: mode,
         );

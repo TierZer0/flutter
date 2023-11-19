@@ -7,7 +7,7 @@ import 'package:recipe_book/shared/detailed-recipe-card.shared.dart';
 import 'package:ui/ui.dart';
 
 import '../models/models.dart';
-import '../services/user/recipes.service.dart';
+import '../services/recipes/recipes.service.dart';
 
 class RecipeBookPage extends StatefulWidget {
   final String recipeBookId;

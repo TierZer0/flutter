@@ -75,7 +75,7 @@ class RecipeCard extends StatelessWidget {
                       ),
                       recipe.description != '' || recipe.description != null
                           ? SizedBox(
-                              width: 275,
+                              width: 200,
                               child: CText(
                                 recipe.description!,
                                 textLevel: EText.title2,
