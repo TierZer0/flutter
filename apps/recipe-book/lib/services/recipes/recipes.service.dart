@@ -32,6 +32,21 @@ class _RecipesService {
     recipeBookService.addRecipeToRecipeBook(postResult.id, recipe.recipeBook!);
   }
 
+  Future<QuerySnapshot<RecipeModel>> getRecipesFuture({filters, sort, search}) {
+    Query<RecipeModel> query = recipesRef;
+
+    if (filters != null) {
+      query = _buildFilterQuery(query, filters);
+    }
+
+    if (sort != null) {
+      query = query.orderBy(sort);
+    } else {
+      query = query.orderBy('created');
+    }
+    return query.get();
+  }
+
   Stream<QuerySnapshot<RecipeModel>> getRecipesStream({filters, sort, search}) {
     Query<RecipeModel> query = recipesRef;
 
@@ -44,7 +59,7 @@ class _RecipesService {
     } else {
       query = query.orderBy('created');
     }
-    return recipesRef.snapshots();
+    return query.snapshots();
   }
 
   Stream<QuerySnapshot<RecipeModel>> recipesInBookStream({List<dynamic> recipeIds = const []}) {

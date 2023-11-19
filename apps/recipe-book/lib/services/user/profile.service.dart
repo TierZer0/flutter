@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
-import 'package:recipe_book/services/user/recipes.service.dart';
+import 'package:recipe_book/services/recipes/recipes.service.dart';
 
 import '../../models/models.dart';
 import '../db.service.dart';

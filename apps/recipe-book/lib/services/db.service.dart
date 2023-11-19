@@ -26,6 +26,8 @@ class _DbService {
       firestore.collection('users').doc(authenticationService.userUid).collection('books');
   CollectionReference<Map<String, dynamic>> get recipeCollection =>
       _firestore.collection('recipes');
+  CollectionReference<Map<String, dynamic>> get resourcesCollection =>
+      _firestore.collection('resources');
 }
 
 final _DbService db = _DbService();
