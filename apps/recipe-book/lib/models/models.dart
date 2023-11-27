@@ -10,3 +10,6 @@ export './recipe/instruction.model.dart';
 
 // Recipe Book
 export './recipe-book/recipe-book.model.dart';
+
+// Firestore
+export './firebase/firebase_result.model.dart';

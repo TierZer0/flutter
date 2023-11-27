@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/items-grid.shared.dart';
@@ -10,9 +13,30 @@ import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
 import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:recipe_book/services/user/profile.service.dart';
 
+
 import 'package:ui/ui.dart';
 
 import '../../models/models.dart';
+
+class RecipePage2 extends ConsumerWidget {
+  final String recipeId;
+
+  RecipePage2({
+    required this.recipeId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final getRecipe = ref.watch(getRecipeProvider(recipeId));
+
+    return switch (getRecipe) {
+        AsyncData(:final value) => Container(),
+        AsyncLoading() => const Center(child: CircularProgressIndicator()),
+        AsyncError(:final error) => const Center(child: CircularProgressIndicator()),
+        _ => const Center(child: CircularProgressIndicator()),
+      };
+  }
+}
 
 class RecipePage extends StatefulWidget {
   final String recipeId;
@@ -308,7 +332,8 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     ),
               canEdit
                   ? IconButton(
-                      onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
+                      onPressed: () =>
+                          context.replace('/newRecipe/${widget.recipeId}'),
                       icon: Icon(
                         Icons.edit_outlined,
                       ),
@@ -518,7 +543,8 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     ),
               canEdit
                   ? IconButton(
-                      onPressed: () => context.replace('/newRecipe/${widget.recipeId}'),
+                      onPressed: () =>
+                          context.replace('/newRecipe/${widget.recipeId}'),
                       icon: Icon(
                         Icons.edit_outlined,
                       ),

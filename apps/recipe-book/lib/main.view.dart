@@ -22,54 +22,6 @@ class MainView extends StatefulWidget {
 class MainViewState extends State<MainView> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  void initState() {
-    super.initState();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   showBottomSheet(
-    //     context: context,
-    //     builder: (context) {
-    //       final theme = Theme.of(context);
-    //       return BottomSheet(
-    //         onClosing: () {},
-    //         builder: (context) {
-    //           return Container();
-    //         },
-    //       );
-    //       // return DraggableScrollableSheet(
-    //       //   initialChildSize: 0.1,
-    //       //   minChildSize: 0.1,
-    //       //   maxChildSize: 0.3,
-    //       //   shouldCloseOnMinExtent: false,
-    //       //   builder: (BuildContext context, ScrollController scrollController) {
-    //       //     return Container(
-    //       //       decoration: BoxDecoration(
-    //       //         color: theme.colorScheme.surface,
-    //       //         borderRadius: BorderRadius.only(
-    //       //           topLeft: Radius.circular(20.0),
-    //       //           topRight: Radius.circular(20.0),
-    //       //         ),
-    //       //         boxShadow: [
-    //       //           BoxShadow(
-    //       //             color: theme.colorScheme.onSurface.withOpacity(0.1),
-    //       //             spreadRadius: 1,
-    //       //             blurRadius: 10,
-    //       //           ),
-    //       //         ],
-    //       //       ),
-    //       //       child: SingleChildScrollView(
-    //       //         controller: scrollController,
-    //       //         child: null,
-    //       //       ),
-    //       //     );
-    //       //   },
-    //       // );
-    //     },
-    //   );
-    // });
-  }
-
   var views = [
     HomePage(),
     RecipesView(),
@@ -90,7 +42,8 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
   double bottomSheetHeight = 200;
 
   buildSearchSheet(BuildContext context) {
-    FormControl searchControl = FormControl<String>(value: context.read<AppModel>().search);
+    FormControl searchControl =
+        FormControl<String>(value: context.read<AppModel>().search);
     final theme = Theme.of(context);
 
     return showModalBottomSheet(
@@ -342,7 +295,8 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                 initialChildSize: 0.15,
                 minChildSize: 0.15,
                 maxChildSize: 0.8,
-                builder: (BuildContext context, ScrollController scrollController) {
+                builder:
+                    (BuildContext context, ScrollController scrollController) {
                   return Container(
                     decoration: BoxDecoration(
                       color: seed,
@@ -369,7 +323,8 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton.filledTonal(
-                                  onPressed: () => scaffoldKey.currentState!.openDrawer(),
+                                  onPressed: () =>
+                                      scaffoldKey.currentState!.openDrawer(),
                                   icon: Icon(
                                     Icons.menu,
                                     size: 35,
