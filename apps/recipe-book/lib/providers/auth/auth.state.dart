@@ -9,8 +9,7 @@ class AuthState with _$AuthState {
 
   const factory AuthState.loading() = _Loading;
 
-  const factory AuthState.unauthenticated({String? message}) =
-      _UnAuthentication;
+  const factory AuthState.unauthenticated({String? message}) = _UnAuthentication;
 
   const factory AuthState.authenticated({required User user}) = _Authenticated;
 }

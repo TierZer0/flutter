@@ -42,8 +42,8 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
   double bottomSheetHeight = 200;
 
   buildSearchSheet(BuildContext context) {
-    FormControl searchControl =
-        FormControl<String>(value: context.read<AppModel>().search);
+    // FormControl searchControl =
+    //     FormControl<String>(value: context.read<AppModel>().search);
     final theme = Theme.of(context);
 
     return showModalBottomSheet(
@@ -55,7 +55,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
           padding: MediaQuery.of(context).viewInsets,
           child: ReactiveForm(
             formGroup: FormGroup({
-              'search': searchControl,
+              // 'search': searchControl,
             }),
             child: Container(
               height: 250,
@@ -77,7 +77,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                     alignment: Alignment.bottomRight,
                     child: FilledButton(
                       onPressed: () {
-                        context.read<AppModel>().search = searchControl.value;
+                        // context.read<AppModel>().search = searchControl.value;
                         context.pop();
                       },
                       child: CText('Search'),
@@ -295,8 +295,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                 initialChildSize: 0.15,
                 minChildSize: 0.15,
                 maxChildSize: 0.8,
-                builder:
-                    (BuildContext context, ScrollController scrollController) {
+                builder: (BuildContext context, ScrollController scrollController) {
                   return Container(
                     decoration: BoxDecoration(
                       color: seed,
@@ -323,8 +322,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton.filledTonal(
-                                  onPressed: () =>
-                                      scaffoldKey.currentState!.openDrawer(),
+                                  onPressed: () => scaffoldKey.currentState!.openDrawer(),
                                   icon: Icon(
                                     Icons.menu,
                                     size: 35,

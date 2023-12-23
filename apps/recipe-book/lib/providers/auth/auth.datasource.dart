@@ -10,8 +10,7 @@ class AuthDataSource {
 
   AuthDataSource({required this.firebaseAuth, required this.ref});
 
-  Future<Either<String, User>> signup(
-      {required String email, required String password}) async {
+  Future<Either<String, User>> signup({required String email, required String password}) async {
     try {
       final response = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -23,8 +22,7 @@ class AuthDataSource {
     }
   }
 
-  Future<Either<String, User?>> login(
-      {required String email, required String password}) async {
+  Future<Either<String, User?>> login({required String email, required String password}) async {
     try {
       final response = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -42,8 +40,7 @@ class AuthDataSource {
       final googleSignIn = GoogleSignIn();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,

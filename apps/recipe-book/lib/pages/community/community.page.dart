@@ -252,7 +252,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
+    // profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
 
     return ResponsiveWidget(
       desktopScreen: buildDesktop(context),

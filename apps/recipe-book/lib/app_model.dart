@@ -11,7 +11,7 @@ class AppModel extends ChangeNotifier {
   String get uid => _userUID;
   set uid(String value) {
     _userUID = value;
-    appPreferences.setUserUIDPref(value);
+    appPreferences.setUserUID(value);
     notifyListeners();
   }
 

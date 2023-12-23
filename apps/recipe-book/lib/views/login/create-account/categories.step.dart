@@ -190,7 +190,7 @@ class _CategoriesStepState extends State<CategoriesStep> {
             ReactiveFormConsumer(
               builder: (context, _formGroup, child) {
                 return SizedBox(
-                  height: 200,
+                  // height: 200,
                   child: ListView.builder(
                     itemCount: _formGroup.control('${formGroupName}.items').value.length,
                     itemBuilder: (context, index) {

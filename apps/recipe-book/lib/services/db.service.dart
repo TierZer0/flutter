@@ -2,17 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 
-class FirestoreResult<T> {
-  bool success;
-  String? message;
-  T? payload;
+// class FirestoreResult<T> {
+//   bool success;
+//   String? message;
+//   T? payload;
 
-  FirestoreResult(
-    this.payload, {
-    required this.success,
-    this.message,
-  });
-}
+//   FirestoreResult(
+//     this.payload, {
+//     required this.success,
+//     this.message,
+//   });
+// }
 
 class _DbService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

@@ -126,8 +126,9 @@ class RecipeBooksStep extends StatelessWidget {
               ReactiveFormConsumer(
                 builder: (context, _formGroup, child) {
                   return SizedBox(
-                    height: 200,
+                    height: _formGroup.control('${formGroupName}.items').value.length * 100,
                     child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: _formGroup.control('${formGroupName}.items').value.length,
                       itemBuilder: (context, index) {
                         RecipeBookModel value =

@@ -5,6 +5,8 @@ import 'package:recipe_book/pages/community/community.page.dart';
 import 'package:recipe_book/providers/auth/providers.dart';
 import 'package:recipe_book/views/auth/login.auth.dart';
 
+import 'create-account.auth.dart';
+
 class AuthView extends ConsumerStatefulWidget {
   const AuthView({Key? key}) : super(key: key);
 
@@ -14,7 +16,7 @@ class AuthView extends ConsumerStatefulWidget {
 
 class _AuthViewState extends ConsumerState<AuthView> {
   bool isLoggedIn = false;
-  bool isLloading = false;
+  bool isLoading = false;
   bool isCreatingAccount = false;
 
   @override
@@ -29,7 +31,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
             loading: () {
               print('loading');
               setState(() {
-                isLloading = true;
+                isLoading = true;
               });
             },
             authenticated: (user) {
@@ -40,25 +42,30 @@ class _AuthViewState extends ConsumerState<AuthView> {
             },
             unauthenticated: (message) {
               print('unauthenticated');
-              // setState(() {
-              //   isCreatingAccount = true;
-              // });
+              setState(() {
+                isLoggedIn = false;
+                isLoading = false;
+              });
             },
           );
         });
 
-        if (isCreatingAccount) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (isLoggedIn) {
+        if (isLoggedIn) {
           return MainView();
-        } else if (isLloading) {
+        } else if (isLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );
+        } else if (isCreatingAccount) {
+          return AuthCreateAccountView();
         } else {
-          return AuthLoginView();
+          return AuthLoginView(
+            triggerCreateAccount: () {
+              setState(() {
+                isCreatingAccount = true;
+              });
+            },
+          );
         }
       },
     );

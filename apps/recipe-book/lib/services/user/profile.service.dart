@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recipe_book/models/models.dart';
+import 'package:recipe_book/services/db.service.dart';
 import 'package:recipe_book/services/user/authentication.service.dart';
 import 'package:recipe_book/services/recipes/recipes.service.dart';
-
-import '../../models/models.dart';
-import '../db.service.dart';
 
 class _ProfileService {
   final _userCollection = db.userCollection;
