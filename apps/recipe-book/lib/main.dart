@@ -22,7 +22,6 @@ import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  // Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -45,6 +44,26 @@ class App extends ConsumerWidget {
         builder: (context, state) {
           return AuthView();
         },
+        routes: [
+          GoRoute(
+            path: 'login',
+            builder: (context, state) {
+              return AuthView(
+                route: AuthViewRoutes.login,
+              );
+              // return LoginView();
+            },
+          ),
+          GoRoute(
+            path: 'createAccount',
+            builder: (context, state) {
+              return AuthView(
+                route: AuthViewRoutes.createAccount,
+              );
+              // return CreateAccountView();
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/newRecipe',

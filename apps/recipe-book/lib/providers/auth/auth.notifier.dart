@@ -20,8 +20,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     final uid = await appPreferences.getUserUID();
     final lastLogin = await appPreferences.getLastLogin();
-    print(lastLogin);
-    print(uid);
 
     if (lastLogin == null || uid == '') {
       state = const AuthState.unauthenticated();
@@ -40,8 +38,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
 
     final bool canAuthenticateWithBiometrics = await _localAuthentication.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await _localAuthentication.isDeviceSupported();
+    final bool canAuthenticate = canAuthenticateWithBiometrics || await _localAuthentication.isDeviceSupported();
 
     if (canAuthenticate) {
       final isAuthenticated = await _localAuthentication.authenticate(

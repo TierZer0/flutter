@@ -44,18 +44,34 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
     })
   });
 
-  buildCardSection({List<Widget> children = const []}) {
+  buildCardSection({List<Widget> body = const [], EdgeInsets? margin, List<Widget> header = const []}) {
     return CustomCard(
-      margin: EdgeInsets.symmetric(
-        horizontal: 15.0,
-      ),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: 15.0),
       card: ECard.elevated,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Wrap(
-          runSpacing: 20.0,
-          children: children,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          header.isNotEmpty
+              ? CustomCard(
+                  margin: EdgeInsets.zero,
+                  card: ECard.filled,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: header,
+                    ),
+                  ),
+                )
+              : SizedBox.shrink(),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Wrap(
+              runSpacing: 20.0,
+              children: body,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -69,26 +85,22 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
           appBar: AppBar(
             centerTitle: true,
             elevation: 0,
-            toolbarHeight: 150.0,
+            toolbarHeight: 75.0,
             title: Column(
               children: [
                 CText(
                   "Livre de Recettes",
                   textLevel: EText.custom,
                   textStyle: GoogleFonts.poly(
-                    fontSize: 55.0,
+                    fontSize: 35.0,
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
                     color: theme.colorScheme.primary,
                   ),
                 ),
                 CText(
-                  "Recipe Book",
+                  "Create Account",
                   textLevel: EText.title2,
-                ),
-                CText(
-                  "By TierZero Studios",
-                  textLevel: EText.caption,
                 ),
               ],
             ),
@@ -99,32 +111,22 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0,
-                    ),
-                    child: CText(
-                      'Create Account',
-                      textLevel: EText.title,
-                    ),
-                  ),
                   Gap(10),
                   buildCardSection(
-                    children: [
+                    header: [
                       CText(
                         "Account Information",
                         textLevel: EText.title,
                         weight: FontWeight.w600,
                       ),
+                    ],
+                    body: [
                       CustomReactiveInput(
                         inputAction: TextInputAction.next,
                         formName: 'UserLogin.Email',
                         label: 'Email',
                         textColor: theme.colorScheme.onBackground,
-                        validationMessages: {
-                          'required': (p0) => 'Email is required',
-                          'email': (p0) => 'Email must be Email format'
-                        },
+                        validationMessages: {'required': (p0) => 'Email is required', 'email': (p0) => 'Email must be Email format'},
                       ),
                       CustomReactiveInput(
                         inputAction: TextInputAction.next,
@@ -149,46 +151,61 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                   ),
                   Gap(20),
                   buildCardSection(
-                    children: [
+                    header: [
                       CText(
                         "Initial Categories",
                         textLevel: EText.title,
                         weight: FontWeight.w600,
                       ),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(
-                            child: CustomReactiveInput(
-                              inputAction: TextInputAction.next,
-                              formName: 'Categories.Category',
-                              label: 'Category',
-                              textColor: theme.colorScheme.onBackground,
-                              validationMessages: {
-                                'required': (p0) => 'Category is required',
-                              },
-                            ),
+                          CText(
+                            "Categories are a way to organize your recipes.",
+                            textLevel: EText.caption,
+                          ),
+                          CText(
+                            "For example, you might have a category for 'Desserts' or 'Appetizers'.",
+                            textLevel: EText.caption,
+                          ),
+                        ],
+                      ),
+                      Gap(10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomReactiveInput(
+                            inputAction: TextInputAction.next,
+                            formName: 'Categories.Category',
+                            label: 'Category',
+                            textColor: theme.colorScheme.onBackground,
+                            validationMessages: {
+                              'required': (p0) => 'Category is required',
+                            },
                           ),
                           Gap(10),
-                          IconButton(
+                          ElevatedButton(
                             onPressed: () {
-                              formGroup
-                                  .control('Categories.items')
-                                  .value
-                                  .add(formGroup.control('Categories.Category').value);
+                              formGroup.control('Categories.items').value.add(formGroup.control('Categories.Category').value);
                               formGroup.control('Categories.Category').reset();
                               setState(() {});
                             },
-                            icon: const Icon(
-                              Icons.add,
-                              size: 35,
+                            child: CText(
+                              'Add Category',
+                              textLevel: EText.button,
                             ),
                           ),
                         ],
                       ),
+                    ],
+                    body: [
                       ReactiveFormConsumer(
                         builder: (context, _formGroup, child) {
-                          return SizedBox(
-                            height: 200,
+                          return Container(
+                            constraints: BoxConstraints(
+                              minHeight: 100,
+                              maxHeight: 300,
+                            ),
                             child: ListView.builder(
                               itemCount: _formGroup.control('Categories.items').value.length,
                               itemBuilder: (context, index) {
@@ -214,60 +231,65 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                   ),
                   Gap(20),
                   buildCardSection(
-                    children: [
+                    header: [
                       CText(
                         "Initial Recipe Books",
                         textLevel: EText.title,
                         weight: FontWeight.w600,
                       ),
-                      Row(
+                      CText(
+                        "Recipe Books are a collection of recipes that you can share with others.",
+                        textLevel: EText.caption,
+                      ),
+                      CText(
+                        "For example, you might have a recipe book for 'Desserts' or 'Appetizers'.",
+                        textLevel: EText.caption,
+                      ),
+                      Gap(10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                CustomReactiveInput(
-                                  inputAction: TextInputAction.next,
-                                  formName: 'RecipeBooks.Name',
-                                  label: 'Name',
-                                  textColor: theme.colorScheme.onBackground,
-                                  validationMessages: {
-                                    'required': (p0) => 'Name is required',
-                                  },
-                                ),
-                                Gap(10),
-                                CustomReactiveInput(
-                                  inputAction: TextInputAction.next,
-                                  formName: 'RecipeBooks.Description',
-                                  label: 'Description',
-                                  textColor: theme.colorScheme.onBackground,
-                                  validationMessages: {
-                                    'required': (p0) => 'Description is required',
-                                  },
-                                ),
-                              ],
-                            ),
+                          CustomReactiveInput(
+                            inputAction: TextInputAction.next,
+                            formName: 'RecipeBooks.Name',
+                            label: 'Name',
+                            textColor: theme.colorScheme.onBackground,
+                            validationMessages: {
+                              'required': (p0) => 'Name is required',
+                            },
                           ),
                           Gap(10),
-                          IconButton(
+                          CustomReactiveInput(
+                            inputAction: TextInputAction.next,
+                            formName: 'RecipeBooks.Description',
+                            label: 'Description',
+                            textColor: theme.colorScheme.onBackground,
+                            validationMessages: {
+                              'required': (p0) => 'Description is required',
+                            },
+                          ),
+                          Gap(10),
+                          ElevatedButton(
                             onPressed: () {
                               formGroup.control('RecipeBooks.items').value.add(
                                     RecipeBookModel(
                                       name: formGroup.control('RecipeBooks.Name').value,
-                                      description:
-                                          formGroup.control('RecipeBooks.Description').value,
+                                      description: formGroup.control('RecipeBooks.Description').value,
                                     ),
                                   );
                               formGroup.control('RecipeBooks.Name').reset();
                               formGroup.control('RecipeBooks.Description').reset();
                               setState(() {});
                             },
-                            icon: const Icon(
-                              Icons.add,
-                              size: 35,
+                            child: CText(
+                              'Add Recipe Book',
+                              textLevel: EText.button,
                             ),
                           ),
                         ],
-                      ),
+                      )
+                    ],
+                    body: [
                       ReactiveFormConsumer(
                         builder: (context, _formGroup, child) {
                           return SizedBox(
@@ -281,10 +303,7 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                                     textLevel: EText.body,
                                   ),
                                   subtitle: CText(
-                                    _formGroup
-                                        .control('RecipeBooks.items')
-                                        .value[index]
-                                        .description,
+                                    _formGroup.control('RecipeBooks.items').value[index].description,
                                     textLevel: EText.caption,
                                   ),
                                   trailing: IconButton(
