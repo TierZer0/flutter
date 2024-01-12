@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
@@ -37,22 +38,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
       return;
     }
 
-    final bool canAuthenticateWithBiometrics = await _localAuthentication.canCheckBiometrics;
-    final bool canAuthenticate = canAuthenticateWithBiometrics || await _localAuthentication.isDeviceSupported();
+    if (!kIsWeb) {
+      final bool canAuthenticateWithBiometrics = await _localAuthentication.canCheckBiometrics;
+      final bool canAuthenticate = canAuthenticateWithBiometrics || await _localAuthentication.isDeviceSupported();
 
-    if (canAuthenticate) {
-      final isAuthenticated = await _localAuthentication.authenticate(
-        localizedReason: 'Please authenticate to continue',
-      );
+      if (canAuthenticate) {
+        final isAuthenticated = await _localAuthentication.authenticate(
+          localizedReason: 'Please authenticate to continue',
+        );
 
-      if (isAuthenticated) {
-        _setAppPreferencesLogin(FirebaseAuth.instance.currentUser!);
-        state = AuthState.authenticated(user: FirebaseAuth.instance.currentUser!);
+        if (isAuthenticated) {
+          _setAppPreferencesLogin(FirebaseAuth.instance.currentUser!);
+          state = AuthState.authenticated(user: FirebaseAuth.instance.currentUser!);
+        } else {
+          state = const AuthState.unauthenticated();
+        }
       } else {
         state = const AuthState.unauthenticated();
       }
     } else {
-      state = const AuthState.unauthenticated();
+      _setAppPreferencesLogin(FirebaseAuth.instance.currentUser!);
+      state = AuthState.authenticated(user: FirebaseAuth.instance.currentUser!);
     }
   }
 
@@ -68,13 +74,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
-  Future<void> signup({required String email, required String password}) async {
+  Future<void> signup({
+    required String email,
+    required String password,
+    required dynamic payload, // TODO: Create model for payload
+  }) async {
     state = const AuthState.loading();
     final response = await dataSource.signup(email: email, password: password);
     response.fold(
       (error) => state = AuthState.unauthenticated(message: error),
       (response) {
         _setAppPreferencesLogin(response);
+        // TODO: Add payload to user
         return state = AuthState.authenticated(user: response);
       },
     );

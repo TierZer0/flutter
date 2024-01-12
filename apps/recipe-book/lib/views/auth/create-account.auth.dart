@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:recipe_book/models/models.dart' show RecipeBookModel;
+import 'package:recipe_book/providers/auth/providers.dart';
 import 'package:ui/ui.dart' show CText, EText, CustomCard, ECard, CustomReactiveInput;
 
 class AuthCreateAccountView extends ConsumerStatefulWidget {
@@ -44,7 +45,8 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
     })
   });
 
-  buildCardSection({List<Widget> body = const [], EdgeInsets? margin, List<Widget> header = const []}) {
+  buildCardSection(
+      {List<Widget> body = const [], EdgeInsets? margin, List<Widget> header = const []}) {
     return CustomCard(
       margin: margin ?? EdgeInsets.symmetric(horizontal: 15.0),
       card: ECard.elevated,
@@ -126,7 +128,10 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                         formName: 'UserLogin.Email',
                         label: 'Email',
                         textColor: theme.colorScheme.onBackground,
-                        validationMessages: {'required': (p0) => 'Email is required', 'email': (p0) => 'Email must be Email format'},
+                        validationMessages: {
+                          'required': (p0) => 'Email is required',
+                          'email': (p0) => 'Email must be Email format'
+                        },
                       ),
                       CustomReactiveInput(
                         inputAction: TextInputAction.next,
@@ -184,17 +189,26 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                             },
                           ),
                           Gap(10),
-                          ElevatedButton(
-                            onPressed: () {
-                              formGroup.control('Categories.items').value.add(formGroup.control('Categories.Category').value);
-                              formGroup.control('Categories.Category').reset();
-                              setState(() {});
+                          ReactiveFormConsumer(
+                            builder: (context, formGroup, child) {
+                              return ElevatedButton(
+                                onPressed: formGroup.control('Categories').valid
+                                    ? () {
+                                        formGroup
+                                            .control('Categories.items')
+                                            .value
+                                            .add(formGroup.control('Categories.Category').value);
+                                        formGroup.control('Categories.Category').reset();
+                                        setState(() {});
+                                      }
+                                    : null,
+                                child: CText(
+                                  'Add Category',
+                                  textLevel: EText.button,
+                                ),
+                              );
                             },
-                            child: CText(
-                              'Add Category',
-                              textLevel: EText.button,
-                            ),
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -204,25 +218,28 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                           return Container(
                             constraints: BoxConstraints(
                               minHeight: 100,
-                              maxHeight: 300,
+                              maxHeight: 200,
                             ),
-                            child: ListView.builder(
-                              itemCount: _formGroup.control('Categories.items').value.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: CText(
-                                    _formGroup.control('Categories.items').value[index],
-                                    textLevel: EText.body,
-                                  ),
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      _formGroup.control('Categories.items').value.removeAt(index);
-                                      _formGroup.control('Categories.items').markAsDirty();
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  ),
-                                );
-                              },
+                            child: Column(
+                              children:
+                                  (_formGroup.control('Categories.items').value as List<String>)
+                                      .map(
+                                (item) {
+                                  return ListTile(
+                                    title: CText(
+                                      item,
+                                      textLevel: EText.body,
+                                    ),
+                                    trailing: IconButton(
+                                      onPressed: () {
+                                        _formGroup.control('Categories.items').value.remove(item);
+                                        _formGroup.control('Categories.items').markAsDirty();
+                                      },
+                                      icon: Icon(Icons.delete),
+                                    ),
+                                  );
+                                },
+                              ).toList(),
                             ),
                           );
                         },
@@ -269,59 +286,102 @@ class _AuthCreateAccountViewState extends ConsumerState<AuthCreateAccountView> {
                             },
                           ),
                           Gap(10),
-                          ElevatedButton(
-                            onPressed: () {
-                              formGroup.control('RecipeBooks.items').value.add(
-                                    RecipeBookModel(
-                                      name: formGroup.control('RecipeBooks.Name').value,
-                                      description: formGroup.control('RecipeBooks.Description').value,
-                                    ),
-                                  );
-                              formGroup.control('RecipeBooks.Name').reset();
-                              formGroup.control('RecipeBooks.Description').reset();
-                              setState(() {});
+                          ReactiveFormConsumer(
+                            builder: (context, formGroup, child) {
+                              return ElevatedButton(
+                                onPressed: formGroup.control('RecipeBooks').valid
+                                    ? () {
+                                        formGroup.control('RecipeBooks.items').value.add(
+                                              RecipeBookModel(
+                                                name: formGroup.control('RecipeBooks.Name').value,
+                                                description: formGroup
+                                                    .control('RecipeBooks.Description')
+                                                    .value,
+                                              ),
+                                            );
+                                        formGroup.control('RecipeBooks.Name').reset();
+                                        formGroup.control('RecipeBooks.Description').reset();
+                                        setState(() {});
+                                      }
+                                    : null,
+                                child: CText(
+                                  'Add Recipe Book',
+                                  textLevel: EText.button,
+                                ),
+                              );
                             },
-                            child: CText(
-                              'Add Recipe Book',
-                              textLevel: EText.button,
-                            ),
-                          ),
+                          )
                         ],
                       )
                     ],
                     body: [
                       ReactiveFormConsumer(
                         builder: (context, _formGroup, child) {
-                          return SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              itemCount: _formGroup.control('RecipeBooks.items').value.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: CText(
-                                    _formGroup.control('RecipeBooks.items').value[index].name,
-                                    textLevel: EText.body,
-                                  ),
-                                  subtitle: CText(
-                                    _formGroup.control('RecipeBooks.items').value[index].description,
-                                    textLevel: EText.caption,
-                                  ),
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      _formGroup.control('RecipeBooks.items').value.removeAt(index);
-                                      _formGroup.control('RecipeBooks.items').markAsDirty();
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  ),
-                                );
-                              },
+                          return Container(
+                            constraints: BoxConstraints(
+                              minHeight: 100,
+                              maxHeight: 300,
+                            ),
+                            child: Column(
+                              children: (_formGroup.control('RecipeBooks.items').value
+                                      as List<RecipeBookModel>)
+                                  .map(
+                                (item) {
+                                  return ListTile(
+                                    title: CText(
+                                      item.name!,
+                                      textLevel: EText.body,
+                                    ),
+                                    subtitle: CText(
+                                      item.description!,
+                                      textLevel: EText.caption,
+                                    ),
+                                    trailing: IconButton(
+                                      onPressed: () {
+                                        _formGroup.control('RecipeBooks.items').value.remove(item);
+                                        _formGroup.control('RecipeBooks.items').markAsDirty();
+                                      },
+                                      icon: Icon(Icons.delete),
+                                    ),
+                                  );
+                                },
+                              ).toList(),
                             ),
                           );
                         },
                       )
                     ],
                   ),
-                  Gap(20)
+                  Gap(20),
+                  ReactiveFormConsumer(
+                    builder: (context, formGroup, child) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                        ),
+                        child: FilledButton(
+                          onPressed: formGroup.valid
+                              ? () {
+                                  ref.read(authNotifierProvider.notifier).signup(
+                                    email: formGroup.control('UserLogin.Email').value,
+                                    password: formGroup.control('UserLogin.Password').value,
+                                    payload: {
+                                      'name': formGroup.control('UserLogin.Name').value,
+                                      'categories': formGroup.control('Categories.items').value,
+                                      'recipeBooks': formGroup.control('RecipeBooks.items').value,
+                                    },
+                                  );
+                                }
+                              : null,
+                          child: CText(
+                            'Create Account',
+                            textLevel: EText.button,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Gap(20),
                 ],
               ),
             ),

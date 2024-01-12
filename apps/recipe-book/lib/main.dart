@@ -12,7 +12,6 @@ import 'package:recipe_book/providers/app/app.state.dart';
 import 'package:recipe_book/providers/app/providers.dart';
 import 'package:recipe_book/providers/firebase/firebase.providers.dart';
 import 'package:recipe_book/views/community/by_category.view.dart';
-import 'package:recipe_book/views/login/create-account.view.dart';
 // import 'package:recipe_book/views/login/login.view.dart';
 import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
 import 'package:recipe_book/views/recipe-book.view.dart';

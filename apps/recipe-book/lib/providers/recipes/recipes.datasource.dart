@@ -20,9 +20,26 @@ class RecipesDataSource {
     required String recipeId,
   }) async {
     try {
-      final recipe = (await _recipesRef.doc(recipeId).get()).data();
+      final RecipeModel recipe = (await _recipesRef.doc(recipeId).get()).data();
       return FirestoreResult<RecipeModel>(
         recipe,
+        success: true,
+      );
+    } catch (e) {
+      return FirestoreResult(
+        null,
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  // TODO: switch from List<dynamic> to List<RecipeModel>
+  Future<FirestoreResult<List<dynamic>>> getRecipes() async {
+    try {
+      final recipes = (await _recipesRef.get()).docs.map((e) => e.data()).toList();
+      return FirestoreResult<List<dynamic>>(
+        recipes,
         success: true,
       );
     } catch (e) {

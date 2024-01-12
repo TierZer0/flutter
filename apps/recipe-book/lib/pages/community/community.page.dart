@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/main.dart';
 import 'package:recipe_book/pages/community/sections/category.section.dart';
 import 'package:recipe_book/pages/community/sections/popular.section.dart';
+import 'package:recipe_book/providers/recipes/recipes.providers.dart' show getRecipesProvider;
+import 'package:recipe_book/providers/resources/resources.providers.dart';
 
 import 'package:recipe_book/services/recipes/recipes.service.dart';
 
@@ -23,7 +26,7 @@ import 'package:utils/functions/case.dart';
 import '../../models/models.dart';
 import '../../shared/recipe-preview.shared.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   @override
   HomePageState createState() => HomePageState();
 }
@@ -34,7 +37,7 @@ const generalFilters = [
   'New',
 ];
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -62,192 +65,17 @@ class HomePageState extends State<HomePage> {
   String _search = '';
 
   RefreshController _refreshController = RefreshController(initialRefresh: false);
+  // SearchController searchController = SearchController();
 
   void _onRefresh() async {
     setState(() {});
+    ref.refresh(getCategoriesProvider);
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
     // setState(() {});
     _refreshController.loadComplete();
-  }
-
-  Future<void> _filterDialog(BuildContext context, {bool isMobile = true}) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        var theme = Theme.of(context);
-        return AlertDialog(
-          title: CText(
-            'Filter Recipes',
-            textLevel: EText.subtitle,
-          ),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
-            child: ReactiveForm(
-              formGroup: formGroup.control('filter') as FormGroup,
-              child: Wrap(
-                runSpacing: 15.0,
-                children: [
-                  CustomReactiveInput(
-                    formName: 'category',
-                    inputAction: TextInputAction.next,
-                    label: 'Category',
-                    textColor: theme.colorScheme.onBackground,
-                  ),
-                  CustomReactiveInput(
-                    formName: 'prepTime',
-                    inputAction: TextInputAction.next,
-                    label: 'Prep Time',
-                    keyboardType: TextInputType.number,
-                    textColor: theme.colorScheme.onBackground,
-                  ),
-                  CustomReactiveInput(
-                    formName: 'cookTime',
-                    inputAction: TextInputAction.next,
-                    label: 'Cook Time',
-                    keyboardType: TextInputType.number,
-                    textColor: theme.colorScheme.onBackground,
-                  ),
-                  CustomReactiveInput(
-                    formName: 'ingredient',
-                    inputAction: TextInputAction.next,
-                    label: 'Ingredient',
-                    textColor: theme.colorScheme.onBackground,
-                  )
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: CText(
-                'Cancel',
-                textLevel: EText.button,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: CText(
-                'Submit',
-                textLevel: EText.button,
-              ),
-              onPressed: () {
-                setState(() {
-                  filters = formGroup.control('filter').value;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _sortDialog(BuildContext context, {bool isMobile = true}) {
-    List<String> _sortables = ['title', 'category', 'created', 'likes', 'prepTime', 'cookTime'];
-
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        var theme = Theme.of(context);
-        return AlertDialog(
-          title: CText(
-            'Sort Recipes',
-            textLevel: EText.subtitle,
-          ),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width * (isMobile ? 0.9 : 0.4),
-            child: ReactiveForm(
-              formGroup: formGroup,
-              child: Wrap(
-                runSpacing: 15.0,
-                children: [
-                  ReactiveDropdownField(
-                    decoration: InputDecoration(
-                      labelText: 'Sort',
-                      filled: true,
-                    ),
-                    items: _sortables
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: CText(
-                              properCase(e),
-                              textLevel: EText.body,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    formControlName: 'sort',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: CText(
-                'Cancel',
-                textLevel: EText.button,
-              ),
-              onPressed: () {
-                formGroup.control('sort').reset();
-                setState(() {
-                  sort = '';
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: CText(
-                'Submit',
-                textLevel: EText.button,
-              ),
-              onPressed: () {
-                setState(() {
-                  sort = formGroup.control('sort').value;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _previewDialog(BuildContext context, RecipeModel recipe, String recipeId,
-      {bool isMobile = true}) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: CText(
-            recipe.title!,
-            textLevel: EText.title2,
-          ),
-          content: RecipePreviewShared(
-            recipe: recipe,
-          ),
-          actions: [
-            TextButton(
-              child: CText(
-                'Close',
-                textLevel: EText.button,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -278,7 +106,7 @@ class HomePageState extends State<HomePage> {
               horizontal: 10.0,
             ),
             child: IconButton(
-              onPressed: () => _filterDialog(context, isMobile: false),
+              onPressed: () => {},
               icon: Icon(Icons.filter_alt_outlined),
               iconSize: 30.0,
             ),
@@ -288,7 +116,7 @@ class HomePageState extends State<HomePage> {
               horizontal: 10.0,
             ),
             child: IconButton(
-              onPressed: () => _sortDialog(context, isMobile: false),
+              onPressed: () => {},
               icon: Icon(Icons.sort_outlined),
               iconSize: 30.0,
             ),
@@ -327,10 +155,7 @@ class HomePageState extends State<HomePage> {
                     if (snapshot.hasData) {
                       var recipes = snapshot.data.docs;
                       List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
-                      _recipes = _recipes
-                          .where((element) =>
-                              element.title!.toLowerCase().contains(_search.toLowerCase()))
-                          .toList();
+                      _recipes = _recipes.where((element) => element.title!.toLowerCase().contains(_search.toLowerCase())).toList();
                       return GridView.builder(
                         itemCount: _recipes.length,
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -346,8 +171,7 @@ class HomePageState extends State<HomePage> {
                             recipe: recipe,
                             cardType: ECard.elevated,
                             onTap: () => context.push('/recipe/${recipeId}'),
-                            onLongPress: () =>
-                                _previewDialog(context, recipe, recipeId, isMobile: false),
+                            onLongPress: () => {},
                             useImage: true,
                           );
                         },
@@ -397,26 +221,33 @@ class HomePageState extends State<HomePage> {
                   viewConstraints: BoxConstraints(maxHeight: 400.0),
                   barHintText: 'Search Recipes',
                   suggestionsBuilder: (context, controller) async {
-                    final recipes = (await recipesService.getRecipesFuture()).docs.where(
-                        (element) => element
-                            .data()
-                            .title!
-                            .toLowerCase()
-                            .contains(controller.text.toLowerCase()));
-                    final _recipes = recipes.map((e) => e.data()).toList();
+                    final recipesProvider = ref.read(getRecipesProvider);
 
-                    return _recipes.map((recipe) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          maxRadius: 40,
-                          foregroundImage: NetworkImage(recipe.image!),
-                        ),
-                        title: CText(recipe.title!),
-                        subtitle: CText(recipe.description!),
-                        onTap: () => context.push(
-                            '/recipe/${recipes.where((element) => element.data().title == recipe.title).first.id}'),
-                      );
-                    }).toList();
+                    return recipesProvider.when(
+                      data: (result) {
+                        switch (result.success) {
+                          case true:
+                            return result.payload!
+                                .where((element) => element.title!.toLowerCase().contains(controller.text.toLowerCase()))
+                                .map((recipe) {
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  maxRadius: 40,
+                                  foregroundImage: NetworkImage(recipe.image!),
+                                ),
+                                title: CText(recipe.title!),
+                                subtitle: CText(recipe.description!),
+                                onTap: () => context.push('/recipe/${recipe.id}'),
+                              );
+                            }).toList();
+                          default:
+                            debugPrint('Error: ${result.message}');
+                            return [ListTile(title: CText('Error: ${result.message}'))];
+                        }
+                      },
+                      loading: () => [ListTile(title: CText('Loading...'))],
+                      error: (error, stackTrace) => [ListTile(title: CText('Error: $error'))],
+                    );
                   },
                 ),
               ),
