@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_book/models/models.dart';
+import 'package:recipe_book/preferences/app_preferences.dart';
 
 class RecipesDataSource {
   final FirebaseFirestore firebaseFirestore;
@@ -38,6 +39,22 @@ class RecipesDataSource {
   Future<FirestoreResult<List<dynamic>>> getRecipes() async {
     try {
       final recipes = (await _recipesRef.get()).docs.map((e) => e.data()).toList();
+      return FirestoreResult<List<dynamic>>(
+        recipes,
+        success: true,
+      );
+    } catch (e) {
+      return FirestoreResult(
+        null,
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<FirestoreResult<List<dynamic>>> getMyRecipes(String uid) async {
+    try {
+      final recipes = (await _recipesRef.where('createdBy', isEqualTo: uid).get()).docs.map((e) => e.data()).toList();
       return FirestoreResult<List<dynamic>>(
         recipes,
         success: true,

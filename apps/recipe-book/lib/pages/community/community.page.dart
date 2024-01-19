@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/main.dart';
@@ -15,16 +12,11 @@ import 'package:recipe_book/providers/resources/resources.providers.dart';
 
 import 'package:recipe_book/services/recipes/recipes.service.dart';
 
-import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/services/user/profile.service.dart';
-import 'package:recipe_book/shared/recipe-accordion.shared.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 
 import 'package:ui/ui.dart';
-import 'package:utils/functions/case.dart';
 
 import '../../models/models.dart';
-import '../../shared/recipe-preview.shared.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   @override
@@ -41,7 +33,6 @@ class HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    // userService.categories.then((result) => setState(() => _categories.addAll(result)));
   }
 
   final PageController recipeCtrl = PageController(viewportFraction: 0.7);
@@ -65,7 +56,6 @@ class HomePageState extends ConsumerState<HomePage> {
   String _search = '';
 
   RefreshController _refreshController = RefreshController(initialRefresh: false);
-  // SearchController searchController = SearchController();
 
   void _onRefresh() async {
     setState(() {});
@@ -74,14 +64,11 @@ class HomePageState extends ConsumerState<HomePage> {
   }
 
   void _onLoading() async {
-    // setState(() {});
     _refreshController.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
-    // profileService.userTheme.then((theme) => context.read<AppModel>().theme = theme);
-
     return ResponsiveWidget(
       desktopScreen: buildDesktop(context),
       mobileScreen: buildMobile(context),

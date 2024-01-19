@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -8,9 +7,7 @@ import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
 class ByCategorySection extends ConsumerStatefulWidget {
-  final String category;
-
-  const ByCategorySection({Key? key, required this.category}) : super(key: key);
+  const ByCategorySection({Key? key}) : super(key: key);
 
   @override
   _ByCategorySectionState createState() => _ByCategorySectionState();
@@ -21,7 +18,7 @@ class _ByCategorySectionState extends ConsumerState {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final categoriesProvider = ref.read(getCategoriesProvider);
+    final categoriesProvider = ref.watch(getCategoriesProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +71,7 @@ class _ByCategorySectionState extends ConsumerState {
                     ),
                   ),
               },
-            AsyncError(:final error, :final stackTrace) => Center(
+            AsyncError(:final error) => Center(
                 child: CText(
                   error.toString(),
                   textLevel: EText.title2,

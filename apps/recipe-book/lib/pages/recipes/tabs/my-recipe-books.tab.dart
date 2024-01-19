@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/services/recipes/recipes.service.dart';
-import 'package:recipe_book/shared/recipe-book-card.shared.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
-import 'package:ui/general/card.custom.dart';
 import 'package:ui/ui.dart';
 
 import 'dart:math' as math;
@@ -41,9 +38,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
+    return maxHeight != oldDelegate.maxHeight || minHeight != oldDelegate.minHeight || child != oldDelegate.child;
   }
 }
 
@@ -68,9 +63,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
             final data = e.data();
             return {
               ...data.toFirestore(),
-              'expanded': _recipeBooks.isNotEmpty
-                  ? _recipeBooks[recipeBooks.indexOf(e)]['expanded']
-                  : false,
+              'expanded': _recipeBooks.isNotEmpty ? _recipeBooks[recipeBooks.indexOf(e)]['expanded'] : false,
             };
           }).toList();
 
@@ -111,8 +104,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
                                   if (snapshot.hasData) {
                                     final recipes = snapshot.data!.docs;
                                     final _recipes = recipes.map((e) => e.data()).toList();
-                                    final recipeIndexes =
-                                        List<int>.generate(_recipes.length, (index) => index);
+                                    final recipeIndexes = List<int>.generate(_recipes.length, (index) => index);
                                     return Wrap(
                                       spacing: 10.0,
                                       runSpacing: 20.0,
@@ -180,9 +172,7 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
             final data = e.data();
             return {
               ...data.toFirestore(),
-              'expanded': _recipeBooks.isNotEmpty
-                  ? _recipeBooks[recipeBooks.indexOf(e)]['expanded']
-                  : false,
+              'expanded': _recipeBooks.isNotEmpty ? _recipeBooks[recipeBooks.indexOf(e)]['expanded'] : false,
             };
           }).toList();
 
