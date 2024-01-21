@@ -16,3 +16,7 @@ final getRecipesProvider = FutureProvider((ref) {
 final getMyRecipesProvider = FutureProvider.family<FirestoreResult<dynamic>, String>((ref, uid) {
   return Future.value(ref.read(recipesDataSource.notifier).state.getMyRecipes(uid));
 });
+
+final getRecipesInBookProvider = FutureProvider.family<FirestoreResult<dynamic>, String>((ref, bookId) {
+  return Future.value(ref.read(recipesDataSource.notifier).state.getRecipesInBook(bookId));
+});

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe_book/providers/recipe-books/recipe-books.providers.dart' show getRecipeBooks;
+import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
@@ -9,13 +12,13 @@ import 'dart:math' as math;
 
 import '../../../models/models.dart';
 
-class MyRecipeBooksTab extends StatefulWidget {
+class MyRecipeBooksTab extends ConsumerStatefulWidget {
   final search;
 
   const MyRecipeBooksTab({super.key, this.search = ''});
 
   @override
-  State<MyRecipeBooksTab> createState() => _MyRecipeBooksTabState();
+  _MyRecipeBooksTabState createState() => _MyRecipeBooksTabState();
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -42,7 +45,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
+class _MyRecipeBooksTabState extends ConsumerState<MyRecipeBooksTab> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
@@ -163,26 +166,23 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
   }
 
   Widget buildMobile(BuildContext context) {
-    return StreamBuilder(
-      stream: recipeBookService.recipeBooksStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var recipeBooks = snapshot.data!.docs;
-          _recipeBooks = recipeBooks.map((e) {
-            final data = e.data();
-            return {
-              ...data.toFirestore(),
-              'expanded': _recipeBooks.isNotEmpty ? _recipeBooks[recipeBooks.indexOf(e)]['expanded'] : false,
-            };
-          }).toList();
+    final recipeBooksProvider = ref.watch(getRecipeBooks);
 
-          final items = List<int>.generate(_recipeBooks.length, (index) => index);
-          final colorScheme = Theme.of(context).colorScheme;
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
+    return switch (recipeBooksProvider) {
+      AsyncData(:final value) => Builder(
+          builder: (context) {
+            final recipeBooks = value.payload ?? [];
+            _recipeBooks = recipeBooks.map((e) {
+              return {
+                ...e.toFirestore(),
+                'expanded': _recipeBooks.isNotEmpty ? _recipeBooks[recipeBooks.indexOf(e)]['expanded'] : false,
+              };
+            }).toList();
+            final items = List<int>.generate(_recipeBooks.length, (index) => index);
+
+            return SingleChildScrollView(
               child: ExpansionPanelList(
-                elevation: 0,
+                elevation: 2,
                 animationDuration: Duration(milliseconds: 500),
                 dividerColor: Colors.transparent,
                 expansionCallback: (int index, bool isExpanded) {
@@ -191,69 +191,63 @@ class _MyRecipeBooksTabState extends State<MyRecipeBooksTab> {
                   });
                 },
                 children: items.map((index) {
+                  final recipeBook = _recipeBooks[index];
+                  final recipesInBookProvider = ref.watch(getRecipesInBookProvider(recipeBook['id']));
+
                   return ExpansionPanel(
                     canTapOnHeader: true,
-                    isExpanded: _recipeBooks[index]['expanded']!,
+                    isExpanded: recipeBook['expanded']!,
                     headerBuilder: (context, isExpanded) {
                       return ListTile(
                         title: CText(
-                          _recipeBooks[index]['name']!,
+                          recipeBook['name']!,
                           textLevel: EText.title2,
                         ),
                         subtitle: CText(
-                          _recipeBooks[index]['recipes'].length.toString() + ' recipes',
+                          recipeBook['recipes'].length.toString() + ' recipes',
                           textLevel: EText.subtitle,
                         ),
                       );
                     },
-                    body: FutureBuilder(
-                      future: recipeBookService.getRecipeBook(recipeBooks[index].id),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final recipeBook = snapshot.data;
-                          return FutureBuilder(
-                            future: recipesService.recipesInBookFuture(
-                              recipeIds: recipeBook!.recipes!,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final recipes = snapshot.data!.docs;
-                                final _recipes = recipes.map((e) => e.data()).toList();
-                                return SizedBox(
-                                  height: 175,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return RecipeCard(
-                                        recipe: _recipes[index],
-                                        cardType: ECard.none,
-                                        useImage: true,
-                                        onTap: () {
-                                          context.push('/recipe/${recipes[index].id}');
-                                        },
-                                      );
-                                    },
-                                    itemCount: _recipes.length,
-                                  ),
-                                );
-                              }
-                              return SizedBox.shrink();
+                    body: switch (recipesInBookProvider) {
+                      AsyncData(:final value) => SizedBox(
+                          height: 175,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              final recipes = value.payload ?? [];
+
+                              return RecipeCard(
+                                recipe: recipes[index],
+                                cardType: ECard.none,
+                                useImage: true,
+                                onTap: () {
+                                  context.push('/recipe/${recipes[index].id}');
+                                },
+                              );
                             },
-                          );
-                        }
-                        return SizedBox.shrink();
-                      },
-                    ),
+                            itemCount: value.payload.length,
+                          ),
+                        ),
+                      AsyncLoading() => Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      _ => Center(
+                          child: CText('No Recipes in book'),
+                        ),
+                    },
                   );
                 }).toList(),
               ),
-            ),
-          );
-        }
-        return Center(
+            );
+          },
+        ),
+      AsyncLoading() => Center(
           child: CircularProgressIndicator(),
-        );
-      },
-    );
+        ),
+      _ => Center(
+          child: CText('No Recipe Books'),
+        ),
+    };
   }
 }

@@ -67,4 +67,20 @@ class RecipesDataSource {
       );
     }
   }
+
+  Future<FirestoreResult<List<dynamic>>> getRecipesInBook(String bookId) async {
+    try {
+      final recipes = (await _recipesRef.where('recipeBook', isEqualTo: bookId).get()).docs.map((e) => e.data()).toList();
+      return FirestoreResult<List<dynamic>>(
+        recipes,
+        success: true,
+      );
+    } catch (e) {
+      return FirestoreResult(
+        null,
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
 }

@@ -23,7 +23,7 @@ class RecipeBookModel {
   ) {
     final data = snapshot.data();
     return RecipeBookModel(
-      id: data?['id'],
+      id: snapshot.id,
       name: data?['name'],
       description: data?['description'] ?? '',
       recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
@@ -39,6 +39,7 @@ class RecipeBookModel {
       if (createdBy != null) "createdBy": createdBy,
       if (likes != null) "likes": likes,
       if (description != null) "description": description,
+      if (id != null) "id": id,
     };
   }
 }

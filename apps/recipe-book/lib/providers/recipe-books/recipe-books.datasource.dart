@@ -16,15 +16,15 @@ class RecipeBooksDataSource {
     authProvider = ref.read(firebaseAuthProvider);
   }
 
-  get _recipeBooksRef => this.firebaseFirestore.collection('users').doc(authProvider.currentUser!.uid).collection('recipeBooks').withConverter(
+  get _recipeBooksRef => this.firebaseFirestore.collection('users').doc(authProvider.currentUser!.uid).collection('books').withConverter(
         fromFirestore: RecipeBookModel.fromFirestore,
         toFirestore: (RecipeBookModel recipeBook, _) => recipeBook.toFirestore(),
       );
 
-  Future<FirestoreResult<RecipeBookModel>> getRecipeBooks() async {
+  Future<FirestoreResult<dynamic>> getRecipeBooks() async {
     try {
       final recipeBooks = (await _recipeBooksRef.get()).docs.map((e) => e.data()).toList();
-      return Future.value(FirestoreResult<RecipeBookModel>(
+      return Future.value(FirestoreResult<dynamic>(
         recipeBooks,
         success: true,
       ));
