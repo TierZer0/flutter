@@ -12,6 +12,8 @@ class FavoritesPage extends StatefulWidget {
   State<FavoritesPage> createState() => _FavoritesPageState();
 }
 
+enum EMyFavoritesViews { Made, NotMade }
+
 class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateMixin {
   late TabController _tabController;
 
@@ -19,6 +21,16 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  EMyFavoritesViews _currentView = EMyFavoritesViews.Made;
+  buildView() {
+    switch (_currentView) {
+      case EMyFavoritesViews.Made:
+        return MadeFavoritesTab();
+      case EMyFavoritesViews.NotMade:
+        return NotMadeFavoritesTab();
+    }
   }
 
   @override
@@ -86,7 +98,7 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
     return Scaffold(
       appBar: AppBar(
         notificationPredicate: (ScrollNotification notification) {
-          return notification.depth == 1;
+          return notification.depth >= 0;
         },
         title: CText(
           'Favorite Recipes',
@@ -95,23 +107,46 @@ class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateM
         ),
         toolbarHeight: 50.0,
         elevation: 0,
-        bottom: TabBar(
-          controller: _tabController,
-          dividerColor: Colors.transparent,
-          tabs: [
-            Tab(
-              text: 'Made',
-            ),
-            Tab(
-              text: "Haven't Made",
-            ),
-          ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 12.0,
+                ),
+                child: SegmentedButton<EMyFavoritesViews>(
+                  segments: [
+                    ButtonSegment<EMyFavoritesViews>(
+                      value: EMyFavoritesViews.Made,
+                      label: CText(
+                        'Made',
+                        textLevel: EText.button,
+                      ),
+                    ),
+                    ButtonSegment<EMyFavoritesViews>(
+                      value: EMyFavoritesViews.NotMade,
+                      label: CText(
+                        "Not Made",
+                        textLevel: EText.button,
+                      ),
+                    ),
+                  ],
+                  selected: <EMyFavoritesViews>{_currentView},
+                  onSelectionChanged: (Set<EMyFavoritesViews> newSelection) {
+                    setState(() {
+                      _currentView = newSelection.first;
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [MadeFavoritesTab(), NotMadeFavoritesTab()],
-      ),
+      body: buildView(),
     );
   }
 }

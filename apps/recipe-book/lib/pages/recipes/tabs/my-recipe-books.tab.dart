@@ -219,7 +219,7 @@ class _MyRecipeBooksTabState extends ConsumerState<MyRecipeBooksTab> {
 
                               return RecipeCard(
                                 recipe: recipes[index],
-                                cardType: ECard.none,
+                                cardType: ECard.filled,
                                 useImage: true,
                                 onTap: () {
                                   context.push('/recipe/${recipes[index].id}');

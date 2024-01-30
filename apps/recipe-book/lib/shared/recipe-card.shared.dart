@@ -73,15 +73,19 @@ class RecipeCard extends StatelessWidget {
                         textLevel: EText.title,
                         weight: FontWeight.bold,
                       ),
-                      recipe.description != '' || recipe.description != null
-                          ? SizedBox(
-                              width: 200,
-                              child: CText(
-                                recipe.description!,
-                                textLevel: EText.title2,
-                              ),
-                            )
-                          : SizedBox.shrink(),
+                      CText(
+                        recipe.category!,
+                        textLevel: EText.subtitle,
+                      ),
+                      // recipe.description != '' || recipe.description != null
+                      //     ? SizedBox(
+                      //         width: 200,
+                      //         child: CText(
+                      //           recipe.description!,
+                      //           textLevel: EText.title2,
+                      //         ),
+                      //       )
+                      //     : SizedBox.shrink(),
                       Expanded(child: SizedBox.shrink()),
                       CText(
                         recipe.likes.toString() + ' likes',

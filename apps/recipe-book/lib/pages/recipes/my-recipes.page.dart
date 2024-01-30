@@ -127,6 +127,7 @@ class RecipesViewState extends State<RecipesView> with TickerProviderStateMixin 
           textLevel: EText.title,
           weight: FontWeight.bold,
         ),
+        toolbarHeight: 50.0,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60),

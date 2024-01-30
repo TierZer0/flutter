@@ -33,7 +33,7 @@ void main() async {
   );
 }
 
-const seed = Color(0xFF0b8457);
+const seed = Color(0xFF82C09A);
 
 class App extends ConsumerWidget {
   final GoRouter _router = GoRouter(
