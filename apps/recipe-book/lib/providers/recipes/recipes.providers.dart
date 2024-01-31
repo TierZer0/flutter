@@ -28,3 +28,7 @@ final getMyMadeFavoritesProvider = FutureProvider.family<FirestoreResult<dynamic
 final getMyNotMadeFavoritesProvider = FutureProvider.family<FirestoreResult<dynamic>, String>((ref, uid) {
   return Future.value(ref.read(recipesDataSource.notifier).state.getMyNotMadeFavorites(uid));
 });
+
+final getRecipesByCategoryProvider = FutureProvider.family<FirestoreResult<dynamic>, String>((ref, category) {
+  return Future.value(ref.read(recipesDataSource.notifier).state.getRecipesByCategory(category));
+});

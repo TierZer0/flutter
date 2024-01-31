@@ -37,7 +37,7 @@ import '../../models/models.dart';
 //   }
 // }
 
-class RecipePage extends StatefulWidget {
+class RecipePage extends ConsumerStatefulWidget {
   final String recipeId;
 
   RecipePage({required this.recipeId});
@@ -46,7 +46,7 @@ class RecipePage extends StatefulWidget {
   RecipePageState createState() => RecipePageState();
 }
 
-class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
+class RecipePageState extends ConsumerState<RecipePage> with TickerProviderStateMixin {
   bool canEdit = false;
   bool liked = false;
   RecipeModel? _recipeModel;
@@ -67,13 +67,11 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
           }),
         );
 
-    recipeBookService
-        .getRecipeBooks()
-        .then((result) => setState(() => recipeBooks = result.docs.map((e) {
-              RecipeBookModel recipe = e.data();
-              recipe.id = e.id;
-              return recipe;
-            }).toList()));
+    recipeBookService.getRecipeBooks().then((result) => setState(() => recipeBooks = result.docs.map((e) {
+          RecipeBookModel recipe = e.data();
+          recipe.id = e.id;
+          return recipe;
+        }).toList()));
   }
 
   Widget? buildFAB() {
@@ -168,8 +166,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     onPressed: formGroup.valid
                         ? () {
                             AbstractControl<dynamic> _form = formGroup;
-                            recipeBookService.addRecipeToRecipeBook(
-                                widget.recipeId, _form.value['recipeBook']);
+                            recipeBookService.addRecipeToRecipeBook(widget.recipeId, _form.value['recipeBook']);
                             Navigator.of(context).pop();
                           }
                         : null,
@@ -273,27 +270,28 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: recipesService.getRecipe(widget.recipeId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          _recipeModel = snapshot.data;
+    final getRecipe = ref.watch(getRecipeProvider(widget.recipeId));
 
-          if (_recipeModel!.createdBy == userUid) {
-            canEdit = true;
-          } else {
-            recipesService.incrementViews(widget.recipeId);
-          }
-          return ResponsiveWidget(
-            desktopScreen: buildDesktop(context, _recipeModel!),
-            mobileScreen: buildMobile(context, _recipeModel!),
-          );
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    return switch (getRecipe) {
+      AsyncData(:final value) => Builder(
+          builder: (context) {
+            final recipe = value.payload!;
+
+            if (recipe.createdBy == userUid) {
+              canEdit = true;
+            } else {
+              // recipesService.incrementViews(widget.recipeId);
+            }
+            return ResponsiveWidget(
+              desktopScreen: buildDesktop(context, recipe),
+              mobileScreen: buildMobile(context, recipe),
+            );
+          },
+        ),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
+      AsyncError(:final error) => Center(child: CText(error.toString())),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
   }
 
   int _selectedIndex = 0;
@@ -602,9 +600,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     recipe!.image!,
                     fit: BoxFit.fitWidth,
                     loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null &&
-                          loadingProgress?.cumulativeBytesLoaded ==
-                              loadingProgress?.expectedTotalBytes) {
+                      if (loadingProgress == null && loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes) {
                         return child;
                       }
                       return Center(
