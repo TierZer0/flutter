@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/models.dart';
 import 'package:recipe_book/shared/items-grid.shared.dart';
+import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
@@ -48,24 +49,28 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AnimatedContainer(
       width: double.maxFinite,
       height: isExpanded ? widget.expandedSizes[1] : widget.expandedSizes[0],
       duration: Duration(milliseconds: 450),
-      child: CustomCard(
-        margin: EdgeInsets.symmetric(
-          horizontal: 5.0,
-          vertical: isExpanded ? 5.0 : 0.0,
-        ),
-        card: isExpanded ? ECard.elevated : ECard.filled,
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: AnimatedSwitcher(
-            switchInCurve: Curves.easeInToLinear,
-            switchOutCurve: Curves.easeOut,
-            duration: Duration(milliseconds: 500),
-            child: isExpanded ? buildExpanded() : buildCollapsed(),
-          ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: isExpanded ? colorScheme.tertiaryContainer : colorScheme.background,
+      ),
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.symmetric(
+        horizontal: 5.0,
+        vertical: isExpanded ? 5.0 : 0.0,
+      ),
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: AnimatedSwitcher(
+          switchInCurve: Curves.easeInToLinear,
+          switchOutCurve: Curves.easeOut,
+          duration: Duration(milliseconds: 500),
+          child: isExpanded ? buildExpanded() : buildCollapsed(),
         ),
       ),
     );
@@ -127,19 +132,19 @@ class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderSt
               card: ECard.elevated,
               child: Image.network(
                 recipe.image!,
-                width: MediaQuery.of(context).size.width * .9,
+                width: MediaQuery.of(context).size.width * .90,
                 height: 200,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(
-              height: 150,
-              child: FieldGridShared(
-                fields: ['category', 'prepTime', 'cookTime'],
-                data: new Map.from(recipe.toFirestore()),
-              ),
-            ),
-            Expanded(child: SizedBox()),
+            // SizedBox(
+            //   height: 110,
+            //   width: MediaQuery.of(context).size.width * .93,
+            //   child: FieldGridShared(
+            //     fields: ['category', 'prepTime', 'cookTime'],
+            //     data: new Map.from(recipe.toFirestore()),
+            //   ),
+            // ),
             Align(
               alignment: Alignment.bottomCenter,
               child: FilledButton(

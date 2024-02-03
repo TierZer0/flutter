@@ -40,7 +40,8 @@ class App extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Consumer(builder: (context, ref, child) {
-      final AsyncValue<ThemeState> themeState = ref.watch(themeStateFutureProvider);
+      final AsyncValue<ThemeState> themeState =
+          ref.watch(themeStateFutureProvider);
 
       return switch (themeState) {
         AsyncData(:final value) => MaterialApp.router(
@@ -58,7 +59,8 @@ class App extends HookConsumerWidget {
             themeMode: value.isDark ? ThemeMode.dark : ThemeMode.light,
           ),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
-        AsyncError(:final error, :final stackTrace) => const Center(child: Text('Error')),
+        AsyncError(:final error, :final stackTrace) =>
+          const Center(child: Text('Error')),
         _ => const Center(child: Text('Error')),
       };
     });

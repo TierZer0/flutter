@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/services/user/profile.service.dart';
-import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:ui/ui.dart';
 
 import '../../../models/models.dart';
@@ -20,14 +18,12 @@ class DetailsStepState extends State<DetailsStep> {
   @override
   void initState() {
     super.initState();
-    profileService.myCategories.then((result) => setState(() => categories = result));
-    recipeBookService
-        .getRecipeBooks()
-        .then((result) => setState(() => recipeBooks = result.docs.map((e) {
-              RecipeBookModel recipe = e.data();
-              recipe.id = e.id;
-              return recipe;
-            }).toList()));
+    // profileService.myCategories.then((result) => setState(() => categories = result));
+    // recipeBookService.getRecipeBooks().then((result) => setState(() => recipeBooks = result.docs.map((e) {
+    //       RecipeBookModel recipe = e.data();
+    //       recipe.id = e.id;
+    //       return recipe;
+    //     }).toList()));
   }
 
   @override

@@ -46,12 +46,10 @@ class _TableSharedState<T> extends State<TableShared<T>> {
       child: SizedBox(
         width: double.maxFinite,
         child: DataTable(
-          headingRowColor: this.widget.headingRowColor ??
-              MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) => theme.colorScheme.surface),
+          headingRowColor:
+              this.widget.headingRowColor ?? MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => theme.colorScheme.surface),
           dataRowColor: this.widget.dataRowColor ??
-              MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) => theme.colorScheme.surface.withOpacity(0.5)),
+              MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => theme.colorScheme.surface.withOpacity(0.5)),
           columns: List<DataColumn>.generate(
             widget.fields.length,
             (index) => DataColumn(

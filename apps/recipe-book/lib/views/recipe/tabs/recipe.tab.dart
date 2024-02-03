@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
 
@@ -95,9 +94,7 @@ class RecipeTabState extends State<RecipeTab> {
                       recipe.image!,
                       fit: BoxFit.fitWidth,
                       loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null &&
-                            loadingProgress?.cumulativeBytesLoaded ==
-                                loadingProgress?.expectedTotalBytes) {
+                        if (loadingProgress == null && loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes) {
                           return child;
                         }
                         return Center(
@@ -165,9 +162,7 @@ class RecipeTabState extends State<RecipeTab> {
                   recipe.image!,
                   fit: BoxFit.fitWidth,
                   loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null &&
-                        loadingProgress?.cumulativeBytesLoaded ==
-                            loadingProgress?.expectedTotalBytes) {
+                    if (loadingProgress == null && loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes) {
                       return child;
                     }
                     return Center(

@@ -4,15 +4,26 @@ class AppPreferences {
   static const userUID = "USERUID";
   static const view = "VIEW";
   static const theme = "THEME";
+  static const lastLogin = "LASTLOGIN";
 
-  setUserUIDPref(String value) async {
+  setUserUID(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(userUID, value);
   }
 
-  Future<String> getUserUIDPref() async {
+  Future<String> getUserUID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(userUID) ?? '';
+  }
+
+  setLastLogin(int value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(lastLogin, value);
+  }
+
+  Future<int?> getLastLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(lastLogin) ?? null;
   }
 
   setCurrentView(String value) async {

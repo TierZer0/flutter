@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/services/resources.service.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/ui.dart';
 
@@ -32,11 +31,11 @@ class IngredientsStepState extends State<IngredientsStep> {
       _ingredients = widget.formGroup.control('ingredients.items').value;
     });
 
-    resourcesService.units.then(
-      (results) => setState(() {
-        _units = List<String>.from(results['Units'] as List);
-      }),
-    );
+    // resourcesService.units.then(
+    //   (results) => setState(() {
+    //     _units = List<String>.from(results['Units'] as List);
+    //   }),
+    // );
   }
 
   Future<void> _addIngredientDialogBuilder(BuildContext context) {
@@ -136,9 +135,7 @@ class IngredientsStepState extends State<IngredientsStep> {
                                 quantity: value['quantity'],
                                 unit: value['unit'],
                               ));
-                              widget.formGroup
-                                  .control('ingredients.items')
-                                  .patchValue(_ingredients);
+                              widget.formGroup.control('ingredients.items').patchValue(_ingredients);
                             });
                             Navigator.of(context).pop();
                           },
@@ -253,9 +250,7 @@ class IngredientsStepState extends State<IngredientsStep> {
                                   quantity: value['quantity'],
                                   unit: value['unit'],
                                 ));
-                                widget.formGroup
-                                    .control('ingredients.items')
-                                    .patchValue(_ingredients);
+                                widget.formGroup.control('ingredients.items').patchValue(_ingredients);
                               });
                               formGroup.control('ingredients.item').reset();
                               formGroup.control('ingredients.quantity').reset();

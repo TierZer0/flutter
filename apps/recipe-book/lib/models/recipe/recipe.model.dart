@@ -46,18 +46,16 @@ class RecipeModel {
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
+
     return RecipeModel(
       title: data?['title'],
       category: data?['category'],
       recipeBook: data?['recipeBook'],
       description: data?['description'],
-      instructions: data?['instructions'] is Iterable
-          ? InstructionModel().fromMap(data?['instructions'])
-          : null,
-      ingredients:
-          data?['ingredients'] is Iterable ? IngredientModel().fromMap(data?['ingredients']) : null,
+      instructions: data?['instructions'] is Iterable ? InstructionModel().fromMap(data?['instructions']) : null,
+      ingredients: data?['ingredients'] is Iterable ? IngredientModel().fromMap(data?['ingredients']) : null,
       likes: data?['likes'] < 0 ? 0 : data?['likes'],
-      id: data?['id'],
+      id: snapshot.id,
       createdBy: data?['createdBy'],
       image: data?['image'] ?? '',
       reviews: data?['reviews'] is Iterable ? ReviewModel().fromMap(data?['reviews']) : null,
@@ -75,8 +73,7 @@ class RecipeModel {
       if (category != null) "category": category,
       if (recipeBook != null) "recipeBook": recipeBook,
       if (description != null) "description": description,
-      if (instructions != null)
-        "instructions": instructions!.map((instruction) => instruction.toJson()),
+      if (instructions != null) "instructions": instructions!.map((instruction) => instruction.toJson()),
       if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toJson()),
       if (likes != null) "likes": likes,
       if (createdBy != null) "createdBy": createdBy,

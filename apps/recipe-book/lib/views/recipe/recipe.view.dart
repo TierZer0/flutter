@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/services/user/authentication.service.dart';
-import 'package:recipe_book/services/user/recipe-books.service.dart';
+import 'package:recipe_book/providers/firebase/firebase.providers.dart';
+
+import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/shared/items-grid.shared.dart';
 import 'package:recipe_book/shared/table.shared.dart';
 import 'package:recipe_book/views/recipe/tabs/recipe.tab.dart';
 import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
-import 'package:recipe_book/services/recipes/recipes.service.dart';
-import 'package:recipe_book/services/user/profile.service.dart';
 
 import 'package:ui/ui.dart';
 
 import '../../models/models.dart';
 
-class RecipePage extends StatefulWidget {
+class RecipePage extends ConsumerStatefulWidget {
   final String recipeId;
 
   RecipePage({required this.recipeId});
@@ -23,12 +23,11 @@ class RecipePage extends StatefulWidget {
   RecipePageState createState() => RecipePageState();
 }
 
-class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
+class RecipePageState extends ConsumerState<RecipePage> with TickerProviderStateMixin {
   bool canEdit = false;
   bool liked = false;
   RecipeModel? _recipeModel;
   List<RecipeBookModel> recipeBooks = [];
-  String userUid = authenticationService.userUid;
   late List<Widget> _recipeCards;
 
   // bool showAddReview = false;
@@ -37,20 +36,6 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-    profileService.hasLiked(widget.recipeId).then(
-          (result) => setState(() {
-            liked = result;
-          }),
-        );
-
-    recipeBookService
-        .getRecipeBooks()
-        .then((result) => setState(() => recipeBooks = result.docs.map((e) {
-              RecipeBookModel recipe = e.data();
-              recipe.id = e.id;
-              return recipe;
-            }).toList()));
   }
 
   Widget? buildFAB() {
@@ -145,8 +130,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     onPressed: formGroup.valid
                         ? () {
                             AbstractControl<dynamic> _form = formGroup;
-                            recipeBookService.addRecipeToRecipeBook(
-                                widget.recipeId, _form.value['recipeBook']);
+                            // recipeBookService.addRecipeToRecipeBook(widget.recipeId, _form.value['recipeBook']);
                             Navigator.of(context).pop();
                           }
                         : null,
@@ -233,12 +217,12 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
               ),
               onPressed: () {
                 AbstractControl<dynamic> _form = formGroup;
-                ReviewModel review = ReviewModel(
-                  review: _form.value['review'],
-                  stars: _form.value['stars'],
-                  createdBy: userUid,
-                );
-                recipesService.addReview(widget.recipeId, review);
+                // ReviewModel review = ReviewModel(
+                //   review: _form.value['review'],
+                //   stars: _form.value['stars'],
+                //   createdBy: userUid,
+                // );
+                // recipesService.addReview(widget.recipeId, review);
                 Navigator.of(context).pop();
               },
             ),
@@ -250,27 +234,28 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: recipesService.getRecipe(widget.recipeId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          _recipeModel = snapshot.data;
+    final getRecipe = ref.watch(getRecipeProvider(widget.recipeId));
 
-          if (_recipeModel!.createdBy == userUid) {
-            canEdit = true;
-          } else {
-            recipesService.incrementViews(widget.recipeId);
-          }
-          return ResponsiveWidget(
-            desktopScreen: buildDesktop(context, _recipeModel!),
-            mobileScreen: buildMobile(context, _recipeModel!),
-          );
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    return switch (getRecipe) {
+      AsyncData(:final value) => Builder(
+          builder: (context) {
+            final recipe = value.payload!;
+
+            if (recipe.createdBy == ref.read(firebaseAuthProvider).currentUser!.uid) {
+              canEdit = true;
+            } else {
+              // recipesService.incrementViews(widget.recipeId);
+            }
+            return ResponsiveWidget(
+              desktopScreen: buildDesktop(context, recipe),
+              mobileScreen: buildMobile(context, recipe),
+            );
+          },
+        ),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
+      AsyncError(:final error) => Center(child: CText(error.toString())),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
   }
 
   int _selectedIndex = 0;
@@ -289,7 +274,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
             children: [
               IconButton(
                 onPressed: () {
-                  profileService.likeRecipe(widget.recipeId, liked);
+                  // profileService.likeRecipe(widget.recipeId, liked);
                   setState(() {
                     liked = !liked;
                   });
@@ -423,58 +408,58 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
               'Reviews',
               textLevel: EText.title2,
             ),
-            StreamBuilder(
-              stream: recipesService.recipeReviews(widget.recipeId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var data = snapshot.data!.data();
+            // StreamBuilder(
+            //   stream: recipesService.recipeReviews(widget.recipeId),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       var data = snapshot.data!.data();
 
-                  List<ReviewModel> reviews = [];
-                  (data.reviews ?? []).forEach(
-                    (e) => reviews.add(ReviewModel(
-                      review: e.review,
-                      stars: e.stars,
-                    )),
-                  );
-                  return SizedBox(
-                    height: reviews.length * 75.0,
-                    child: ListView(
-                      children: reviews
-                          .map(
-                            (review) => ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 0.0,
-                                horizontal: 10.0,
-                              ),
-                              // tileColor: theme.colorScheme.surface,
-                              title: CText(
-                                review.review ?? '',
-                                textLevel: EText.title2,
-                                theme: theme,
-                              ),
-                              subtitle: review.stars! > 0
-                                  ? Wrap(
-                                      spacing: 4,
-                                      children: List<Widget>.generate(
-                                        review.stars ?? 1,
-                                        (index) => Icon(
-                                          Icons.star_rate,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                      ).toList(),
-                                    )
-                                  : null,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  );
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+            //       List<ReviewModel> reviews = [];
+            //       (data.reviews ?? []).forEach(
+            //         (e) => reviews.add(ReviewModel(
+            //           review: e.review,
+            //           stars: e.stars,
+            //         )),
+            //       );
+            //       return SizedBox(
+            //         height: reviews.length * 75.0,
+            //         child: ListView(
+            //           children: reviews
+            //               .map(
+            //                 (review) => ListTile(
+            //                   contentPadding: const EdgeInsets.symmetric(
+            //                     vertical: 0.0,
+            //                     horizontal: 10.0,
+            //                   ),
+            //                   // tileColor: theme.colorScheme.surface,
+            //                   title: CText(
+            //                     review.review ?? '',
+            //                     textLevel: EText.title2,
+            //                     theme: theme,
+            //                   ),
+            //                   subtitle: review.stars! > 0
+            //                       ? Wrap(
+            //                           spacing: 4,
+            //                           children: List<Widget>.generate(
+            //                             review.stars ?? 1,
+            //                             (index) => Icon(
+            //                               Icons.star_rate,
+            //                               color: theme.colorScheme.primary,
+            //                             ),
+            //                           ).toList(),
+            //                         )
+            //                       : null,
+            //                 ),
+            //               )
+            //               .toList(),
+            //         ),
+            //       );
+            //     }
+            //     return Center(
+            //       child: CircularProgressIndicator(),
+            //     );
+            //   },
+            // ),
           ],
         ),
       )
@@ -526,7 +511,7 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                   : SizedBox.shrink(),
               IconButton(
                 onPressed: () {
-                  profileService.likeRecipe(widget.recipeId, liked);
+                  // profileService.likeRecipe(widget.recipeId, liked);
                   setState(() {
                     liked = !liked;
                   });
@@ -576,18 +561,16 @@ class RecipePageState extends State<RecipePage> with TickerProviderStateMixin {
                     ),
                   ),
                   child: Image.network(
-                    recipe!.image!,
+                    recipe.image!,
                     fit: BoxFit.fitWidth,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null &&
-                          loadingProgress?.cumulativeBytesLoaded ==
-                              loadingProgress?.expectedTotalBytes) {
-                        return child;
-                      }
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
+                    // loadingBuilder: (context, child, loadingProgress) {
+                    //   if (loadingProgress == null && loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes) {
+                    //     return child;
+                    //   }
+                    //   return Center(
+                    //     child: CircularProgressIndicator(),
+                    //   );
+                    // },
                   ),
                 ),
               ),
