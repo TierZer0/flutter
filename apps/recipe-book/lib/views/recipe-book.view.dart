@@ -2,12 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/shared/detailed-recipe-card.shared.dart';
 import 'package:ui/ui.dart';
 
 import '../models/models.dart';
-import '../services/recipes/recipes.service.dart';
 
 class RecipeBookPage extends StatefulWidget {
   final String recipeBookId;
@@ -37,11 +35,11 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
   }
 
   getRecipeBook() {
-    recipeBookService.getRecipeBook(widget.recipeBookId).then((result) {
-      setState(() {
-        recipeBook = result;
-      });
-    });
+    // recipeBookService.getRecipeBook(widget.recipeBookId).then((result) {
+    //   setState(() {
+    //     recipeBook = result;
+    //   });
+    // });
   }
 
   Future<void> _addRecipeDialogBuilder(BuildContext context, RecipeBookModel recipeBook) {
@@ -61,30 +59,30 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
               'Add Recipe to Book',
               textLevel: EText.title2,
             ),
-            content: FutureBuilder(
-              future: recipesService.myRecipesFuture(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var data = snapshot.data!.docs;
-                  var recipes = data.map((e) => e.data()).toList();
-                  return ReactiveDropdownField(
-                    hint: Text('Select Recipe'),
-                    items: List<DropdownMenuItem>.generate(recipes.length, (index) {
-                      final RecipeModel item = recipes[index];
-                      final id = data[index].id;
-                      return DropdownMenuItem(
-                        value: id,
-                        child: Text(
-                          item.title!,
-                        ),
-                      );
-                    }),
-                    formControlName: 'recipe',
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
+            // content: FutureBuilder(
+            //   future: recipesService.myRecipesFuture(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       var data = snapshot.data!.docs;
+            //       var recipes = data.map((e) => e.data()).toList();
+            //       return ReactiveDropdownField(
+            //         hint: Text('Select Recipe'),
+            //         items: List<DropdownMenuItem>.generate(recipes.length, (index) {
+            //           final RecipeModel item = recipes[index];
+            //           final id = data[index].id;
+            //           return DropdownMenuItem(
+            //             value: id,
+            //             child: Text(
+            //               item.title!,
+            //             ),
+            //           );
+            //         }),
+            //         formControlName: 'recipe',
+            //       );
+            //     }
+            //     return Center(child: CircularProgressIndicator());
+            //   },
+            // ),
             actions: [
               TextButton(
                 child: CText(
@@ -103,8 +101,7 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
                 onPressed: () {
                   setState(() {
                     recipeBook.recipes!.add(formGroup.control('recipe').value);
-                    recipeBookService.addRecipeToRecipeBook(
-                        formGroup.control('recipe').value, widget.recipeBookId);
+                    // recipeBookService.addRecipeToRecipeBook(formGroup.control('recipe').value, widget.recipeBookId);
                   });
 
                   Navigator.of(context).pop();
@@ -149,153 +146,153 @@ class _RecipeBookPageState extends State<RecipeBookPage> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: recipesService.recipesInBookStream(recipeIds: recipeBook.recipes!),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var recipes = snapshot.data!.docs;
-            List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
+      // body: StreamBuilder(
+      //   stream: recipesService.recipesInBookStream(recipeIds: recipeBook.recipes!),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       var recipes = snapshot.data!.docs;
+      //       List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
 
-            if (isEditing) {
-              return ListView.builder(
-                itemCount: _recipes.length + 1,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    // _recipes.add(null);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                      ),
-                      child: DottedBorder(
-                        dashPattern: [6, 6],
-                        borderType: BorderType.RRect,
-                        color: theme.colorScheme.onSurfaceVariant,
-                        strokeWidth: 1.5,
-                        child: ListTile(
-                          title: CText(
-                            'Add Recipe',
-                            textLevel: EText.title2,
-                          ),
-                          trailing: IconButton(
-                            onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
-                            icon: Icon(
-                              Icons.add,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
+      //       if (isEditing) {
+      //         return ListView.builder(
+      //           itemCount: _recipes.length + 1,
+      //           padding: const EdgeInsets.symmetric(
+      //             horizontal: 20.0,
+      //           ),
+      //           itemBuilder: (context, index) {
+      //             if (index == 0) {
+      //               // _recipes.add(null);
+      //               return Padding(
+      //                 padding: const EdgeInsets.symmetric(
+      //                   vertical: 5.0,
+      //                 ),
+      //                 child: DottedBorder(
+      //                   dashPattern: [6, 6],
+      //                   borderType: BorderType.RRect,
+      //                   color: theme.colorScheme.onSurfaceVariant,
+      //                   strokeWidth: 1.5,
+      //                   child: ListTile(
+      //                     title: CText(
+      //                       'Add Recipe',
+      //                       textLevel: EText.title2,
+      //                     ),
+      //                     trailing: IconButton(
+      //                       onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
+      //                       icon: Icon(
+      //                         Icons.add,
+      //                         color: theme.colorScheme.onSurfaceVariant,
+      //                       ),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               );
+      //             }
 
-                  index -= 1;
-                  final RecipeModel recipe = _recipes[index]!;
-                  final String recipeId = recipes[index].id;
+      //             index -= 1;
+      //             final RecipeModel recipe = _recipes[index]!;
+      //             final String recipeId = recipes[index].id;
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5.0,
-                    ),
-                    child: ListTile(
-                      isThreeLine: true,
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(recipe.image!),
-                      ),
-                      title: CText(
-                        recipe.title!,
-                        textLevel: EText.title,
-                      ),
-                      subtitle: CText(
-                        recipe.description! + '\n' + recipe.category!,
-                        textLevel: EText.subtitle,
-                      ),
-                      tileColor: theme.colorScheme.surfaceVariant.withOpacity(0.2),
-                      trailing: IconButton(
-                        onPressed: () => {
-                          setState(() {
-                            recipeBook.recipes!.remove(recipeId);
-                            recipeBookService.updateRecipeBook(widget.recipeBookId, recipeBook);
-                          })
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          color: theme.colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else {
-              return PageView.builder(
-                itemCount: _recipes.length,
-                onPageChanged: (next) {
-                  if (currentItem != next) {
-                    setState(() {
-                      currentItem = next;
-                    });
-                  }
-                },
-                controller: recipeCtrl,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int currentIndex) {
-                  bool active = currentIndex == currentItem;
-                  return Center(
-                    child: AnimatedContainer(
-                      height: MediaQuery.of(context).size.height * (active ? 0.8 : 0.6),
-                      color: Colors.transparent,
-                      duration: Duration(milliseconds: 300),
-                      child: DetailedRecipeCard(
-                        elevation: active ? 5 : 1,
-                        cardType: ECard.elevated,
-                        recipe: _recipes[currentIndex],
-                        onTap: () => context.push('/recipe/${recipes[currentIndex].id}'),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-                  child: DottedBorder(
-                    dashPattern: [6, 6],
-                    borderType: BorderType.RRect,
-                    color: theme.colorScheme.onSurfaceVariant,
-                    strokeWidth: 1.5,
-                    child: ListTile(
-                      title: CText(
-                        'Add Recipe',
-                        textLevel: EText.title,
-                      ),
-                      trailing: IconButton(
-                        onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
-                        icon: Icon(
-                          Icons.add,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                CText(
-                  'No Recipes in this book',
-                  textLevel: EText.title2,
-                ),
-              ],
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+      //             return Padding(
+      //               padding: const EdgeInsets.symmetric(
+      //                 vertical: 5.0,
+      //               ),
+      //               child: ListTile(
+      //                 isThreeLine: true,
+      //                 leading: CircleAvatar(
+      //                   backgroundImage: NetworkImage(recipe.image!),
+      //                 ),
+      //                 title: CText(
+      //                   recipe.title!,
+      //                   textLevel: EText.title,
+      //                 ),
+      //                 subtitle: CText(
+      //                   recipe.description! + '\n' + recipe.category!,
+      //                   textLevel: EText.subtitle,
+      //                 ),
+      //                 tileColor: theme.colorScheme.surfaceVariant.withOpacity(0.2),
+      //                 trailing: IconButton(
+      //                   onPressed: () => {
+      //                     setState(() {
+      //                       recipeBook.recipes!.remove(recipeId);
+      //                       recipeBookService.updateRecipeBook(widget.recipeBookId, recipeBook);
+      //                     })
+      //                   },
+      //                   icon: Icon(
+      //                     Icons.delete,
+      //                     color: theme.colorScheme.error,
+      //                   ),
+      //                 ),
+      //               ),
+      //             );
+      //           },
+      //         );
+      //       } else {
+      //         return PageView.builder(
+      //           itemCount: _recipes.length,
+      //           onPageChanged: (next) {
+      //             if (currentItem != next) {
+      //               setState(() {
+      //                 currentItem = next;
+      //               });
+      //             }
+      //           },
+      //           controller: recipeCtrl,
+      //           scrollDirection: Axis.horizontal,
+      //           itemBuilder: (BuildContext context, int currentIndex) {
+      //             bool active = currentIndex == currentItem;
+      //             return Center(
+      //               child: AnimatedContainer(
+      //                 height: MediaQuery.of(context).size.height * (active ? 0.8 : 0.6),
+      //                 color: Colors.transparent,
+      //                 duration: Duration(milliseconds: 300),
+      //                 child: DetailedRecipeCard(
+      //                   elevation: active ? 5 : 1,
+      //                   cardType: ECard.elevated,
+      //                   recipe: _recipes[currentIndex],
+      //                   onTap: () => context.push('/recipe/${recipes[currentIndex].id}'),
+      //                 ),
+      //               ),
+      //             );
+      //           },
+      //         );
+      //       }
+      //     } else if (snapshot.connectionState == ConnectionState.done) {
+      //       return Column(
+      //         children: [
+      //           Padding(
+      //             padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+      //             child: DottedBorder(
+      //               dashPattern: [6, 6],
+      //               borderType: BorderType.RRect,
+      //               color: theme.colorScheme.onSurfaceVariant,
+      //               strokeWidth: 1.5,
+      //               child: ListTile(
+      //                 title: CText(
+      //                   'Add Recipe',
+      //                   textLevel: EText.title,
+      //                 ),
+      //                 trailing: IconButton(
+      //                   onPressed: () => _addRecipeDialogBuilder(context, recipeBook),
+      //                   icon: Icon(
+      //                     Icons.add,
+      //                     color: theme.colorScheme.onSurfaceVariant,
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //           CText(
+      //             'No Recipes in this book',
+      //             textLevel: EText.title2,
+      //           ),
+      //         ],
+      //       );
+      //     }
+      //     return Center(
+      //       child: CircularProgressIndicator(),
+      //     );
+      //   },
+      // ),
     );
   }
 }

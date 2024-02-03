@@ -10,8 +10,6 @@ import 'package:recipe_book/pages/community/sections/popular.section.dart';
 import 'package:recipe_book/providers/recipes/recipes.providers.dart' show getRecipesProvider;
 import 'package:recipe_book/providers/resources/resources.providers.dart';
 
-import 'package:recipe_book/services/recipes/recipes.service.dart';
-
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 
 import 'package:ui/ui.dart';
@@ -132,42 +130,42 @@ class HomePageState extends ConsumerState<HomePage> {
                 },
               ),
               SizedBox(height: 10.0),
-              Expanded(
-                child: StreamBuilder(
-                  stream: recipesService.getRecipesStream(
-                    filters: filters,
-                    sort: formGroup.control('sort').value,
-                  ),
-                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData) {
-                      var recipes = snapshot.data.docs;
-                      List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
-                      _recipes = _recipes.where((element) => element.title!.toLowerCase().contains(_search.toLowerCase())).toList();
-                      return GridView.builder(
-                        itemCount: _recipes.length,
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 450,
-                          childAspectRatio: 4 / 1.5,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          final RecipeModel recipe = _recipes[index];
-                          final String recipeId = recipes[index].id;
-                          return RecipeCard(
-                            recipe: recipe,
-                            cardType: ECard.elevated,
-                            onTap: () => context.push('/recipe/${recipeId}'),
-                            onLongPress: () => {},
-                            useImage: true,
-                          );
-                        },
-                      );
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                ),
-              ),
+              // Expanded(
+              //   child: StreamBuilder(
+              //     stream: recipesService.getRecipesStream(
+              //       filters: filters,
+              //       sort: formGroup.control('sort').value,
+              //     ),
+              //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              //       if (snapshot.hasData) {
+              //         var recipes = snapshot.data.docs;
+              //         List<dynamic> _recipes = recipes.map((e) => e.data()).toList();
+              //         _recipes = _recipes.where((element) => element.title!.toLowerCase().contains(_search.toLowerCase())).toList();
+              //         return GridView.builder(
+              //           itemCount: _recipes.length,
+              //           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              //             maxCrossAxisExtent: 450,
+              //             childAspectRatio: 4 / 1.5,
+              //             crossAxisSpacing: 20,
+              //             mainAxisSpacing: 10,
+              //           ),
+              //           itemBuilder: (context, index) {
+              //             final RecipeModel recipe = _recipes[index];
+              //             final String recipeId = recipes[index].id;
+              //             return RecipeCard(
+              //               recipe: recipe,
+              //               cardType: ECard.elevated,
+              //               onTap: () => context.push('/recipe/${recipeId}'),
+              //               onLongPress: () => {},
+              //               useImage: true,
+              //             );
+              //           },
+              //         );
+              //       }
+              //       return Center(child: CircularProgressIndicator());
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

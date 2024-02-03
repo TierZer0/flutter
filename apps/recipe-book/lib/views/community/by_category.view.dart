@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_book/providers/recipes/recipes.providers.dart';
-import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:recipe_book/shared/recipe-accordion.shared.dart';
 
 class ByCategoryCommunityView extends ConsumerWidget {

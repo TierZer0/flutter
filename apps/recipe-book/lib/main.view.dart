@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/app_model.dart';
 import 'package:recipe_book/main.dart';
 import 'package:recipe_book/pages/favorites/favorites.page.dart';
 import 'package:recipe_book/pages/community/community.page.dart';
-import 'package:recipe_book/pages/profile/profile.page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
-import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
-import 'package:ui/inputs/reactive-input.custom.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
 
 class MainView extends StatefulWidget {
@@ -58,7 +51,6 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
       ]
     },
     2: {'title': 'Favorites', 'icon': Icons.favorite_outline, 'selectedIcon': Icons.favorite, 'view': FavoritesPage(), 'sideNav': []},
-    3: {'title': 'Profile', 'icon': Icons.person_outline_outlined, 'selectedIcon': Icons.person, 'view': ProfileView(), 'sideNav': []},
   };
   @override
   Widget build(BuildContext context) {
@@ -130,20 +122,6 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
               padding: const EdgeInsets.all(8.0),
               child: CText(
                 'Favorites',
-                textLevel: EText.custom,
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CText(
-                'Profile',
                 textLevel: EText.custom,
                 textStyle: TextStyle(
                   fontSize: 20,

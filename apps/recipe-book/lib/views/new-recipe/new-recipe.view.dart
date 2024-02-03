@@ -7,13 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/app_model.dart';
-import 'package:recipe_book/services/user/authentication.service.dart';
-import 'package:recipe_book/services/user/recipe-books.service.dart';
 import 'package:recipe_book/views/new-recipe/steps/details.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/ingredients.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/instructions.step.dart';
 import 'package:recipe_book/views/new-recipe/steps/save.step.dart';
-import 'package:recipe_book/services/recipes/recipes.service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ui/ui.dart';
 
@@ -30,7 +27,7 @@ class NewPage extends StatefulWidget {
 
 class NewPageState extends State<NewPage> {
   bool loading = false;
-  String userUid = authenticationService.userUid;
+  // String userUid = authenticationService.userUid;
 
   @override
   void initState() {
@@ -69,36 +66,36 @@ class NewPageState extends State<NewPage> {
   }
 
   getRecipe() {
-    recipesService.getRecipe(widget.id!).then((recipe) {
-      print(recipe.recipeBook);
-      recipeBookService.getRecipeBook(recipe.recipeBook!).then((book) {
-        _formGroup.patchValue({
-          'details': {
-            'name': recipe.title,
-            'description': recipe.description,
-            'category': recipe.category,
-            'book': recipe.recipeBook!,
-            'cookTime': recipe.cookTime,
-            'prepTime': recipe.prepTime,
-            'servings': recipe.servings,
-          },
-          'ingredients': {
-            'items': recipe.ingredients,
-          },
-          'instructions': {
-            'steps': recipe.instructions,
-          },
-          'settings': {
-            'isPublic': recipe.isPublic ?? false,
-            'isShareable': recipe.isShareable ?? false,
-          },
-        });
-        setState(() {
-          context.read<AppModel>().recipeBook = book;
-          loading = false;
-        });
-      });
-    });
+    // recipesService.getRecipe(widget.id!).then((recipe) {
+    //   print(recipe.recipeBook);
+    //   recipeBookService.getRecipeBook(recipe.recipeBook!).then((book) {
+    //     _formGroup.patchValue({
+    //       'details': {
+    //         'name': recipe.title,
+    //         'description': recipe.description,
+    //         'category': recipe.category,
+    //         'book': recipe.recipeBook!,
+    //         'cookTime': recipe.cookTime,
+    //         'prepTime': recipe.prepTime,
+    //         'servings': recipe.servings,
+    //       },
+    //       'ingredients': {
+    //         'items': recipe.ingredients,
+    //       },
+    //       'instructions': {
+    //         'steps': recipe.instructions,
+    //       },
+    //       'settings': {
+    //         'isPublic': recipe.isPublic ?? false,
+    //         'isShareable': recipe.isShareable ?? false,
+    //       },
+    //     });
+    //     setState(() {
+    //       context.read<AppModel>().recipeBook = book;
+    //       loading = false;
+    //     });
+    //   });
+    // });
   }
 
   late FormGroup _formGroup;
@@ -148,13 +145,13 @@ class NewPageState extends State<NewPage> {
     instructions: [],
     ingredients: [],
     likes: 0,
-    createdBy: authenticationService.userUid,
+    // createdBy: authenticationService.userUid,
   );
 
   _handleDelete(BuildContext context) {
-    recipesService.deleteRecipe(widget.id!, recipe).then((value) {
-      context.pop();
-    });
+    // recipesService.deleteRecipe(widget.id!, recipe).then((value) {
+    //   context.pop();
+    // });
   }
 
   @override
@@ -230,28 +227,28 @@ class NewPageState extends State<NewPage> {
                     //snackbar
                     return;
                   }
-                  recipe = RecipeModel(
-                    title: details.value['name'],
-                    category: details.value['category'] ?? '',
-                    recipeBook: details.value['book'] ?? '',
-                    description: details.value['description'] ?? '',
-                    ingredients: ingredients.value['items'],
-                    instructions: instructions.value['steps'],
-                    likes: 0,
-                    createdBy: userUid,
-                    isPublic: settings.value['isPublic'],
-                    isShareable: settings.value['isShareable'],
-                    prepTime: details.value['prepTime'],
-                    cookTime: details.value['cookTime'],
-                    servings: details.value['servings'],
-                  );
-                  recipesService.createRecipe(recipe, _photo ?? _photoWeb!);
-                  context.read<AppModel>().recipeBook = RecipeBookModel(
-                    name: '',
-                    recipes: [],
-                    createdBy: userUid,
-                    likes: 0,
-                  );
+                  // recipe = RecipeModel(
+                  //   title: details.value['name'],
+                  //   category: details.value['category'] ?? '',
+                  //   recipeBook: details.value['book'] ?? '',
+                  //   description: details.value['description'] ?? '',
+                  //   ingredients: ingredients.value['items'],
+                  //   instructions: instructions.value['steps'],
+                  //   likes: 0,
+                  //   createdBy: userUid,
+                  //   isPublic: settings.value['isPublic'],
+                  //   isShareable: settings.value['isShareable'],
+                  //   prepTime: details.value['prepTime'],
+                  //   cookTime: details.value['cookTime'],
+                  //   servings: details.value['servings'],
+                  // );
+                  // recipesService.createRecipe(recipe, _photo ?? _photoWeb!);
+                  // context.read<AppModel>().recipeBook = RecipeBookModel(
+                  //   name: '',
+                  //   recipes: [],
+                  //   createdBy: userUid,
+                  //   likes: 0,
+                  // );
                   context.go('/');
                   break;
               }
@@ -377,32 +374,32 @@ class NewPageState extends State<NewPage> {
         }
 
         submit(File photo, String imageName) {
-          recipe = RecipeModel(
-            title: details.value['name'],
-            category: details.value['category'] ?? '',
-            recipeBook: details.value['book'] ?? '',
-            description: details.value['description'] ?? '',
-            ingredients: ingredients.value['items'],
-            instructions: instructions.value['steps'],
-            likes: 0,
-            createdBy: userUid,
-            isPublic: settings.value['isPublic'],
-            isShareable: settings.value['isShareable'],
-            prepTime: details.value['prepTime'],
-            cookTime: details.value['cookTime'],
-            servings: details.value['servings'],
-          );
-          if (widget.id != null) {
-            recipesService.updateRecipe(widget.id!, recipe);
-          } else {
-            recipesService.createRecipe(recipe, photo);
-          }
-          context.read<AppModel>().recipeBook = RecipeBookModel(
-            name: '',
-            recipes: [],
-            createdBy: userUid,
-            likes: 0,
-          );
+          // recipe = RecipeModel(
+          //   title: details.value['name'],
+          //   category: details.value['category'] ?? '',
+          //   recipeBook: details.value['book'] ?? '',
+          //   description: details.value['description'] ?? '',
+          //   ingredients: ingredients.value['items'],
+          //   instructions: instructions.value['steps'],
+          //   likes: 0,
+          //   createdBy: userUid,
+          //   isPublic: settings.value['isPublic'],
+          //   isShareable: settings.value['isShareable'],
+          //   prepTime: details.value['prepTime'],
+          //   cookTime: details.value['cookTime'],
+          //   servings: details.value['servings'],
+          // );
+          // if (widget.id != null) {
+          //   recipesService.updateRecipe(widget.id!, recipe);
+          // } else {
+          //   recipesService.createRecipe(recipe, photo);
+          // }
+          // context.read<AppModel>().recipeBook = RecipeBookModel(
+          //   name: '',
+          //   recipes: [],
+          //   createdBy: userUid,
+          //   likes: 0,
+          // );
           context.go('/');
         }
 
@@ -508,17 +505,13 @@ class NewPageState extends State<NewPage> {
                                   flex: 2,
                                   child: IconButton(
                                     icon: Icon(Icons.arrow_forward_ios),
-                                    onPressed: _determinePageValid()
-                                        ? () => _handlePageChange(true)
-                                        : null,
+                                    onPressed: _determinePageValid() ? () => _handlePageChange(true) : null,
                                   ),
                                 )
                               : Expanded(
                                   flex: 2,
                                   child: IconButton(
-                                    onPressed: _determinePageValid()
-                                        ? () => submit(_photo!, _name!)
-                                        : null,
+                                    onPressed: _determinePageValid() ? () => submit(_photo!, _name!) : null,
                                     icon: Icon(Icons.check),
                                   ),
                                 )
