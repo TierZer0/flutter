@@ -7,15 +7,16 @@ import 'package:go_router/go_router.dart';
 import 'package:recipe_book/app_model.dart';
 // import 'package:provider/provider.dart';
 import 'package:recipe_book/main.view.dart';
-import 'package:recipe_book/views/auth/auth.dart';
+import 'package:recipe_book/styles.dart';
+import 'package:recipe_book/views2/auth/auth.dart';
 import 'package:recipe_book/providers/app/app.state.dart';
 import 'package:recipe_book/providers/app/providers.dart';
 import 'package:recipe_book/providers/firebase/firebase.providers.dart';
-import 'package:recipe_book/views/community/by_category.view.dart';
+import 'package:recipe_book/views2/community/by_category.view.dart';
 // import 'package:recipe_book/views/login/login.view.dart';
-import 'package:recipe_book/views/new-recipe/new-recipe.view.dart';
-import 'package:recipe_book/views/recipe-book.view.dart';
-import 'package:recipe_book/views/recipe/recipe.view.dart';
+import 'package:recipe_book/views2/new-recipe/new-recipe.view.dart';
+import 'package:recipe_book/views2/recipe-book.view.dart';
+import 'package:recipe_book/views2/recipe/recipe.view.dart';
 import 'package:recipe_book/preferences/app_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
@@ -33,7 +34,7 @@ void main() async {
   );
 }
 
-const seed = Color(0xFF82C09A);
+// const seed = Color(0xFF82C09A);
 
 class App extends ConsumerWidget {
   final GoRouter _router = GoRouter(
@@ -118,7 +119,7 @@ class App extends ConsumerWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: seed,
+        systemNavigationBarColor: primary,
         // statusBarIconBrightness: ref.watch(app).brigthness,
         // systemNavigationBarIconBrightness: ref.watch(app).brigthness,
       ),
@@ -126,26 +127,27 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        useMaterial3: true,
-        colorSchemeSeed: seed,
-        fontFamily: 'Lato',
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: Colors.transparent,
-          // surfaceTintColor: Colors.transparent,
-        ),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        useMaterial3: true,
-        colorSchemeSeed: seed,
-        fontFamily: 'Lato',
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: Colors.transparent,
-          // surfaceTintColor: Colors.transparent,
-        ),
-      ),
+      theme: lightTheme,
+      // theme: ThemeData(
+      //   brightness: Brightness.light,
+      //   useMaterial3: true,
+      //   colorSchemeSeed: seed,
+      //   fontFamily: 'Lato',
+      //   bottomSheetTheme: BottomSheetThemeData(
+      //     backgroundColor: Colors.transparent,
+      //     // surfaceTintColor: Colors.transparent,
+      //   ),
+      // ),
+      // darkTheme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   useMaterial3: true,
+      //   colorSchemeSeed: seed,
+      //   fontFamily: 'Lato',
+      //   bottomSheetTheme: BottomSheetThemeData(
+      //     backgroundColor: Colors.transparent,
+      //     // surfaceTintColor: Colors.transparent,
+      //   ),
+      // ),
       themeMode: ref.watch(app).themeMode,
     );
   }

@@ -64,8 +64,7 @@ class _InstructionsStepState extends State<InstructionsStep> {
                     label: 'Description',
                     textColor: theme.colorScheme.onBackground,
                     validationMessages: {
-                      ValidationMessage.required: (_) =>
-                          'The Instruction description must not be empty',
+                      ValidationMessage.required: (_) => 'The Instruction description must not be empty',
                     },
                   ),
                 ],
@@ -98,9 +97,7 @@ class _InstructionsStepState extends State<InstructionsStep> {
                                 description: value['description'],
                                 order: _instructions.length + 1,
                               ));
-                              widget.formGroup
-                                  .control('instructions.steps')
-                                  .patchValue(_instructions);
+                              widget.formGroup.control('instructions.steps').patchValue(_instructions);
                             });
                             Navigator.of(context).pop();
                           },
@@ -158,8 +155,7 @@ class _InstructionsStepState extends State<InstructionsStep> {
                   label: 'Description',
                   textColor: theme.colorScheme.onBackground,
                   validationMessages: {
-                    ValidationMessage.required: (_) =>
-                        'The Instruction description must not be empty',
+                    ValidationMessage.required: (_) => 'The Instruction description must not be empty',
                   },
                 ),
                 SizedBox(height: 40.0),
@@ -180,9 +176,7 @@ class _InstructionsStepState extends State<InstructionsStep> {
                                   description: value['description'],
                                   order: _instructions.length + 1,
                                 ));
-                                widget.formGroup
-                                    .control('instructions.steps')
-                                    .patchValue(_instructions);
+                                widget.formGroup.control('instructions.steps').patchValue(_instructions);
                               });
                               widget.formGroup.control('instructions.title').reset();
                               widget.formGroup.control('instructions.description').reset();

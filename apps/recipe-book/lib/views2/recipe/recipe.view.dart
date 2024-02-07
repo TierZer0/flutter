@@ -7,8 +7,8 @@ import 'package:recipe_book/providers/firebase/firebase.providers.dart';
 import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/shared/items-grid.shared.dart';
 import 'package:recipe_book/shared/table.shared.dart';
-import 'package:recipe_book/views/recipe/tabs/recipe.tab.dart';
-import 'package:recipe_book/views/recipe/tabs/reviews.tab.dart';
+import 'package:recipe_book/views2/recipe/tabs/recipe.tab.dart';
+import 'package:recipe_book/views2/recipe/tabs/reviews.tab.dart';
 
 import 'package:ui/ui.dart';
 

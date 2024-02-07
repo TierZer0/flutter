@@ -26,77 +26,31 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      card: cardType,
+    return Material(
       child: InkWell(
         onTap: onTap,
-        onLongPress: onLongPress,
-        child: SizedBox(
-          width: 300,
-          height: height,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-            child: Row(
-              children: [
-                useImage
-                    ? CustomCard(
-                        card: cardType,
-                        child: Container(
-                          width: 110,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                5.0,
-                              ),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: new NetworkImage(
-                                recipe.image!,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 5.0,
-                    top: 5.0,
-                    bottom: 10.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CText(
-                        recipe.title!,
-                        textLevel: EText.title,
-                        weight: FontWeight.bold,
-                      ),
-                      CText(
-                        recipe.category!,
-                        textLevel: EText.subtitle,
-                      ),
-                      // recipe.description != '' || recipe.description != null
-                      //     ? SizedBox(
-                      //         width: 200,
-                      //         child: CText(
-                      //           recipe.description!,
-                      //           textLevel: EText.title2,
-                      //         ),
-                      //       )
-                      //     : SizedBox.shrink(),
-                      Expanded(child: SizedBox.shrink()),
-                      CText(
-                        recipe.likes.toString() + ' likes',
-                        textLevel: EText.subtitle,
-                      ),
-                    ],
+        child: Column(
+          children: [
+            CustomCard(
+              card: ECard.elevated,
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: new NetworkImage(
+                      recipe.image!,
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+            CText(
+              recipe.title!,
+              textLevel: EText.title,
+              weight: FontWeight.bold,
+            ),
+          ],
         ),
       ),
     );

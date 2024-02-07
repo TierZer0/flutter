@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe_book/main.page.dart';
 import 'package:recipe_book/main.view.dart';
-import 'package:recipe_book/pages/community/community.page.dart';
+import 'package:recipe_book/pages2/community/community.page.dart';
 import 'package:recipe_book/providers/auth/providers.dart';
-import 'package:recipe_book/views/auth/login.auth.dart';
+import 'package:recipe_book/views2/auth/login.auth.dart';
 
 import 'create-account.auth.dart';
 
@@ -73,7 +74,8 @@ class _AuthViewState extends ConsumerState<AuthView> {
         });
 
         if (isLoggedIn) {
-          return MainView();
+          // return MainView();
+          return MainPage();
         } else if (isLoading) {
           return Center(
             child: CircularProgressIndicator(),

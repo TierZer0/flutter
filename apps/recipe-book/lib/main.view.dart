@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/main.dart';
-import 'package:recipe_book/pages/favorites/favorites.page.dart';
-import 'package:recipe_book/pages/community/community.page.dart';
+import 'package:recipe_book/pages2/favorites/favorites.page.dart';
+import 'package:recipe_book/pages2/community/community.page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_book/pages/recipes/my-recipes.page.dart';
+import 'package:recipe_book/pages2/recipes/my-recipes.page.dart';
 import 'package:ui/general/text.custom.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
 
@@ -69,7 +69,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
         notificationPredicate: (notification) {
           return notification.depth != 0;
         },
-        backgroundColor: seed,
+        // backgroundColor: seed,
         title: CText(
           'Recipe Book',
           textLevel: EText.custom,
@@ -141,7 +141,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
             right: 0,
             child: _currentPage['sideNav'].length == 0
                 ? Container(
-                    color: seed,
+                    // color: seed,
                     child: SizedBox(
                       height: double.maxFinite,
                       width: double.maxFinite,
@@ -149,7 +149,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                   )
                 : NavigationRail(
                     extended: true,
-                    backgroundColor: seed,
+                    // backgroundColor: seed,
                     destinations: _currentPage['sideNav'],
                     selectedIndex: 0,
                   ),
@@ -207,7 +207,7 @@ class MainViewState extends State<MainView> with TickerProviderStateMixin {
                 builder: (BuildContext context, ScrollController scrollController) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: seed,
+                      // color: seed,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0),
