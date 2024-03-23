@@ -44,7 +44,7 @@ class RecipeBookCard extends StatelessWidget {
                 ),
               ),
               CText(
-                '${recipeBook.recipes!.length.toString()} Recipes',
+                '${recipeBook.recipeIds!.length.toString()} Recipes',
                 textLevel: EText.caption,
               ),
             ],

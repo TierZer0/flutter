@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:recipe_book/pages/search/shared/expansion-list.shared.dart';
 import 'package:recipe_book/providers/firebase/firebase.providers.dart';
-import 'package:recipe_book/providers/recipes/recipes.providers.dart';
-import 'package:recipe_book/shared/card.shared.dart';
+import 'package:recipe_book/providers/recipe-books/recipe-books.providers.dart';
 
-class FavoritesPage extends ConsumerStatefulWidget {
+class MyRecipeBooksPart extends ConsumerStatefulWidget {
   @override
-  FavoritesPageState createState() => FavoritesPageState();
+  MyRecipeBooksPartState createState() => MyRecipeBooksPartState();
 }
 
-class FavoritesPageState extends ConsumerState<FavoritesPage> {
+class MyRecipeBooksPartState extends ConsumerState<MyRecipeBooksPart> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
-  void refreshFavoriteRecipes() => ref.refresh(getFavoritesByUserId(ref.read(firebaseAuthProvider).currentUser!.uid));
+  void refreshMyRecipeBooks() => ref.refresh(getRecipeBooksByUserIdProvider(ref.read(firebaseAuthProvider).currentUser!.uid));
 
   void _onRefresh() async {
-    refreshFavoriteRecipes();
+    refreshMyRecipeBooks();
     _refreshController.refreshCompleted();
   }
 
@@ -27,7 +26,7 @@ class FavoritesPageState extends ConsumerState<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final getFavorites = ref.watch(getFavoritesByUserId(ref.read(firebaseAuthProvider).currentUser!.uid));
+    final getMyRecipeBooks = ref.watch(getRecipeBooksByUserIdProvider(ref.read(firebaseAuthProvider).currentUser!.uid));
 
     return SmartRefresher(
       controller: _refreshController,
@@ -37,31 +36,30 @@ class FavoritesPageState extends ConsumerState<FavoritesPage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         color: Theme.of(context).colorScheme.onPrimary,
       ),
-      child: getFavorites.when(
+      child: getMyRecipeBooks.when(
         error: (error, stackTrace) => Center(child: Text('Error: $error')),
         loading: () => Center(
           child: CircularProgressIndicator(),
         ),
         data: (data) {
-          if (data.payload == null || data.payload.isEmpty) {
+          if (data.payload.isEmpty) {
             return Center(
-              child: Text('No favorite recipes found'),
+              child: Text('No recipe books found'),
             );
           }
           return ListView.builder(
             itemCount: data.payload.length,
             itemBuilder: (context, index) {
-              final _recipes = data.payload!;
-              final recipe = _recipes[index];
-              return CardShared(
-                recipe: recipe,
-                onTap: () => context.go('/recipe/${recipe.id}'),
-                margin: EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 20,
-                ),
-                height: 200,
-                width: 200,
+              final _recipeBooks = data.payload!;
+              final books = _recipeBooks.map((e) {
+                return {
+                  ...e.toFirestore(),
+                  'expanded': false,
+                };
+              }).toList();
+
+              return SearchExpansionList(
+                recipeBooks: books,
               );
             },
           );

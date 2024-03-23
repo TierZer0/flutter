@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recipe_book/models/models.dart';
 
 class RecipeBookModel {
   String? id;
   String? name;
   String? description;
-  List<String>? recipes;
+  List<String>? recipeIds;
+  List<dynamic>? recipes;
   String? createdBy;
   int? likes;
 
@@ -12,6 +14,7 @@ class RecipeBookModel {
     this.id,
     this.name,
     this.description,
+    this.recipeIds,
     this.recipes,
     this.createdBy,
     this.likes,
@@ -26,7 +29,7 @@ class RecipeBookModel {
       id: snapshot.id,
       name: data?['name'],
       description: data?['description'] ?? '',
-      recipes: data?['recipes'] is Iterable ? List<String>.from(data?['recipes']) : null,
+      recipeIds: data?['recipeIds'] is Iterable ? List<String>.from(data?['recipeIds']) : [],
       createdBy: data?['createdBy'],
       likes: data?['likes'],
     );
@@ -35,10 +38,11 @@ class RecipeBookModel {
   Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name": name,
-      if (recipes != null) "recipes": recipes,
+      if (recipeIds != null) "recipeIds": recipeIds,
       if (createdBy != null) "createdBy": createdBy,
       if (likes != null) "likes": likes,
       if (description != null) "description": description,
+      if (recipes != null) "recipes": recipes,
       if (id != null) "id": id,
     };
   }

@@ -4,33 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class CustomReactiveInput<T> extends StatelessWidget {
-  String formName;
+  String formControlName;
   Map<String, String Function(Object)> validationMessages;
   TextInputAction inputAction;
   int? maxLines;
   TextInputType keyboardType;
 
   String label;
-  Color textColor;
+  Color? textColor;
   double fontSize;
   bool readonly;
   bool obscureText;
+  IconData? prefixIcon;
 
   void Function(FormControl<T>)? onTap;
 
   CustomReactiveInput({
     super.key,
     required this.inputAction,
-    required this.formName,
+    required this.formControlName,
     this.validationMessages = const {},
     required this.label,
-    required this.textColor,
+    this.textColor,
     this.fontSize = 20.0,
     this.maxLines = 1,
     this.onTap,
     this.readonly = false,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
+    this.prefixIcon,
   });
 
   @override
@@ -39,20 +41,21 @@ class CustomReactiveInput<T> extends StatelessWidget {
       keyboardType: keyboardType,
       onTap: onTap,
       maxLines: maxLines,
-      formControlName: formName,
+      formControlName: formControlName,
       validationMessages: validationMessages,
       textInputAction: inputAction,
       obscureText: obscureText,
       decoration: InputDecoration(
+        icon: prefixIcon != null ? Icon(prefixIcon) : null,
         labelText: label,
         helperStyle: const TextStyle(height: 0.7),
         errorStyle: const TextStyle(height: 0.7),
         filled: true,
       ),
-      style: TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-      ),
+      // style: TextStyle(
+      //   color: textColor,
+      //   fontSize: fontSize,
+      // ),
       readOnly: readonly,
     );
   }

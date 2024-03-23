@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/models/models.dart';
-import 'package:recipe_book/shared/items-grid.shared.dart';
-import 'package:recipe_book/shared/table.shared.dart';
 import 'package:ui/general/card.custom.dart';
 import 'package:ui/general/text.custom.dart';
 
