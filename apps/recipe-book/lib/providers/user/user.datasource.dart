@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_book/models/models.dart';
+import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 
 class UserDataSource {
   final FirebaseFirestore firebaseFirestore;
@@ -18,7 +19,10 @@ class UserDataSource {
 
   Future<FirestoreResult<List<dynamic>>> getLikedRecipes(String uid) async {
     try {
-      final likes = (await _usersRef.doc(uid).get()).data()!.likes;
+      final likedIds = (await _usersRef.doc(uid).get()).data()!.likes;
+
+      final likes = (await ref.read(recipesDataSource.notifier).state.getRecipesByIds(likedIds!)).payload;
+
       return FirestoreResult<List<dynamic>>(
         likes,
         success: true,

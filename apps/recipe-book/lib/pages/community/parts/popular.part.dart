@@ -24,24 +24,22 @@ class PopularPartState extends ConsumerState<PopularPart> {
 
     return switch (recipesProvider) {
       AsyncData(:final value) => switch (value.success) {
-          true => GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 3.5 / 4,
-                crossAxisSpacing: 30,
-                mainAxisSpacing: 5,
-              ),
+          true => ListView.builder(
+              scrollDirection: Axis.horizontal,
               itemCount: value.payload!.length,
-              scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 final _recipes = value.payload!;
-
                 final RecipeModel recipe = _recipes[index];
-                return RecipeCard(
-                  recipe: recipe,
-                  useImage: true,
-                  cardType: ECard.elevated,
-                  onTap: () => context.push('/recipe/${recipe.id}'),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: RecipeCard(
+                    recipe: recipe,
+                    useImage: true,
+                    cardType: ECard.elevated,
+                    onTap: () => context.push('/recipe/${recipe.id}'),
+                  ),
                 );
               },
             ),

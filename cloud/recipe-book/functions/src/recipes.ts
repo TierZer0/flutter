@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import {DateTime} from "luxon";
 
 
 export const onRecipeCreateActions = functions.firestore
@@ -12,7 +13,7 @@ export const onRecipeCreateActions = functions.firestore
 
       const recipeData = {
         ingredientsList: ingredients,
-        created: Date.now(),
+        created: DateTime.now().toISODate(),
       };
 
       return snapshot.ref.set({

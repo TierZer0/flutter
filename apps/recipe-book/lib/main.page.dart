@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gap/gap.dart';
 import 'package:recipe_book/pages/community/comunity.page.dart';
-import 'package:recipe_book/pages2/community/community.page.dart';
-import 'package:recipe_book/pages2/recipes/my-recipes.page.dart';
-import 'package:recipe_book/providers/recipes/recipes.providers.dart';
-import 'package:recipe_book/shared/search.shared.dart';
+import 'package:recipe_book/pages/favorites/favorites.page.dart';
+import 'package:recipe_book/pages/mine/mine.page.dart';
+import 'package:recipe_book/pages/search/search.page.dart';
 import 'package:ui/general/text.custom.dart';
 import 'package:ui/layout/responsive-widget.custom.dart';
 
@@ -23,14 +20,19 @@ class _MainPageState extends State<MainPage> {
       'view': CommunityPage(),
     },
     1: {
-      'title': 'My Recipes',
-      'icon': FontAwesomeIcons.book,
-      'view': RecipesView(),
+      'title': 'Search',
+      'icon': FontAwesomeIcons.magnifyingGlass,
+      'view': SearchPage(),
     },
     2: {
+      'title': 'Contributions',
+      'icon': FontAwesomeIcons.book,
+      'view': MinePage(),
+    },
+    3: {
       'title': 'Favorites',
       'icon': FontAwesomeIcons.solidHeart,
-      'view': HomePage(),
+      'view': FavoritesPage(),
     }
   };
   Map<String, dynamic> _currentPage = {};
@@ -63,63 +65,32 @@ class _MainPageState extends State<MainPage> {
           _currentPage['title'],
           textLevel: EText.title2,
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(75.0),
-          child: SearchWidget(),
-        ),
-      ),
-      body: Stack(
-        children: [
-          _currentPage['view'],
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: 500,
-              width: double.infinity,
-              child: DraggableScrollableSheet(
-                initialChildSize: 0.1,
-                minChildSize: 0.1,
-                maxChildSize: 0.9,
-                builder: (context, scrollController) {
-                  return Container(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        child: Column(
-                          children: [
-                            Gap(10),
-                            FaIcon(
-                              FontAwesomeIcons.gripLines,
-                              color: Colors.white,
-                              size: 30,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 10,
+            ),
+            child: IconButton(
+              onPressed: () {},
+              icon: FaIcon(
+                FontAwesomeIcons.circleUser,
               ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 10,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        currentIndex: _currentIndex,
-        onTap: (value) => handleMobileNav(value),
-        items: _pages.entries
+      body: _currentPage['view'],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: FaIcon(FontAwesomeIcons.plus),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (value) => handleMobileNav(value),
+        destinations: _pages.entries
             .map(
-              (e) => BottomNavigationBarItem(
+              (e) => NavigationDestination(
                 icon: FaIcon(
                   e.value['icon'],
                 ),

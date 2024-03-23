@@ -18,10 +18,9 @@ class SearchWidgetState extends ConsumerState<SearchWidget> {
       padding: EdgeInsets.all(15.0),
       child: SearchAnchor.bar(
         isFullScreen: false,
-        barElevation: MaterialStateProperty.all(2.0),
         barLeading: FaIcon(
           FontAwesomeIcons.magnifyingGlass,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onSurface,
           size: 15,
         ),
         viewElevation: 2.0,

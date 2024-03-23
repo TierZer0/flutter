@@ -49,6 +49,7 @@ dependencies:
   local_auth: ^2.1.7
   dartz: ^0.10.1
   freezed: ^2.4.5
+  auth_buttons: ^1.0.1+4
 
   # firebase_core_desktop: ^1.0.2
   # firebase_auth_desktop: ^1.0.2
