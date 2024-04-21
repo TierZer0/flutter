@@ -5,6 +5,7 @@ import 'package:recipe_book/providers/recipes/recipes.datasource.dart';
 
 final recipesDataSource = StateProvider((ref) => RecipesDataSource(ref: ref, firebaseFirestore: ref.read(firebaseFirestoreProvider)));
 
+// GETTERS
 final getRecipeProvider = FutureProvider.family<FirestoreResult<RecipeModel>, String>((ref, recipeId) {
   return Future.value(ref.read(recipesDataSource.notifier).state.getRecipe(recipeId: recipeId));
 });
@@ -35,4 +36,37 @@ final getRecipesByCategoryProvider = FutureProvider.family<FirestoreResult<dynam
 
 final getRecipesByDateProvider = FutureProvider.family<FirestoreResult<dynamic>, String>((ref, date) {
   return Future.value(ref.read(recipesDataSource.notifier).state.getRecipesByDate(date));
+});
+
+// SETTERS
+class RecipeReview {
+  ReviewModel review;
+  String recipeId;
+
+  RecipeReview({
+    required this.review,
+    required this.recipeId,
+  });
+}
+
+final setRecipeReviewProvider = FutureProvider.family<void, RecipeReview>((ref, review) {
+  return Future.value(ref.read(recipesDataSource.notifier).state.setRecipeReview(review.recipeId, review.review));
+});
+
+class CreateRecipe {
+  RecipeModel recipe;
+  dynamic photo;
+
+  CreateRecipe({
+    required this.recipe,
+    required this.photo,
+  });
+}
+
+final setRecipeProvider = FutureProvider.family<void, CreateRecipe>((ref, payload) {
+  return Future.value(ref.read(recipesDataSource.notifier).state.setRecipe(payload.recipe, payload.photo));
+});
+
+final updateRecipeProvider = FutureProvider.family<void, RecipeModel>((ref, recipe) {
+  return Future.value(ref.read(recipesDataSource.notifier).state.updateRecipe(recipe));
 });

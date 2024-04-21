@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recipe_book/pages/community/comunity.page.dart';
 import 'package:recipe_book/pages/favorites/favorites.page.dart';
 import 'package:recipe_book/pages/mine/mine.page.dart';
@@ -81,7 +82,7 @@ class _MainPageState extends State<MainPage> {
       ),
       body: _currentPage['view'],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => context.push('/new/recipe'),
         child: FaIcon(FontAwesomeIcons.plus),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

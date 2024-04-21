@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_book/routes/auth/auth.main.dart';
 import 'package:recipe_book/providers/app/providers.dart';
+import 'package:recipe_book/routes/new_recipe/recipe_form.main.dart';
 import 'package:recipe_book/routes/recipe/recipe.main.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
@@ -47,6 +48,28 @@ class App extends ConsumerWidget {
       //     )
       //   ],
       // ),
+      GoRoute(
+        path: '/new',
+        builder: (context, state) {
+          return Container();
+        },
+        routes: [
+          GoRoute(
+            path: 'recipe',
+            builder: (context, state) {
+              return RecipeFormMain();
+            },
+            routes: [
+              GoRoute(
+                path: ':recipeId',
+                builder: (context, state) {
+                  return RecipeFormMain(id: state.params['recipeId']!);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
       GoRoute(
         path: '/recipe/:recipeId',
         builder: (context, state) {
@@ -139,7 +162,7 @@ class App extends ConsumerWidget {
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: lightColorTheme.background,
           elevation: 0,
-          indicatorColor: lightColorTheme.secondary,
+          indicatorColor: lightColorTheme.primary,
           labelTextStyle: MaterialStatePropertyAll(
             TextStyle(
               color: lightColorTheme.onBackground,
@@ -174,7 +197,7 @@ class App extends ConsumerWidget {
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: darkColorTheme.background,
           elevation: 0,
-          indicatorColor: darkColorTheme.secondary,
+          indicatorColor: darkColorTheme.primary,
           labelTextStyle: MaterialStatePropertyAll(
             TextStyle(
               color: darkColorTheme.onBackground,

@@ -35,4 +35,41 @@ class UserDataSource {
       );
     }
   }
+
+  Future<FirestoreResult<bool>> getHasLikedRecipe(String recipeId, String uid) async {
+    try {
+      final likedIds = (await _usersRef.doc(uid).get()).data()!.likes;
+
+      return FirestoreResult<bool>(
+        likedIds!.contains(recipeId),
+        success: true,
+      );
+    } catch (e) {
+      return FirestoreResult(
+        false,
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  Future<void> setLikedRecipe(String recipeId, String uid) async {
+    try {
+      final likedIds = (await _usersRef.doc(uid).get()).data()!.likes;
+
+      if (likedIds!.contains(recipeId)) {
+        await _usersRef.doc(uid).update({
+          'likes': FieldValue.arrayRemove([recipeId]),
+        });
+        return;
+      }
+
+      await _usersRef.doc(uid).update({
+        'likes': FieldValue.arrayUnion([recipeId]),
+      });
+      return;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

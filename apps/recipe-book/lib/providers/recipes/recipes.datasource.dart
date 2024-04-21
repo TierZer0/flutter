@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recipe_book/models/models.dart';
+import 'package:recipe_book/providers/storage/storage.providers.dart';
 import 'package:recipe_book/providers/user/user.providers.dart';
 
 class RecipesDataSource {
@@ -44,6 +45,7 @@ class RecipesDataSource {
         success: true,
       );
     } catch (e) {
+      print(e);
       return FirestoreResult(
         [],
         success: false,
@@ -143,6 +145,34 @@ class RecipesDataSource {
         success: false,
         message: e.toString(),
       );
+    }
+  }
+
+  Future<void> setRecipeReview(String recipeId, ReviewModel review) async {
+    try {
+      await _recipesRef.doc(recipeId).update({
+        'reviews': FieldValue.arrayUnion([review.toMap()]),
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> setRecipe(RecipeModel recipe, dynamic photo) async {
+    try {
+      final result = await ref.read(uploadFileProvider(photo).future);
+      recipe.image = result.toString();
+      await _recipesRef.add(recipe);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateRecipe(RecipeModel recipe) async {
+    try {
+      await _recipesRef.doc(recipe.id).update(recipe.toFirestore());
+    } catch (e) {
+      print(e);
     }
   }
 }

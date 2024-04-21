@@ -19,6 +19,7 @@ class RecipeModel {
   bool? isShareable;
   int? prepTime;
   int? cookTime;
+  int? totalTime;
   int? servings;
 
   RecipeModel({
@@ -36,6 +37,7 @@ class RecipeModel {
     this.isShareable,
     this.prepTime,
     this.cookTime,
+    this.totalTime,
     this.servings,
   });
 
@@ -60,6 +62,7 @@ class RecipeModel {
       isShareable: data?['isShareable'],
       prepTime: data?['prepTime'],
       cookTime: data?['cookTime'],
+      totalTime: data?['prepTime'] + data?['cookTime'],
       servings: data?['servings'],
     );
   }
@@ -79,6 +82,7 @@ class RecipeModel {
       if (isShareable != null) "isShareable": isShareable,
       if (prepTime != null) "prepTime": prepTime,
       if (cookTime != null) "cookTime": cookTime,
+      if (totalTime != null) "totalTime": totalTime,
       if (servings != null) "servings": servings,
     };
   }
