@@ -7,7 +7,6 @@ import 'review.model.dart';
 class RecipeModel {
   String? title;
   String? category;
-  String? recipeBook;
   String? description;
   List<InstructionModel>? instructions;
   List<IngredientModel>? ingredients;
@@ -20,12 +19,12 @@ class RecipeModel {
   bool? isShareable;
   int? prepTime;
   int? cookTime;
+  int? totalTime;
   int? servings;
 
   RecipeModel({
     this.title,
     this.category,
-    this.recipeBook,
     this.description,
     this.instructions,
     this.ingredients,
@@ -38,6 +37,7 @@ class RecipeModel {
     this.isShareable,
     this.prepTime,
     this.cookTime,
+    this.totalTime,
     this.servings,
   });
 
@@ -50,7 +50,6 @@ class RecipeModel {
     return RecipeModel(
       title: data?['title'],
       category: data?['category'],
-      recipeBook: data?['recipeBook'],
       description: data?['description'],
       instructions: data?['instructions'] is Iterable ? InstructionModel().fromMap(data?['instructions']) : null,
       ingredients: data?['ingredients'] is Iterable ? IngredientModel().fromMap(data?['ingredients']) : null,
@@ -63,6 +62,7 @@ class RecipeModel {
       isShareable: data?['isShareable'],
       prepTime: data?['prepTime'],
       cookTime: data?['cookTime'],
+      totalTime: data?['prepTime'] + data?['cookTime'],
       servings: data?['servings'],
     );
   }
@@ -71,7 +71,6 @@ class RecipeModel {
     return {
       if (title != null) "title": title,
       if (category != null) "category": category,
-      if (recipeBook != null) "recipeBook": recipeBook,
       if (description != null) "description": description,
       if (instructions != null) "instructions": instructions!.map((instruction) => instruction.toJson()),
       if (ingredients != null) "ingredients": ingredients!.map((ingredient) => ingredient.toJson()),
@@ -83,6 +82,7 @@ class RecipeModel {
       if (isShareable != null) "isShareable": isShareable,
       if (prepTime != null) "prepTime": prepTime,
       if (cookTime != null) "cookTime": cookTime,
+      if (totalTime != null) "totalTime": totalTime,
       if (servings != null) "servings": servings,
     };
   }

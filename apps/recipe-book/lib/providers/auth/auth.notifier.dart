@@ -77,7 +77,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signup({
     required String email,
     required String password,
-    required dynamic payload, // TODO: Create model for payload
+    // required dynamic payload, // TODO: Create model for payload
   }) async {
     state = const AuthState.loading();
     final response = await dataSource.signup(email: email, password: password);

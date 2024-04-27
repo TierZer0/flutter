@@ -1,152 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:ui/general/text.custom.dart';
-import 'package:ui/ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:recipe_book/providers/firebase/firebase.providers.dart';
+import 'package:recipe_book/providers/recipes/recipes.providers.dart';
+import 'package:recipe_book/shared/card.shared.dart';
 
-import 'tabs/made-recipes.tab.dart';
-import 'tabs/not-made-recipes.tab.dart';
-
-class FavoritesPage extends StatefulWidget {
-  const FavoritesPage({super.key});
-
+class FavoritesPage extends ConsumerStatefulWidget {
   @override
-  State<FavoritesPage> createState() => _FavoritesPageState();
+  FavoritesPageState createState() => FavoritesPageState();
 }
 
-enum EMyFavoritesViews { Made, NotMade }
+class FavoritesPageState extends ConsumerState<FavoritesPage> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
-class _FavoritesPageState extends State<FavoritesPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+  void refreshFavoriteRecipes() => ref.refresh(getFavoritesByUserId(ref.read(firebaseAuthProvider).currentUser!.uid));
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+  void _onRefresh() async {
+    refreshFavoriteRecipes();
+    _refreshController.refreshCompleted();
   }
 
-  EMyFavoritesViews _currentView = EMyFavoritesViews.Made;
-  buildView() {
-    switch (_currentView) {
-      case EMyFavoritesViews.Made:
-        return MadeFavoritesTab();
-      case EMyFavoritesViews.NotMade:
-        return NotMadeFavoritesTab();
-    }
+  void _onLoading() async {
+    _refreshController.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWidget(
-      desktopScreen: buildDesktop(context),
-      mobileScreen: buildMobile(context),
-    );
-  }
+    final getFavorites = ref.watch(getFavoritesByUserId(ref.read(firebaseAuthProvider).currentUser!.uid));
 
-  var _selectedIndex = 0;
-  final _destinations = [
-    MadeFavoritesTab(),
-    NotMadeFavoritesTab(),
-  ];
-  Widget buildDesktop(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: CText(
-          'Favorite Recipes',
-          textLevel: EText.title,
-          weight: FontWeight.bold,
-        ),
+    return SmartRefresher(
+      controller: _refreshController,
+      onLoading: _onLoading,
+      onRefresh: _onRefresh,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.onPrimary,
       ),
-      body: Row(
-        children: [
-          NavigationRail(
-            labelType: NavigationRailLabelType.selected,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
+      child: getFavorites.when(
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        loading: () => Center(
+          child: CircularProgressIndicator(),
+        ),
+        data: (data) {
+          if (data.payload == null || data.payload.isEmpty) {
+            return Center(
+              child: Text('No favorite recipes found'),
+            );
+          }
+          return ListView.builder(
+            itemCount: data.payload.length,
+            itemBuilder: (context, index) {
+              final _recipes = data.payload!;
+              final recipe = _recipes[index];
+              return CardShared(
+                recipe: recipe,
+                onTap: () => context.go('/recipe/${recipe.id}'),
+                margin: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 20,
+                ),
+                height: 200,
+                width: 200,
+              );
             },
-            selectedIndex: _selectedIndex,
-            destinations: [
-              NavigationRailDestination(
-                icon: Icon(Icons.check),
-                label: CText(
-                  'Made',
-                  textLevel: EText.button,
-                ),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.clear),
-                label: CText(
-                  "Not Made",
-                  textLevel: EText.button,
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: CustomCard(
-              card: ECard.filled,
-              child: _destinations[_selectedIndex],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget buildMobile(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        notificationPredicate: (ScrollNotification notification) {
-          return notification.depth >= 0;
+          );
         },
-        title: CText(
-          'Favorite Recipes',
-          textLevel: EText.title,
-          weight: FontWeight.bold,
-        ),
-        toolbarHeight: 50.0,
-        elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 12.0,
-                ),
-                child: SegmentedButton<EMyFavoritesViews>(
-                  segments: [
-                    ButtonSegment<EMyFavoritesViews>(
-                      value: EMyFavoritesViews.Made,
-                      label: CText(
-                        'Made',
-                        textLevel: EText.button,
-                      ),
-                    ),
-                    ButtonSegment<EMyFavoritesViews>(
-                      value: EMyFavoritesViews.NotMade,
-                      label: CText(
-                        "Not Made",
-                        textLevel: EText.button,
-                      ),
-                    ),
-                  ],
-                  selected: <EMyFavoritesViews>{_currentView},
-                  onSelectionChanged: (Set<EMyFavoritesViews> newSelection) {
-                    setState(() {
-                      _currentView = newSelection.first;
-                    });
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
       ),
-      body: buildView(),
     );
   }
 }

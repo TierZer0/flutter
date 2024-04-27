@@ -8,3 +8,11 @@ final userDataSource = StateProvider((ref) => UserDataSource(ref: ref, firebaseF
 final getUserLikesProvider = FutureProvider.family<FirestoreResult<List<dynamic>>, String>((ref, uid) {
   return Future.value(ref.read(userDataSource.notifier).state.getLikedRecipes(uid));
 });
+
+final getHasUserLikedRecipeProvider = FutureProvider.family<FirestoreResult<bool>, String>((ref, recipeId) {
+  return Future.value(ref.read(userDataSource.notifier).state.getHasLikedRecipe(recipeId, ref.read(firebaseAuthProvider).currentUser!.uid));
+});
+
+final setUserLikedRecipeProvider = FutureProvider.family<void, String>((ref, recipeId) {
+  return Future.value(ref.read(userDataSource.notifier).state.setLikedRecipe(recipeId, ref.read(firebaseAuthProvider).currentUser!.uid));
+});
