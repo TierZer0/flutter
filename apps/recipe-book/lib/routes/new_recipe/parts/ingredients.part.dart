@@ -23,6 +23,11 @@ class _RecipeFormIngredientsPartState extends State<RecipeFormIngredientsPart> {
 
     _recipe = widget.recipe;
     _formGroup = widget.formGroup;
+
+    if (_recipe != null) {
+      _formGroup.control('items').value = _recipe!.ingredients;
+      _formGroup.markAsPristine();
+    }
   }
 
   @override

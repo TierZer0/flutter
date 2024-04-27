@@ -83,7 +83,7 @@ class _RecipeMainState extends ConsumerState<RecipeMain> with TickerProviderStat
               myRecipe
                   ? IconButton(
                       icon: Icon(Icons.edit_outlined),
-                      onPressed: () => context.go('/new/recipe/${recipe.id}'),
+                      onPressed: () => context.replace('/edit/${recipe.id}'),
                     )
                   : SizedBox.shrink(),
               !myRecipe

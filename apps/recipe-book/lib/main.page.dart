@@ -13,6 +13,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
+enum menuOptions { profile, settings, logout }
+
 class _MainPageState extends State<MainPage> {
   Map<int, Map<String, dynamic>> _pages = {
     0: {
@@ -69,13 +71,52 @@ class _MainPageState extends State<MainPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(
-              right: 10,
+              right: 20,
             ),
-            child: IconButton(
-              onPressed: () {},
-              icon: FaIcon(
-                FontAwesomeIcons.circleUser,
+            child: PopupMenuButton(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                child: FaIcon(
+                  FontAwesomeIcons.circleUser,
+                ),
               ),
+              onSelected: (value) {
+                switch (value) {
+                  case menuOptions.profile:
+                    context.push('/user/profile');
+                    break;
+                  case menuOptions.settings:
+                    break;
+                  case menuOptions.logout:
+                    break;
+                }
+              },
+              itemBuilder: (context) => <PopupMenuItem<menuOptions>>[
+                PopupMenuItem(
+                  value: menuOptions.profile,
+                  child: Text(
+                    'Profile',
+                    textScaler: TextScaler.linear(1.1),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: menuOptions.settings,
+                  child: Text(
+                    'Settings',
+                    textScaler: TextScaler.linear(1.1),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: menuOptions.logout,
+                  child: Text(
+                    'Logout',
+                    textScaler: TextScaler.linear(1.1),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

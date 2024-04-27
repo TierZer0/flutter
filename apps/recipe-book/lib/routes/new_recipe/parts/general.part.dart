@@ -27,6 +27,18 @@ class _RecipeFormGeneralPartState extends State<RecipeFormGeneralPart> {
 
     _recipe = widget.recipe;
     _formGroup = widget.formGroup;
+
+    if (_recipe != null) {
+      _formGroup.control('title').value = _recipe!.title;
+      _formGroup.control('description').value = _recipe!.description;
+      _formGroup.control('category').value = _recipe!.category;
+      _formGroup.control('servings').value = _recipe!.servings;
+      _formGroup.control('prepTime').value = _recipe!.prepTime;
+      _formGroup.control('cookTime').value = _recipe!.cookTime;
+      _formGroup.control('totalTime').value = _recipe!.totalTime;
+      // _formGroup.control('imageUrl').value = _recipe!.image;
+      _formGroup.markAsPristine();
+    }
   }
 
   @override

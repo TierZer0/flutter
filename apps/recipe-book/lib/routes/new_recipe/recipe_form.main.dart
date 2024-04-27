@@ -116,6 +116,7 @@ class _RecipeFormMainState extends ConsumerState<RecipeFormMain> {
           ref.read(getRecipeProvider(_id!)).whenData((data) {
             recipe = data.payload;
           });
+          _formGroup.markAsPristine();
         }
 
         return Scaffold(

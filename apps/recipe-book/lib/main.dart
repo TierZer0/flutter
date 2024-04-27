@@ -7,6 +7,7 @@ import 'package:recipe_book/routes/auth/auth.main.dart';
 import 'package:recipe_book/providers/app/providers.dart';
 import 'package:recipe_book/routes/new_recipe/recipe_form.main.dart';
 import 'package:recipe_book/routes/recipe/recipe.main.dart';
+import 'package:recipe_book/routes/user/profile.user.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
@@ -34,41 +35,23 @@ class App extends ConsumerWidget {
           return AuthMainRoute();
         },
       ),
-      // GoRoute(
-      //   path: '/newRecipe',
-      //   builder: (context, state) {
-      //     return NewPage();
-      //   },
-      //   routes: [
-      //     GoRoute(
-      //       path: ':recipeId',
-      //       builder: (context, state) {
-      //         return NewPage(id: state.params['recipeId']);
-      //       },
-      //     )
-      //   ],
-      // ),
       GoRoute(
         path: '/new',
-        builder: (context, state) {
-          return Container();
-        },
+        redirect: (context, state) => '/new/recipe',
         routes: [
           GoRoute(
             path: 'recipe',
             builder: (context, state) {
               return RecipeFormMain();
             },
-            routes: [
-              GoRoute(
-                path: ':recipeId',
-                builder: (context, state) {
-                  return RecipeFormMain(id: state.params['recipeId']!);
-                },
-              ),
-            ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/edit/:recipeId',
+        builder: (context, state) {
+          return RecipeFormMain(id: state.params['recipeId']!);
+        },
       ),
       GoRoute(
         path: '/recipe/:recipeId',
@@ -77,6 +60,18 @@ class App extends ConsumerWidget {
             recipeId: state.params['recipeId']!,
           );
         },
+      ),
+      GoRoute(
+        path: '/user',
+        redirect: (context, state) => '/user/profile',
+        routes: [
+          GoRoute(
+            path: 'profile',
+            builder: (context, state) {
+              return UserProfileMain();
+            },
+          ),
+        ],
       ),
       // GoRoute(
       //   path: '/recipeBook/:recipeBookId',

@@ -56,7 +56,7 @@ class PastWeekSearchPartState extends ConsumerState<PastWeekSearchPart> {
                   final RecipeModel recipe = _recipes[index];
                   return CardShared(
                     recipe: recipe,
-                    onTap: () => context.go('/recipe/${recipe.id}'),
+                    onTap: () => context.push('/recipe/${recipe.id}'),
                     margin: EdgeInsets.symmetric(
                       vertical: 10,
                       horizontal: 20,

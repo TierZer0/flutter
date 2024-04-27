@@ -34,7 +34,7 @@ class CardShared extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => onTap,
+          onTap: onTap,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -74,10 +74,6 @@ class CardShared extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // ElevatedButton(
-                  //   onPressed: onTap,
-                  //   child: Text('Save'),
-                  // ),
                 ],
               )
             ],
