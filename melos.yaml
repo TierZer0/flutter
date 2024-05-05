@@ -1,0 +1,11 @@
+name: my_project
+
+ide:
+  intellij: false
+
+packages:
+  - apps/**
+  - packages/**
+
+scripts:
+  analyze: dart analyze .

@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: ui,utils
+dependency_overrides:
+  ui:
+    path: ..\\..\\packages\\ui
+  utils:
+    path: ..\\..\\packages\\utils
