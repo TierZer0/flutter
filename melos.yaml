@@ -6,3 +6,6 @@ ide:
 packages:
   - apps/**
   - packages/**
+
+scripts:
+  analyze: dart analyze .
