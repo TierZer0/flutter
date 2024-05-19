@@ -8,7 +8,7 @@ class RecipeBookCard extends StatelessWidget {
   final ECard cardType;
   final VoidCallback? onTap;
 
-  final RecipeBookModel recipeBook;
+  final RecipeBook recipeBook;
 
   const RecipeBookCard({
     super.key,

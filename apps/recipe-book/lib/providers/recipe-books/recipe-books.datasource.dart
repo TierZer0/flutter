@@ -17,8 +17,8 @@ class RecipeBooksDataSource {
   }
 
   get _recipeBooksRef => this.firebaseFirestore.collection('recipeBooks').withConverter(
-        fromFirestore: RecipeBookModel.fromFirestore,
-        toFirestore: (RecipeBookModel recipeBook, _) => recipeBook.toFirestore(),
+        fromFirestore: RecipeBook.fromFirestore,
+        toFirestore: (RecipeBook recipeBook, _) => recipeBook.toFirestore(),
       );
 
   Future<FirestoreResult<dynamic>> getRecipeBooks() async {

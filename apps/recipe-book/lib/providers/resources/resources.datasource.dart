@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recipe_book/models/firebase/firebase_result.model.dart';
-import 'package:recipe_book/models/resources/resources.model.dart';
+import 'package:recipe_book/models/models.dart';
 
 class ResourcesDataSource {
   final FirebaseFirestore firebaseFirestore;
@@ -13,8 +12,8 @@ class ResourcesDataSource {
   });
 
   get _resourcesRef => this.firebaseFirestore.collection('resources').withConverter(
-        fromFirestore: ResourcesModel.fromFirestore,
-        toFirestore: (ResourcesModel resource, _) => resource.toMap(),
+        fromFirestore: Resources.fromFirestore,
+        toFirestore: (Resources resource, _) => resource.toFirestore(),
       );
 
   // TODO: switch from List<dynamic> to List<String+>

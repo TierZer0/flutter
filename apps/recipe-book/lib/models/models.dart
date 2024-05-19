@@ -1,6 +1,5 @@
 // User
-export './user/user.model.dart';
-export './user/likes.model.dart';
+export './user/user.dart';
 
 // Recipe
 export './recipe/recipe.model.dart';
@@ -9,7 +8,11 @@ export './recipe/ingredient.model.dart';
 export './recipe/instruction.model.dart';
 
 // Recipe Book
-export './recipe-book/recipe-book.model.dart';
+export './recipe-book/recipe-book.dart';
 
 // Firestore
 export './firebase/firebase_result.model.dart';
+
+// Resources
+export './resources/resources.dart';
+export './resources/categories.dart';

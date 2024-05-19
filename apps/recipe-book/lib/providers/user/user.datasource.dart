@@ -13,8 +13,8 @@ class UserDataSource {
   });
 
   get _usersRef => this.firebaseFirestore.collection('users').withConverter(
-        fromFirestore: UserModel.fromFirestore,
-        toFirestore: (UserModel user, _) => user.toFirestore(),
+        fromFirestore: User.fromFirestore,
+        toFirestore: (User user, _) => user.toFirestore(),
       );
 
   Future<FirestoreResult<List<dynamic>>> getLikedRecipes(String uid) async {
