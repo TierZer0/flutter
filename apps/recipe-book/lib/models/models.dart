@@ -2,10 +2,10 @@
 export './user/user.dart';
 
 // Recipe
-export './recipe/recipe.model.dart';
-export './recipe/review.model.dart';
-export './recipe/ingredient.model.dart';
-export './recipe/instruction.model.dart';
+export './recipe/recipe.dart';
+export './recipe/instruction/instruction.dart';
+export './recipe/ingredient/ingredient.dart';
+export './recipe/review/review.dart';
 
 // Recipe Book
 export './recipe-book/recipe-book.dart';

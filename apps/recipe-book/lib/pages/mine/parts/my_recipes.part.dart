@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:recipe_book/models/recipe/recipe.model.dart';
+import 'package:recipe_book/models/models.dart';
 import 'package:recipe_book/providers/firebase/firebase.providers.dart';
 import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/shared/card.shared.dart';
@@ -53,7 +53,7 @@ class MyRecipesPartState extends ConsumerState<MyRecipesPart> {
             itemCount: data.payload.length,
             itemBuilder: (context, index) {
               final _recipes = data.payload!;
-              final RecipeModel recipe = _recipes[index];
+              final Recipe recipe = _recipes[index];
               return CardShared(
                 recipe: recipe,
                 onTap: () => context.push('/recipe/${recipe.id}'),

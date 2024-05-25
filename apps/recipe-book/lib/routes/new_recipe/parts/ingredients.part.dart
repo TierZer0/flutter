@@ -9,7 +9,7 @@ import 'package:recipe_book/providers/grocery/grocery.providers.dart';
 import 'package:ui/ui.dart';
 
 class RecipeFormIngredientsPart extends ConsumerStatefulWidget {
-  final RecipeModel? recipe;
+  final Recipe? recipe;
   final FormGroup formGroup;
 
   RecipeFormIngredientsPart({this.recipe, required this.formGroup});
@@ -19,7 +19,7 @@ class RecipeFormIngredientsPart extends ConsumerStatefulWidget {
 }
 
 class _RecipeFormIngredientsPartState extends ConsumerState<RecipeFormIngredientsPart> {
-  late RecipeModel? _recipe;
+  late Recipe? _recipe;
   late FormGroup _formGroup;
 
   List<String> options = [];
@@ -129,7 +129,7 @@ class _RecipeFormIngredientsPartState extends ConsumerState<RecipeFormIngredient
                       onPressed: () {
                         if (_form.valid) {
                           _form.control('items').value.add(
-                                IngredientModel(
+                                Ingredient(
                                   item: _form.control('name').value,
                                   quantity: _form.control('quantity').value.toString(),
                                   unit: _form.control('unit').value,

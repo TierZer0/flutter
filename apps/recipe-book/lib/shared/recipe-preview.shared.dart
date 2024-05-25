@@ -6,7 +6,7 @@ import '../models/models.dart';
 import 'items-grid.shared.dart';
 
 class RecipePreviewShared extends StatelessWidget {
-  final RecipeModel recipe;
+  final Recipe recipe;
 
   const RecipePreviewShared({super.key, required this.recipe});
 
@@ -33,9 +33,7 @@ class RecipePreviewShared extends StatelessWidget {
                 recipe.image!,
                 fit: BoxFit.fitWidth,
                 loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null &&
-                      loadingProgress?.cumulativeBytesLoaded ==
-                          loadingProgress?.expectedTotalBytes) {
+                  if (loadingProgress == null && loadingProgress?.cumulativeBytesLoaded == loadingProgress?.expectedTotalBytes) {
                     return child;
                   }
                   return Center(
@@ -48,7 +46,7 @@ class RecipePreviewShared extends StatelessWidget {
           Container(
             height: 150,
             width: double.maxFinite,
-            child: FieldGridShared<RecipeModel>(
+            child: FieldGridShared<Recipe>(
               fields: ['category', 'prepTime', 'cookTime'],
               data: new Map.from(recipe.toFirestore()),
             ),

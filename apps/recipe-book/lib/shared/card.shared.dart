@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:recipe_book/models/recipe/recipe.model.dart';
+import 'package:recipe_book/models/models.dart';
 import 'package:ui/general/card.custom.dart';
 
 class CardShared extends StatelessWidget {
-  final RecipeModel recipe;
+  final Recipe recipe;
   final VoidCallback onTap;
   final double? height;
   final double? width;

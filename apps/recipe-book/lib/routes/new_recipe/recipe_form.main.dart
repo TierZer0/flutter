@@ -44,13 +44,13 @@ class _RecipeFormMainState extends ConsumerState<RecipeFormMain> {
       'name': FormControl<String>(validators: [Validators.required]),
       'quantity': FormControl<int>(validators: [Validators.required]),
       'unit': FormControl<String>(validators: [Validators.required]),
-      'items': FormControl<List<IngredientModel>>(value: [], validators: [Validators.required]),
+      'items': FormControl<List<Ingredient>>(value: [], validators: [Validators.required]),
     }),
     'instructions': FormGroup({
       'title': FormControl<String>(validators: [Validators.required]),
       'order': FormControl<int>(validators: [Validators.required]),
       'description': FormControl<String>(validators: [Validators.required]),
-      'items': FormControl<List<InstructionModel>>(value: [], validators: [Validators.required]),
+      'items': FormControl<List<Instruction>>(value: [], validators: [Validators.required]),
     }),
   });
 
@@ -81,7 +81,7 @@ class _RecipeFormMainState extends ConsumerState<RecipeFormMain> {
   }
 
   submit() {
-    RecipeModel recipeModel = RecipeModel(
+    Recipe recipeModel = Recipe(
       title: _formGroup.control('title').value,
       description: _formGroup.control('description').value,
       category: _formGroup.control('category').value,
@@ -111,7 +111,7 @@ class _RecipeFormMainState extends ConsumerState<RecipeFormMain> {
     return ReactiveFormBuilder(
       form: () => _formGroup,
       builder: (context, formGroup, child) {
-        RecipeModel? recipe = null;
+        Recipe? recipe = null;
         if (_id != null) {
           ref.read(getRecipeProvider(_id!)).whenData((data) {
             recipe = data.payload;

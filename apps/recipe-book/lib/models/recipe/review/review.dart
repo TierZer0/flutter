@@ -1,18 +1,23 @@
-class ReviewModel {
-  String? review;
-  String? createdBy;
-  int? stars;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  ReviewModel({
-    this.review,
-    this.createdBy,
-    this.stars,
-  });
+part 'review.freezed.dart';
 
-  List<ReviewModel> fromMap(List<dynamic> reviews) {
+@freezed
+class Review with _$Review {
+  const Review._();
+
+  const factory Review({
+    String? review,
+    String? createdBy,
+    int? stars,
+  }) = _Review;
+
+  List<Review> fromMap(
+    List<dynamic> reviews,
+  ) {
     return reviews
         .map(
-          (review) => ReviewModel(
+          (review) => Review(
             review: review['review'],
             createdBy: review['createdBy'],
             stars: review['stars'],

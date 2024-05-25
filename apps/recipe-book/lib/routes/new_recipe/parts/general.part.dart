@@ -6,7 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/models.dart';
 
 class RecipeFormGeneralPart extends StatefulWidget {
-  final RecipeModel? recipe;
+  final Recipe? recipe;
   final FormGroup formGroup;
   final VoidCallback selectImage;
   final dynamic photo;
@@ -18,7 +18,7 @@ class RecipeFormGeneralPart extends StatefulWidget {
 }
 
 class _RecipeFormGeneralPartState extends State<RecipeFormGeneralPart> {
-  late RecipeModel? _recipe;
+  late Recipe? _recipe;
   late FormGroup _formGroup;
 
   @override
