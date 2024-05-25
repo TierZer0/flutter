@@ -87,7 +87,7 @@ class RecipeReviewSheet extends ConsumerWidget {
                                   ref.read(
                                     setRecipeReviewProvider(
                                       RecipeReview(
-                                        review: ReviewModel(
+                                        review: Review(
                                           review: formGroup.control('review').value,
                                           stars: formGroup.control('stars').value,
                                           createdBy: ref.read(firebaseAuthProvider).currentUser!.uid,

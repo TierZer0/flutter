@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_book/models/models.dart';
 
 class RecipeInstructionsPart extends StatefulWidget {
-  final List<InstructionModel> instructions;
+  final List<Instruction> instructions;
 
   const RecipeInstructionsPart({
     Key? key,

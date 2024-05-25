@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_book/models/models.dart';
 
 class RecipeReviewsPart extends StatefulWidget {
-  final List<ReviewModel> reviews;
+  final List<Review> reviews;
 
   const RecipeReviewsPart({
     Key? key,

@@ -14,16 +14,16 @@ class RecipesDataSource {
   });
 
   get _recipesRef => this.firebaseFirestore.collection('recipes').withConverter(
-        fromFirestore: RecipeModel.fromFirestore,
-        toFirestore: (RecipeModel recipe, _) => recipe.toFirestore(),
+        fromFirestore: Recipe.fromFirestore,
+        toFirestore: (Recipe recipe, _) => recipe.toFirestore(),
       );
 
-  Future<FirestoreResult<RecipeModel>> getRecipe({
+  Future<FirestoreResult<Recipe>> getRecipe({
     required String recipeId,
   }) async {
     try {
-      final RecipeModel recipe = (await _recipesRef.doc(recipeId).get()).data();
-      return FirestoreResult<RecipeModel>(
+      final Recipe recipe = (await _recipesRef.doc(recipeId).get()).data();
+      return FirestoreResult<Recipe>(
         recipe,
         success: true,
       );
@@ -148,7 +148,7 @@ class RecipesDataSource {
     }
   }
 
-  Future<void> setRecipeReview(String recipeId, ReviewModel review) async {
+  Future<void> setRecipeReview(String recipeId, Review review) async {
     try {
       await _recipesRef.doc(recipeId).update({
         'reviews': FieldValue.arrayUnion([review.toMap()]),
@@ -158,17 +158,17 @@ class RecipesDataSource {
     }
   }
 
-  Future<void> setRecipe(RecipeModel recipe, dynamic photo) async {
+  Future<void> setRecipe(Recipe recipe, dynamic photo) async {
     try {
       final result = await ref.read(uploadFileProvider(photo).future);
-      recipe.image = result.toString();
+      recipe = recipe.copyWith(image: result.toString());
       await _recipesRef.add(recipe);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> updateRecipe(RecipeModel recipe) async {
+  Future<void> updateRecipe(Recipe recipe) async {
     try {
       await _recipesRef.doc(recipe.id).update(recipe.toFirestore());
     } catch (e) {

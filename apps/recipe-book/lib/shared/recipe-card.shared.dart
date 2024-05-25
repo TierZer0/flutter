@@ -11,7 +11,7 @@ class RecipeCard extends StatelessWidget {
   final double? height;
   final double? width;
 
-  final RecipeModel recipe;
+  final Recipe recipe;
 
   final bool useImage;
 

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recipe_book/models/recipe/instruction.model.dart';
-import 'package:recipe_book/models/recipe/recipe.model.dart';
+import 'package:recipe_book/models/models.dart';
 
 class RecipeFormInstructionsPart extends StatefulWidget {
-  final RecipeModel? recipe;
+  final Recipe? recipe;
   final FormGroup formGroup;
 
   RecipeFormInstructionsPart({this.recipe, required this.formGroup});
@@ -14,7 +13,7 @@ class RecipeFormInstructionsPart extends StatefulWidget {
 }
 
 class _RecipeFormInstructionsPartState extends State<RecipeFormInstructionsPart> {
-  late RecipeModel? _recipe;
+  late Recipe? _recipe;
   late FormGroup _formGroup;
 
   @override
@@ -95,7 +94,7 @@ class _RecipeFormInstructionsPartState extends State<RecipeFormInstructionsPart>
                       onPressed: () {
                         if (_form.valid) {
                           _form.control('items').value.add(
-                                InstructionModel(
+                                Instruction(
                                   title: _form.control('title').value,
                                   order: _form.control('order').value,
                                   description: _form.control('description').value,
@@ -116,7 +115,7 @@ class _RecipeFormInstructionsPartState extends State<RecipeFormInstructionsPart>
                       child: ListView.builder(
                         itemCount: _form.control('items').value.length,
                         itemBuilder: (context, index) {
-                          final InstructionModel instruction = _form.control('items').value[index] as InstructionModel;
+                          final Instruction instruction = _form.control('items').value[index] as Instruction;
 
                           return ListTile(
                             title: Text(instruction.title!),

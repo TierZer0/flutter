@@ -16,6 +16,7 @@ export './layout/accordion.custom.dart';
 export 'inputs/input.custom.dart';
 export 'inputs/reactive-input.custom.dart';
 export 'inputs/reactive-autocomplete.custom.dart';
+export 'inputs/tz-reactive-input.custom.dart';
 
 // IMAGES
 

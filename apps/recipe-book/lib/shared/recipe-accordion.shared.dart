@@ -8,7 +8,7 @@ class RecipeAccordion extends StatefulWidget {
   // final String title;
   // final String? subtitle;
   // final Widget? leading;
-  final RecipeModel recipe;
+  final Recipe recipe;
   final String id;
 
   /// The expanded and collapsed sizes of the accordion.
@@ -31,7 +31,7 @@ class RecipeAccordion extends StatefulWidget {
 
 class _RecipeAccordionState extends State<RecipeAccordion> with TickerProviderStateMixin {
   bool isExpanded = false;
-  late RecipeModel recipe;
+  late Recipe recipe;
 
   @override
   initState() {

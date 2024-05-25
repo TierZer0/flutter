@@ -6,7 +6,7 @@ import 'package:recipe_book/providers/recipes/recipes.datasource.dart';
 final recipesDataSource = StateProvider((ref) => RecipesDataSource(ref: ref, firebaseFirestore: ref.read(firebaseFirestoreProvider)));
 
 // GETTERS
-final getRecipeProvider = FutureProvider.family<FirestoreResult<RecipeModel>, String>((ref, recipeId) {
+final getRecipeProvider = FutureProvider.family<FirestoreResult<Recipe>, String>((ref, recipeId) {
   return Future.value(ref.read(recipesDataSource.notifier).state.getRecipe(recipeId: recipeId));
 });
 
@@ -40,7 +40,7 @@ final getRecipesByDateProvider = FutureProvider.family<FirestoreResult<dynamic>,
 
 // SETTERS
 class RecipeReview {
-  ReviewModel review;
+  Review review;
   String recipeId;
 
   RecipeReview({
@@ -54,7 +54,7 @@ final setRecipeReviewProvider = FutureProvider.family<void, RecipeReview>((ref, 
 });
 
 class CreateRecipe {
-  RecipeModel recipe;
+  Recipe recipe;
   dynamic photo;
 
   CreateRecipe({
@@ -67,6 +67,6 @@ final setRecipeProvider = FutureProvider.family<void, CreateRecipe>((ref, payloa
   return Future.value(ref.read(recipesDataSource.notifier).state.setRecipe(payload.recipe, payload.photo));
 });
 
-final updateRecipeProvider = FutureProvider.family<void, RecipeModel>((ref, recipe) {
+final updateRecipeProvider = FutureProvider.family<void, Recipe>((ref, recipe) {
   return Future.value(ref.read(recipesDataSource.notifier).state.updateRecipe(recipe));
 });

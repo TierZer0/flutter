@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recipe_book/models/models.dart';
+import 'package:reactive_raw_autocomplete/reactive_raw_autocomplete.dart';
+import 'package:recipe_book/providers/grocery/grocery.providers.dart';
+import 'package:ui/ui.dart';
 
-class RecipeFormIngredientsPart extends StatefulWidget {
-  final RecipeModel? recipe;
+class RecipeFormIngredientsPart extends ConsumerStatefulWidget {
+  final Recipe? recipe;
   final FormGroup formGroup;
 
   RecipeFormIngredientsPart({this.recipe, required this.formGroup});
@@ -13,9 +18,11 @@ class RecipeFormIngredientsPart extends StatefulWidget {
   _RecipeFormIngredientsPartState createState() => _RecipeFormIngredientsPartState();
 }
 
-class _RecipeFormIngredientsPartState extends State<RecipeFormIngredientsPart> {
-  late RecipeModel? _recipe;
+class _RecipeFormIngredientsPartState extends ConsumerState<RecipeFormIngredientsPart> {
+  late Recipe? _recipe;
   late FormGroup _formGroup;
+
+  List<String> options = [];
 
   @override
   void initState() {
@@ -51,15 +58,14 @@ class _RecipeFormIngredientsPartState extends State<RecipeFormIngredientsPart> {
                 ),
               ),
             ),
-            FractionallySizedBox(
-              widthFactor: 1,
-              child: ReactiveTextField(
-                formControlName: 'ingredients.name',
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  filled: true,
-                ),
-              ),
+            TZ_ReactiveAutocomplete(
+              label: 'Ingredient',
+              formControlName: 'ingredients.name',
+              optionsBuilder: (search) async {
+                if (search.text.isEmpty) return [] as List<String>;
+
+                return (await ref.read(searchGroceryAutocompleteProvider(search.text).future)).payload ?? [];
+              },
             ),
             FractionallySizedBox(
               widthFactor: .4,
@@ -123,7 +129,7 @@ class _RecipeFormIngredientsPartState extends State<RecipeFormIngredientsPart> {
                       onPressed: () {
                         if (_form.valid) {
                           _form.control('items').value.add(
-                                IngredientModel(
+                                Ingredient(
                                   item: _form.control('name').value,
                                   quantity: _form.control('quantity').value.toString(),
                                   unit: _form.control('unit').value,

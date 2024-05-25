@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipe_book/models/recipe/recipe.model.dart';
+import 'package:recipe_book/models/models.dart';
 import 'package:recipe_book/providers/recipes/recipes.providers.dart';
 import 'package:recipe_book/shared/recipe-card.shared.dart';
 import 'package:ui/general/card.custom.dart';
@@ -29,7 +29,7 @@ class PopularPartState extends ConsumerState<PopularPart> {
               itemCount: value.payload!.length,
               itemBuilder: (context, index) {
                 final _recipes = value.payload!;
-                final RecipeModel recipe = _recipes[index];
+                final Recipe recipe = _recipes[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,

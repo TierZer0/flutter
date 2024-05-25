@@ -12,7 +12,7 @@ class DetailedRecipeCard extends StatelessWidget {
 
   final VoidCallback? onTap;
 
-  final RecipeModel recipe;
+  final Recipe recipe;
 
   const DetailedRecipeCard({
     super.key,
@@ -53,8 +53,7 @@ class DetailedRecipeCard extends StatelessWidget {
                     return Center(
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                             : null,
                       ),
                     );
@@ -95,7 +94,7 @@ class DetailedRecipeCard extends StatelessWidget {
               right: 0,
               child: Column(
                 children: [
-                  TableShared<IngredientModel>(
+                  TableShared<Ingredient>(
                     fields: ['Item', 'Quantity', 'Measurement'],
                     data: recipe.ingredients!,
                   ),
