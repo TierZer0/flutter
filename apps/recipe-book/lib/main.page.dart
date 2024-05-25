@@ -51,6 +51,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return ResponsiveWidget(
       mobileScreen: buildMobile(context),
+      desktopScreen: buildDesktop(context),
     );
   }
 
@@ -59,6 +60,40 @@ class _MainPageState extends State<MainPage> {
       _currentPage = _pages[index]!;
       _currentIndex = index;
     });
+  }
+
+  Widget buildDesktop(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (value) => handleMobileNav(value),
+            labelType: NavigationRailLabelType.selected,
+            destinations: _pages.entries
+                .map(
+                  (e) => NavigationRailDestination(
+                    icon: FaIcon(
+                      e.value['icon'],
+                    ),
+                    label: CText(
+                      e.value['title'],
+                      textLevel: EText.title2,
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          VerticalDivider(
+            thickness: 1,
+            width: 1,
+          ),
+          Expanded(
+            child: _currentPage['view'],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildMobile(BuildContext context) {
